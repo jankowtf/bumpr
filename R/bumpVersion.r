@@ -90,25 +90,22 @@ setMethod(
   message(paste0("Suggested version: ", vsn_sug))
 
   ## New version //
-  input <- -1
-  while(input < 1 ){
-    input <- readline(paste0("Enter version number [", vsn_sug, "]: "))
-    input <- ifelse(grepl("\\D", input), input, NA)
-    if (is.na(input)){
-      message(paste0("Using suggested version: ", vsn_sug))
-      vsn_new <- vsn_sug
-    } else {
-      res <- ifelse(!grepl("^\\d+\\.\\d+(\\.\\d+){0,2}$", input), NA, input)
-      if (is.na(res)) {
-        msg <- c(
-          paste0("Invalid version number provided: ", input),
-          "(expecting {major}.{minor} or any one or both of .{patch} and .{dev}"
-        )
-        stop(paste(msg, collapse = "\n"))
-      }
+  input <- readline(paste0("Enter version number [", vsn_sug, "]: "))
+  input <- ifelse(grepl("\\D", input), input, NA)
+  if (is.na(input)){
+    message(paste0("Using suggested version: ", vsn_sug))
+    vsn_new <- vsn_sug
+  } else {
+    res <- ifelse(!grepl("^\\d+\\.\\d+(\\.\\d+){0,2}$", input), NA, input)
+    if (is.na(res)) {
+      msg <- c(
+        paste0("Invalid version number provided: ", input),
+        "(expecting {major}.{minor} or any one or both of .{patch} and .{dev}"
+      )
+      stop(paste(msg, collapse = "\n"))
     }
-    vsn_new <- input
   }
+  vsn_new <- input
   
   message(paste0("Will set new version to be DESCRIPTION file: ", vsn_new))
 
@@ -120,15 +117,12 @@ setMethod(
   write.dcf(as.data.frame(desc), file = "test")
   
   ## Git //
-  input <- -1
-  while(input < 1 ){
-    input <- readline(paste0("Ready to commit to git? [yes/no]: "))
-    input <- ifelse(grepl("\\D", input), input, NA)
-    if (is.na(input)){
-      message("Exiting")
-      return(TRUE)
-    } 
-  }
+  input <- readline(paste0("Ready to commit to git? [yes/no]: "))
+  input <- ifelse(grepl("\\D", input), input, NA)
+  if (is.na(input)){
+    message("Exiting")
+    return(TRUE)
+  } 
   
   input <- readline(paste0("Git repository to push to: "))
   idx <- ifelse(grepl("\\D", input), input, NA)
@@ -152,49 +146,44 @@ setMethod(
     stop(paste(msg, collapse="\n"))
   }
   
-  tmpfile <- tempfile()
   ## Checking for initial commit //
   git_log <- suppressWarnings(system("git log", intern = TRUE))
-  if (!grepl("fatal: bad default revision HEAD", git_log)) {
+  if (!grepl("fatal: bad default revision HEAD", git_log[1])) {
     has_initial <- FALSE
   } else {
     has_initial <- TRUE
   }
   
-  ## CHANGES //
   
-  
+
+vsn_0 <- "0.1.0.1"
+vsn_new <- "0.1.0.2"
   if (has_initial) {
     ## CHANGES //
+    tmpfile <- tempfile()
+    if (!file.exists("CHANGES")) {
+      write("", file = "CHANGES")
+    }
+    tmp_new <- c(
+      paste0("Version ", vsn_new, ":"),
+      system(paste0("git log --pretty=format:\" - %s\" ", "\"v", vsn_0, "\"...HEAD"),
+             intern = TRUE),
+      "",
+      "",
+      readLines("CHANGES")
+    )
+    write(tmp_new, file = tmpfile)
+    file.rename(from = tmpfile, to = "CHANGES")
+    
+    ## Git commands //
     git_commands <- c(
-      paste0("echo \"Version ", vsn_new, ":\" > tmpfile")
-      paste0("git log --pretty=format:\" - %s\" ", "\"v", vsn_new, "\"...HEAD >> tmpfile")
-      "echo \"\" >> tmpfile",
-      "echo \"\" >> tmpfile",
-      "cat CHANGES >> tmpfile"
+      "git add CHANGES DESCRIPTION",
+      paste0("git commit -m 'Version bump to ", vsn_new, "'"),
+      paste0("git tag -a -m 'Tagging version ", vsn_new, "' 'v", vsn_new, "'"),
+      paste0("git push ", git_repos, " --tags")
     )
   }
   
-  
-  system(git_commands[1])
-    
-    echo "" >> tmpfile
-    
-    mv tmpfile CHANGES
-    git add CHANGES VERSION
-    git commit -m "Version bump to $INPUT_STRING"
-    git tag -a -m "Tagging version $INPUT_STRING" "v$INPUT_STRING"
-    
-    read -p "Name of git repository to push to: " GITREPOS
-    echo $GITREPOS
-    exit
-    #git push origin --tags
-    git push `$GITREPOS` --tags
-  else
-    echo "exiting..."
-  fi
-
-
 
   return(bumpVersion(from = from, to = to, ns = ns, ...))
     
