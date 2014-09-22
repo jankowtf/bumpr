@@ -67,7 +67,26 @@ setMethod(
     ns,
     ...
   ) {
-
+    
+  ## HOME //
+  sys_home <- Sys.getenv("HOME")
+  if (sys_home == "") {
+    Sys.setenv("HOME" = ns$home)
+    sys_home <- Sys.getenv("HOME")
+  }
+  if (!file.exists(file.path(sys_home, "_netrc"))) {
+    msg <- c(
+      "Missing file '_netrc' with HTTPS credentials",
+      paste0("Create that file in: ", sys_home),
+      "Make sure it contains the following content:",
+      "  machine github.com",
+      "  login <your-username>",
+      "  password <your-password>",
+      "  protocol https"
+    )
+    stop(paste(msg, collapse = "\n"))
+  }
+  
   ## Read description file //
   tmp <- read.dcf("DESCRIPTION")
   desc <- as.list(tmp)
@@ -104,8 +123,8 @@ setMethod(
       )
       stop(paste(msg, collapse = "\n"))
     }
+    vsn_new <- input
   }
-  vsn_new <- input
   
   message(paste0("Will set new version to be DESCRIPTION file: ", vsn_new))
 
@@ -114,7 +133,7 @@ setMethod(
   desc$Date <- Sys.time()
   
   ## Write DESCRIPTION FILE
-  write.dcf(as.data.frame(desc), file = "test")
+  write.dcf(as.data.frame(desc), file = "DESCRIPTION")
   
   ## Git //
   input <- readline(paste0("Ready to commit to git? [yes/no]: "))
@@ -124,14 +143,15 @@ setMethod(
     return(TRUE)
   } 
   
-  input <- readline(paste0("Git repository to push to: "))
+  input <- readline(paste0("Git repository to push to (default: 'origin'): "))
   idx <- ifelse(grepl("\\D", input), input, NA)
   if (is.na(idx)){
-    message("Using repository 'origin'")
     git_repos <- "origin"
   } else {
     git_repos <- idx
   }
+  
+  message("Using remote git repository 'origin'")
   
   ## Validate repository //
   git_remote <- system("git remote", intern = TRUE)
@@ -154,6 +174,21 @@ setMethod(
     has_initial <- TRUE
   }
   
+  ## Git credentials
+  user_email <- suppressWarnings(system("git config --global user.email", intern = TRUE))
+  if (!length(user_email)) {
+    if (!length(ns$user_email)) {
+      stop("Empty field in 'ns': user_email")
+    }
+    system(paste0("git config user.email \"", ns$user_email, "\""))
+  }
+  user_name <- suppressWarnings(system("git config --global user.name", intern = TRUE))
+  if (!length(user_name)) {
+    if (!length(ns$user_name)) {
+      stop("Empty field in 'ns': user_name")
+    }
+    system(paste0("git config user.name \"", ns$user_name, "\""))
+  }
   
 
 vsn_0 <- "0.1.0.1"
@@ -178,10 +213,11 @@ vsn_new <- "0.1.0.2"
     ## Git commands //
     git_commands <- c(
       "git add CHANGES DESCRIPTION",
-      paste0("git commit -m 'Version bump to ", vsn_new, "'"),
-      paste0("git tag -a -m 'Tagging version ", vsn_new, "' 'v", vsn_new, "'"),
+      paste0("git commit -m \"Version bump to ", vsn_new, "\""),
+      paste0("git tag -a -m \"Tagging version ", vsn_new, "\" \"v", vsn_new, "\""),
       paste0("git push ", git_repos, " --tags")
     )
+    system(git_commands[4])
   }
   
 
@@ -222,12 +258,16 @@ setMethod(
     ...
   ) {
 
-  ns <- classr::createInstance(cl = "Versionbumpr", 
+  ns <- classr::createInstance(cl = "Bumpr.Git.S3", 
     obj = list(
-      git_repos = "origin"
+      git_repos = "origin",
+      user_email = character(),
+      user_name = character(),
+      home = Sys.getenv("HOME")
     )
   )
-  ns
+  ns$user_email <- "janko.thyson@rappster.de"
+  ns$user_name <- "Janko Thyson"
   
   
   

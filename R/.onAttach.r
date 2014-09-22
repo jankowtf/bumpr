@@ -9,5 +9,5 @@
 #' @template references
 #' @export .onAttach
 .onAttach <- function(libname, pkgname) {	
-  setOldVersion("Versionbumpr.Git.S3")
+
 }
