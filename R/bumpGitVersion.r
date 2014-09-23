@@ -35,7 +35,7 @@
 #'      repository that relies on HTTPS for authentication, the function 
 #'      assumes that you \strong{are willing to store (at least temporarily) your 
 #'      HTTP credentials in this file}:
-#'      \code{file.path(Sys.getenv("HOME")/_netrc)}. 
+#'      \code{file.path(Sys.getenv("HOME"), "_netrc")}. 
 #'      
 #'      Currently only tested for
 #'      GitHub repositories as this is the location where the API seems to 
@@ -59,7 +59,7 @@
 #'      Make sure that you already issued an initial commit for your \strong{local}
 #'      repository and pushed this to your remote repository.
 #'      The function does have built-in checks for very early stages of a
-#'      Git repository (i.e. no commits yet, not \code{.gitignore} file yet, 
+#'      Git repository (i.e. no commits yet, no \code{.gitignore} file yet, 
 #'      no branches on the remote repository yet), but I would not consider 
 #'      this completely stable and tested yet. If you want to check out what 
 #'      the function does in such early stages, I would recommend testing it
