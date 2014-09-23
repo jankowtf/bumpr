@@ -112,6 +112,7 @@ setGeneric(
 #' @template author
 #' @template references
 #' @export
+#' @import classr
 setMethod(
   f = "bumpGitVersion", 
   signature = signature(
