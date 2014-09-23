@@ -75,7 +75,7 @@ setMethod(
   if (is.na(from)) {
     stop("Invalid version in DESCRIPTION")
   }
-  to <- ns$version    
+  to <- as.character(ns$version)
     
   return(bump(
     what = what,
@@ -200,7 +200,7 @@ setMethod(
     return(character())
   } 
   ## Check remote state //
-  message("Checking remote repository state (this may take a while")
+  message("Checking remote repository state (this may take a while)")
   head_check <- sapply(git_remote, function(rem) {
     res <- system(paste0("git ls-remote --heads ", rem), intern = TRUE)
     if (!length(res)) {
@@ -474,7 +474,7 @@ setMethod(
     
   ## Git commands //
   git_commands <- c(
-    "git add --ignore-removal CHANGES DESCRIPTION",
+    "git add --ignore-removal CHANGES.md DESCRIPTION",
     paste0("git commit -m \"Version bump to ", vsn_new, "\""),
     paste0("git tag -a -m \"Tagging version ", vsn_new, "\" \"v", vsn_new, "\""),
     paste0("git push ", git_repos, " --tags")

@@ -3,6 +3,4 @@ test_that("bumpGitVersion", {
 
   bumpGitVersion()
   
-  
-}
-)
+})
