@@ -1,3 +1,11 @@
+# Version 0.2.2
+ - Changed title
+ - Update README.md
+ - Hotfix 2014-09-23 - `install_github()` in `README.md`
+ - Hotfix for release v0.2 - Added dependency 'classr' - Updated 'DESCRIPTION'
+
+----------
+
 # Version 0.2.1
  - Release v0.2
 
