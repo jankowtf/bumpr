@@ -69,9 +69,54 @@ with a toy Git/GitHub repository first
 
 ### See version bumping in action
 
-That being said, have fun with easy version bumping and let me know what you 
+That being said, have fun with easy version bumping and let me know what you
 think.
+
+Bumping from current version `0.1.3` (retrieved from `DESCRIPTION` to a new version.
 
 ```
 bumpGitVersion()
+# Checking remote repository state (this may take a while)
+# Current version: 0.1.3
+# Suggested version: 0.1.4
+# Enter a valid version number [0.1.4=ENTER]: 0.2
+# Updating version in DESCRIPTION file to: '0.2?' [yes=ENTER/no]:
+# Ready to commit to git? [yes=ENTER/no]:
+# Remote git repository (hit ENTER for default: 'origin'):
+# Using remote git repository: origin
+# Use stored HTTPS credentials (or type them instead) [yes=ENTER/no]:
+#
+# [master 9955721] Version bump to 0.2 2 files changed, 8 insertions(+), 2 deletions(-)
+#
+# To https://github.com/Rappster/bumpr * [new tag]         v0.2 -> v0.2
+# [1] "0.2"
 ```
+
+#### Explanation what just happened
+
+- The suggestion always takes the last version digit and increments it by one.
+If you simply hit enter, this suggested version will be used.
+
+- However, you are of course free to provide any version you'd like as long as
+it complies with the [semtatic versioning conventions](http://semver.org/).
+
+- You are then asked if you want to update your `DESCRIPTION` file (fields `Version` and `Date`).
+
+- Then a last check before commencing with Git/GitHub related stuff is made.
+
+- Based on the specification of your remote repository (**note that this must
+have been defined prior to running `bumpGitVersion()`**) a new commit
+is issued and **after** that a new tag corresponding to `v<new-version>` (e.g. `v0.2`) is created so **future** commits are automatically tagged with it.
+
+- What also happens is that the file `CHANGES.md` is updated.
+
+- Before pushing to the remote GitHub repository, you are asked how you'd like
+to specify your HTTP credentials: either by looking up the information in file
+`_netrc` in your `HOME` directory or by typing it into the console.
+
+  This is also where argument `temp_credentials` comes into play: when `TRUE`
+  the function makes sure that file `_netrc` is deleted after the version bump is
+  finished.
+
+- The function finally returns the new version as a `character` string. If
+along the way something when wrong (wrong user input) or when you wanted to exit on purpose, the function returns `character()`.
