@@ -75,7 +75,7 @@ setMethod(
   if (is.na(from)) {
     stop("Invalid version in DESCRIPTION")
   }
-  to <- as.character(ns$version)
+  to <- as.character(what$version)
     
   return(bump(
     what = what,
@@ -348,7 +348,7 @@ setMethod(
   ## Git user credentials //
   git_user_email <- suppressWarnings(system("git config user.email", intern = TRUE))
   if (!length(git_user_email)) {
-    if (!length(ns$user_email)) {
+    if (!length(what$user_email)) {
       input <- readline("git user.email: ")
       idx <- ifelse(grepl("\\D", input), input, NA)
       if (is.na(idx)) {
@@ -358,11 +358,11 @@ setMethod(
       }
       git_user_email <- input 
     }
-    system(paste0("git config user.email \"", ns$user_email, "\""))  
+    system(paste0("git config user.email \"", what$user_email, "\""))  
   }
   git_user_name <- suppressWarnings(system("git config user.name", intern = TRUE))
   if (!length(git_user_name)) {
-    if (!length(ns$user_name)) {
+    if (!length(what$user_name)) {
       input <- readline("git user.name: ")
       idx <- ifelse(grepl("\\D", input), input, NA)
       if (is.na(idx)) {
@@ -372,7 +372,7 @@ setMethod(
       }
       git_user_name <- input 
     }
-    system(paste0("git config user.name \"", ns$user_name, "\""))  
+    system(paste0("git config user.name \"", what$user_name, "\""))  
   }
 
   ## CHANGES //
@@ -403,7 +403,7 @@ setMethod(
   ## HTTPS credentials //
   sys_home <- Sys.getenv("HOME")
   if (sys_home == "") {
-    Sys.setenv("HOME" = ns$home)
+    Sys.setenv("HOME" = what$home)
     sys_home <- Sys.getenv("HOME")
   }
   path_netrc <- file.path(sys_home, "_netrc")
