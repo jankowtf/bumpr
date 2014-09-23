@@ -1,7 +1,7 @@
 bumpr
 ======
 
-Hassle-free version bumping and other things
+Easy version bumping and more
 
 ## Installation
 
