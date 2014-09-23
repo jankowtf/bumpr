@@ -7,31 +7,66 @@
 #' @details
 #' Asumptions:
 #' \itemize{
-#'   \item{Git project: }{
-#'      Assumes that a valid Git project has been created 
-#'      (look for directory \code{.git})
+#'   \item{\strong{R package project}: } {
+#'   
+#'      You are using this function to systematically manage the versions 
+#'      of an R package project.
 #'   }
-#'   \item{Git project: }{
-#'      Assumes that an initial commit has already been issued.
-#'      (Run \code{git log} for your commit history. If this fails, you haven't 
-#'      done an intial commit yet)
+#'   \item{\strong{Local Git repository}: }{
+#'   
+#'      Your package project is under Git version control, i.e. a local Git 
+#'      repository has been created in your package project's root directory.
+#'      (look for directory \code{.git} in your package project's root 
+#'      directory)
 #'   }
-#'   \item{Git remote repository: }{
-#'      Assumes that at least the remote repository with name \code{origin}
-#'      has been set. 
-#'      (Run \code{git remote} to find out about your remote repositories)
+#'   \item{\strong{Remote Git repository}: }{
+#'   
+#'      At the very least one remote repository with name \code{origin}
+#'      has been defined for your local Git repository. 
+#'      
+#'      Additional remote repositories with different 
+#'      names are not a problem. You can choose them interactively. 
+#'      (Run \code{git remote} in your git shell to find out about your 
+#'      remote repositories)
 #'   }
-#'   \item{GitHub HTTP credentials: }{
-#'      If you want to push to a GitHub repository, the function assumes that 
-#'      you are willing to store your HTTP credentials for 
-#'      \url{https://github.com} (\code{username} and \code{password} in file 
-#'      \code{file.path(Sys.getenv("HOME)/_netrc)} as this is where Git expects
-#'      to find HTTP credentials when pushing. 
-#'      You can choose to destroy this file after each bump by setting
-#'      \code{temp_credentials = TRUE}.
+#'   \item{\strong{HTTP credentials}: }{
+#'   
+#'      If you want to push to a GitHub repository or any other remote 
+#'      repository that relies on HTTPS for authentication, the function 
+#'      assumes that you \strong{are willing to store (at least temporarily) your 
+#'      HTTP credentials in this file}:
+#'      \code{file.path(Sys.getenv("HOME")/_netrc)}. 
+#'      
+#'      Currently only tested for
+#'      GitHub repositories as this is the location where the API seems to 
+#'      expect HTTP credentials when pushing to such a repository. 
+#'      
+#'      \strong{However, You can choose to destroy this file after each bump by setting
+#'      \code{temp_credentials = TRUE}}.
+#'      I will try to find better ways of handling HTTPS credentials in future
+#'      releases.
 #'   }
 #' }
-#'   	
+#' 
+#' @section Disclaimer:
+#' \strong{This package is really new. So please test this function with 
+#' repositories that are not crucial for your productive work!}
+#' 
+#' @section Recommendations:
+#' \itemize{
+#'   \item{\strong{Initial commit}: }{
+#'   
+#'      Make sure that you already issued an initial commit for your \strong{local}
+#'      repository and pushed this to your remote repository.
+#'      The function does have built-in checks for very early stages of a
+#'      Git repository (i.e. no commits yet, not \code{.gitignore} file yet, 
+#'      no branches on the remote repository yet), but I would not consider 
+#'      this completely stable and tested yet. If you want to check out what 
+#'      the function does in such early stages, I would recommend testing it
+#'      with a toy Git/GitHub repository first
+#'   }
+#' }
+#' 
 #' @param temp_credentials \code{\link{logical}}.
 #'    \code{TRUE}: delete HTTPS credentials after each bump;
 #'    \code{FALSE}: permanently store HTTPS credentials in \code{_netrc} file.
