@@ -1,3 +1,7 @@
+# Version 0.2.4
+
+----------
+
 # Version 0.2.3
  - Hotfix `ns` -> `what`
 
