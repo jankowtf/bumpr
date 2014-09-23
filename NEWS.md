@@ -1,8 +1,10 @@
-# CHANGES IN bumpr VERSION 0.1.0.1
+# CHANGES IN bumpr VERSION 0.2.1
 
 ## NEW FEATURES
 
 ## BUG FIXES
+
+- Hotfix: `install_github("Rappster/classr")`
 
 ## MAJOR CHANGES
 
@@ -10,6 +12,5 @@
 
 ## MISC
 
-- Initial commit
-
 -----
+
