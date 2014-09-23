@@ -1,7 +1,7 @@
 bumpr
 ======
 
-Easy version bumping and more
+Easy systematic version bumping and more
 
 ## Installation
 
@@ -77,20 +77,19 @@ Bumping from current version `0.1.3` (retrieved from `DESCRIPTION`) to a new ver
 
 ```
 bumpGitVersion()
-# Checking remote repository state (this may take a while)
-# Current version: 0.1.3
-# Suggested version: 0.1.4
-# Enter a valid version number [0.1.4=ENTER]: 0.2
-# Updating version in DESCRIPTION file to: '0.2?' [yes=ENTER/no]:
-# Ready to commit to git? [yes=ENTER/no]:
-# Remote git repository (hit ENTER for default: 'origin'):
+# Current version: 0.3
+# Suggested version: 0.4
+# Enter a valid version number [0.4=ENTER]: 0.3.1
+# Updating version in DESCRIPTION file to: '0.3.1?' [(y)es | (n)o | (q)uit]: 
+# Ready to bump version in git?' [(y)es | (n)o | (q)uit]: 
+# Name of remote git repository (hit ENTER for default = 'origin'): 
 # Using remote git repository: origin
-# Use stored HTTPS credentials (or type them instead) [yes=ENTER/no]:
-#
-# [master 9955721] Version bump to 0.2 2 files changed, 8 insertions(+), 2 deletions(-)
-#
-# To https://github.com/Rappster/bumpr * [new tag]         v0.2 -> v0.2
-# [1] "0.2"
+# Use stored HTTPS credentials (no = type them)? [(y)es | (n)o | (q)uit ]: 
+# 
+# [release-v0.3.1 a9d0a5c] Version bump to 0.3.1 2 files changed, 7 insertions(+), 2 deletions(-)
+# 
+# To https://github.com/Rappster/bumpr * [new tag]         v0.3.1 -> v0.3.1
+# [1] "0.3.1"
 ```
 
 #### Explanation what just happened
@@ -111,7 +110,7 @@ is issued and **after** that a new tag corresponding to `v<new-version>` (e.g. `
 
 - What also happens is that the file `CHANGES.md` is updated.
 
-- Before pushing to the remote GitHub repository, you are asked how you'd like
+- Before pushing to the remote (GitHub) repository, you are asked how you'd like
 to specify your HTTP credentials: either by looking up the information in file
 `_netrc` in your `HOME` directory or by typing it into the console.
 

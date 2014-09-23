@@ -1,5 +1,5 @@
 #' @title
-#' Version bumping and more
+#' Easy systematic version bumping and more
 #'
 #' @description
 #' Makes it really easy to bump the version of an R package project placed 
@@ -44,15 +44,6 @@
 #'    \strong{This package is really new. So please test it with 
 #'    repositories that are not crucial for your productive work!}
 #'    }
-#'    \item{
-#'    Currently assumes that you are \emph{also} using \emph{GitHub} 
-#'    (see \url{https://github.com/}) for 
-#'    hosting your remote repositories. However, this is just a temporary 
-#'    "limitation" and this constraint will be relaxed in future releases. 
-#'    Other remote repositories should work as well as long as they are 
-#'    relying on HTTPS for authentication. However, this needs to be tested 
-#'    more thouroughly yet.
-#'    }   
 #' }
 #' 
 #' @section Inspiration and aknowledgements:

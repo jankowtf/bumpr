@@ -620,7 +620,9 @@ setMethod(
     "",
     "## MISC",
     "",
-    "-----"
+    "-----" ,
+    "",
+    readLines("NEWS.md")
   )
   write(news_content, file = tmpfile)
   file.rename(from = tmpfile, to = "NEWS.md")
