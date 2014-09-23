@@ -73,7 +73,7 @@ with a toy Git/GitHub repository first
 That being said, have fun with easy version bumping and let me know what you
 think.
 
-Bumping from current version `0.1.3` (retrieved from `DESCRIPTION` to a new version.
+Bumping from current version `0.1.3` (retrieved from `DESCRIPTION`) to a new version.
 
 ```
 bumpGitVersion()
