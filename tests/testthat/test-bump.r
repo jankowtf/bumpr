@@ -11,16 +11,19 @@ test_that("bump", {
       home = Sys.getenv("HOME")
     )
   )
-  ns$user_email <- "janko.thyson@rappster.de"
-  ns$user_name <- "Janko Thyson"  
+#   ns$user_email <- "janko.thyson@rappster.de"
+#   ns$user_name <- "Janko Thyson"  
   
   if (basename(getwd()) == "testthat") {
     wd_0 <- setwd("data/bumpr.test")
   } else {
     wd_0 <- setwd("tests/testthat/data/bumpr.test")
   }
-  getwd()
+  
   bump(what = ns)
+  
+  setwd(wd_0)
+  on.exit(setwd(wd_0))
   
   }
 )
