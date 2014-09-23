@@ -1,3 +1,11 @@
+# Version 0.3
+ - alternative remote repositories work - started to factor out user input and git code into own private functions
+ - set remote repos
+ - Merge branch 'newsfile' into develop
+ - Automatic update of `NEWS.md`
+
+----------
+
 # Version 0.2.4
 
 ----------
