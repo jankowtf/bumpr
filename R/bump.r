@@ -232,6 +232,7 @@ setMethod(
   tmp <- read.dcf("DESCRIPTION")
   desc <- as.list(tmp)
   names(desc) <- colnames(tmp)  
+  pkg_name <- desc$Package
   
   ## Ensure they are the same //
   if (from != desc$Version) {
@@ -399,6 +400,29 @@ setMethod(
   )
   write(tmp_new, file = tmpfile)
   file.rename(from = tmpfile, to = "CHANGES.md")
+
+  ## NEWS //
+  tmpfile <- tempfile()
+  if (!file.exists("NEWS.md")) {
+    write("", file = "NEWS.md")
+  }
+  news_content <- c(
+    paste0("# CHANGES IN ", pkg_name, " VERSION ", vsn_new),
+    "",
+    "## NEW FEATURES",
+    "",
+    "## BUG FIXES",
+    "",
+    "## MAJOR CHANGES",
+    "",
+    "## MINOR CHANGES",
+    "",
+    "## MISC",
+    "",
+    "-----"
+  )
+  write(news_content, file = tmpfile)
+  file.rename(from = tmpfile, to = "NEWS.md")
   
   ## HTTPS credentials //
   sys_home <- Sys.getenv("HOME")
