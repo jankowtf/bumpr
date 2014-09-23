@@ -11,7 +11,9 @@
 .onLoad <- function(libname, pkgname) {
     setOldClass("Bumpr.Git.S3", 
       prototype = list(
-        git_repos = "origin",
+        version = "0.1.0.1",
+        git_repos_name = "origin",
+        git_repos_url = character(),
         user_email = character(),
         user_name = character()
       )
