@@ -1,3 +1,8 @@
+# Version 0.2.3
+ - Hotfix `ns` -> `what`
+
+----------
+
 # Version 0.2.2
  - Changed title
  - Update README.md
