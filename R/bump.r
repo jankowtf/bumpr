@@ -187,7 +187,7 @@ setMethod(
     res <- system("git add --all", intern = TRUE)
     res <- system("git commit -m \"Initial commit\"", intern = TRUE)
     res <- suppressWarnings(system("git log", intern = TRUE))
-    if (grepl("fatal: bad default revision 'HEAD'", res)) {
+    if (grepl("fatal: bad default revision 'HEAD'", res[1])) {
       message("Something went wrong with initial commit")
       return(character())
     }
@@ -196,8 +196,25 @@ setMethod(
   git_remote <- system("git remote", intern = TRUE)
   if (!length(git_remote)) {
     message("No remote git repositories set yet. Specify at least 'origin'")
-    message("Exiting")
-    return(character())
+    input <- readline("Do you want to add a remote repository now? [yes=ENTER/no]: ")
+    input <- ifelse(grepl("\\D", input), input, "yes")
+    if (grepl("[nN]|No|no|NO", input)) {
+      message("Make sure you set a remote repository in your local repository")
+      message("Exiting")
+      return(character())
+    }
+    input <- readline("Repository name [ENTER='origin']: ")
+    git_remote_name <- ifelse(grepl("\\D", input), input, "origin")
+    input <- readline("Repository URL: ")
+    input <- ifelse(grepl("\\D", input), input, NA)
+    if (is.na(input)) {
+      message("Invalid input")
+      message("Exiting")
+      return(character())
+    }
+    git_remote_url <- input
+    system(paste0("git remote add ", git_remote_name, " ", git_remote_url),
+           intern = TRUE)
   } 
   ## Check remote state //
   message("Checking remote repository state (this may take a while)")
