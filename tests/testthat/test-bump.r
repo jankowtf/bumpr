@@ -1,6 +1,8 @@
 context("bump-1")
 test_that("bump", {
 
+  skip("interactive only")
+  
   ## Class instance //    
   ns <- classr::createInstance(cl = "Bumpr.Git.S3", 
     obj = list(
@@ -20,6 +22,32 @@ test_that("bump", {
     wd_0 <- setwd("tests/testthat/data/bumpr.test")
   }
   
+  bump(what = ns)
+  
+  setwd(wd_0)
+  on.exit(setwd(wd_0))
+  
+  }
+)
+
+context("bump-Bumpr.RPackage.S3")
+test_that("bump", {
+
+  skip("interactive only")
+
+  ## Class instance //    
+  ns <- classr::createInstance(cl = "Bumpr.RPackage.S3", 
+    obj = list(
+      version = character()
+    )
+  )
+  
+  if (basename(getwd()) == "testthat") {
+    wd_0 <- setwd("data/bumpr.test")
+  } else {
+    wd_0 <- setwd("tests/testthat/data/bumpr.test")
+  }
+
   bump(what = ns)
   
   setwd(wd_0)
