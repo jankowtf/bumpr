@@ -1,4 +1,4 @@
-bumpr (v0.3.3)
+bumpr (v0.3.4)
 ======
 
 Easy systematic version bumping and more
@@ -18,20 +18,31 @@ See `?bumpr` for the overall purpose of this package.
 
 ## Bump R package version (no Git required)
 
-Bumping from current version `0.3.2` (retrieved from `DESCRIPTION`) to a new version
+Retrieves the current package version from the `DESCRIPTION` file,
+suggest the next version number and prompts the user for a new 
+version number. After asking permission, the new version number is 
+written to the `DESCRIPTION` file along with additional
+information provided via `desc_fields`. Currently, only 
+an element of form `Date = NULL` is allowed/used, which 
+corresponds to also updating the `Date` field of the 
+`DESCRIPTION` file. `desc_fields = list()` suppresses that.
+
+### Example
+
+Bumping from current version `0.3.3` to a new version
 
 ```
-bumpGitVersion()
-# Current version: 0.3.2
-# Suggested version: 0.3.3
-# Enter a valid version number: [ENTER = 0.3.3] 
-# Using suggested version: 0.3.3
-# Updating version in DESCRIPTION file to '0.3.3?' [(y)es | (n)o | (q)uit]: 
+bumpPackageVersion()
+# Current version: 0.3.3
+# Suggested version: 0.3.4
+# Enter a valid version number: [ENTER = 0.3.4] 
+# Using suggested version: 0.3.4
+# Updating version in DESCRIPTION file to '0.3.4?' [(y)es | (n)o | (q)uit]: 
 # $old
-# [1] "0.3.2"
+# [1] "0.3.3"
 # 
 # $new
-# [1] "0.3.3"
+# [1] "0.3.4"
 ```
 
 #### Explanation what just happened
@@ -49,13 +60,33 @@ along the way something when wrong (wrong user input) or when you wanted to quit
 
 ## Bump Git version 
 
+Performs all sorts of Git-related checks and tasks in order to take care
+that everything necessary is done that is related to bumping a project
+to a higher version number.
+ 
+This provided version number is transferred to `v{version-number``,
+e.g. `v0.1.1`, and added as a Git tag. 
+
+All commits linked to the *previous* version/tag are queried and added
+to file `CHANGES.md`. Additionally, a template section to state the 
+changes in the *new* version is added in file `NEWS.md`.
+
+Files `DESCRIPTION` and `CHANGES.md` are automatically 
+commited to signal the version bump.
+
+Optionally, you can push the new version (i.e. the new tag) as well 
+as the associated commit to a remote repository (default: `origin`).
+This can be any valid Git remote repository, including a GitHub
+repository
+
+### Example
+
 **Please read the assumptions and recommendations stated in `?bumpGitVersion()`
 before you are running this function!**
 
 As `bumpPackageVersion()` is called inside `bumpGitVersion()` and we already
-ran `bumpPackageVersion()` explicitly, we'll stay at the same (new) version
-number when prompted. If you just run `bumpGitVersion()` make your choices
-accordingly.
+ran `bumpPackageVersion()` explicitly, we'll stay at the same version
+number when prompted. If you just run `bumpGitVersion()` then this does not apply.
 
 Recommended way of using this function when version-controlling your package
 project with Git: run `bumpGitVersion()` **without** previously running
@@ -77,22 +108,23 @@ bumpGitVersion()
 # 0.3
 # 0.3.1
 # 0.3.2
-# Current version: 0.3.3
-# Suggested version: 0.3.4
-# Enter a valid version number: [ENTER = 0.3.4] 0.3.3
+# 0.3.3
+# Current version: 0.3.4
+# Suggested version: 0.3.5
+# Enter a valid version number: [ENTER = 0.3.5] 0.3.4
 # Ready to bump version in git?' [(y)es | (n)o | (q)uit]: 
 # Name of remote git repository (hit ENTER for default = 'origin'): 
 # Using remote git repository: origin
 # Use stored HTTPS credentials (no = type them)? [(y)es | (n)o | (q)uit ]: 
 # 
-# [feature-refactorBumpGitVersion 6fde558] Version bump to 0.3.3 2 files changed, 7 insertions(+), 2 deletions(-)
+# [release-0.3.4 fdc57a4] Version bump to 0.3.4 2 files changed, 8 insertions(+), 2 deletions(-)
 # 
-# To https://github.com/Rappster/bumpr * [new tag]         v0.3.3 -> v0.3.3
+# To https://github.com/Rappster/bumpr * [new tag]         v0.3.4 -> v0.3.4
 # $old
-# [1] ‘0.3.2’
+# [1] ‘0.3.3’
 # 
 # $new
-# [1] "0.3.3"
+# [1] "0.3.4"
 ```
 
 #### Explanation what just happened
@@ -109,9 +141,9 @@ bumpGitVersion()
 
 - Based on the specification of your remote repository (**note that this should
 have been defined prior to running `bumpGitVersion()`**) a new commit
-is issued and **after** that a new tag corresponding to `v<new-version>` (e.g. `v0.3.3`) is created so **future** commits are automatically tagged with it.
+is issued and **after** that a new tag corresponding to `v<new-version>` (e.g. `v0.3.4`) is created so **future** commits are automatically tagged with it.
 
-- What also happens is that the files `CHANGES.md` and \code{NEWS.md} are updated
+- What also happens is that the files `CHANGES.md` and `NEWS.md` are updated
   as described in `?bumpr`.
 
 - Before pushing to the remote (GitHub) repository, you are asked how you'd like
