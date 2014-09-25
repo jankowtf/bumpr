@@ -12,20 +12,45 @@
 #' 
 #' The core functions/methods of this package: 
 #'  \itemize{
+#'    \item{\code{\link[bumpr]{bumpPackageVersion}}: }{
+#'    
+#'      Retrieves the current package version from the \code{DESCRIPTION} file,
+#'      suggest the next version number and prompts the user for a new 
+#'      version number. After asking permission, the new version number is 
+#'      written to the \code{DESCRIPTION} file along with additional
+#'      information provided via \code{desc_fields}. Currently, only 
+#'      an element of form \code{Date = NULL} is allowed/used, which 
+#'      corresponds to also updating the \code{Date} field of the 
+#'      \code{DESCRIPTION} file. \code{desc_fields = list()} suppresses that.
+#'          
+#'      Essentially, this function is a mere convenience wrapper for the 
+#'      actual workhorse function \code{\link[bumpr]{bump}} and its 
+#'      method associated to class \code{Bumpr.RPackageVersion.s3}.
+#'    }
 #'    \item{\code{\link[bumpr]{bumpGitVersion}}: }{
 #'    
 #'      Performs all sorts of Git-related checks and tasks in order to take care
 #'      that everything necessary is done that is related to bumping a project
-#'      to a higher version number. 
-#'      This also implies that the \emph{package version} (field \code{Version})
-#'      and the \emph{package date} (field \code{Date}) in the 
-#'      \code{DESCRIPTION} file are updated accordingly. 
+#'      to a higher version number.
+#'       
+#'      This provided version number is transferred to \code{v{version-number}},
+#'      e.g. \code{v0.1.1}, and added as a Git tag. 
+
+#'      All commits linked to the \emph{previous} version/tag are queried and added
+#'      to file \code{CHANGES.md}. Additionally, a template section to state the 
+#'      changes in the \emph{new} version is added in file \code{NEWS.md}.
 #'      
-#'      Changes are tracked systematically in the file \code{CHANGES.md} 
-#'      which is modified at each version bump.
+#'      Files \code{DESCRIPTION} and \code{CHANGES.md} are automatically 
+#'      commited to signal the version bump.
+#'      
+#'      Optionally, you can push the new version (i.e. the new tag) as well 
+#'      as the associated commit to a remote repository (default: \code{origin}).
+#'      This can be any valid Git remote repository, including a GitHub
+#'      repository
 #'      
 #'      Essentially, this function is a mere convenience wrapper for the 
-#'      actual workhorse function \code{\link[bumpr]{bump}} and its methods.
+#'      actual workhorse function \code{\link[bumpr]{bump}} and its 
+#'      method associated to class \code{Bumpr.GitVersion.s3}.
 #'    }
 #'    \item{\code{\link[bumpr]{bump}}: }{
 #'    

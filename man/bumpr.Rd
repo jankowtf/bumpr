@@ -3,7 +3,7 @@
 \name{bumpr}
 \alias{bumpr}
 \alias{bumpr-package}
-\title{Version bumping and more}
+\title{Easy systematic version bumping and more}
 \description{
 Makes it really easy to bump the version of an R package project placed
 under Git version control (see \url{http://git-scm.com}) to a new version
@@ -47,15 +47,6 @@ The core functions/methods of this package:
    \item{
    \strong{This package is really new. So please test it with
    repositories that are not crucial for your productive work!}
-   }
-   \item{
-   Currently assumes that you are \emph{also} using \emph{GitHub}
-   (see \url{https://github.com/}) for
-   hosting your remote repositories. However, this is just a temporary
-   "limitation" and this constraint will be relaxed in future releases.
-   Other remote repositories should work as well as long as they are
-   relying on HTTPS for authentication. However, this needs to be tested
-   more thouroughly yet.
    }
 }
 }

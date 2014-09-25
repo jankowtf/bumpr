@@ -24,7 +24,18 @@ generic function.
 \examples{
 \dontrun{
 
-bump(what = classr::createInstance(cl = "Bumpr.Git.S3"))
+##------------------------------------------------------------------------------
+## DISCLAIMER  
+##------------------------------------------------------------------------------
+
+## Please that with repositories that are not crucial for your productive work!
+
+## Make sure that you set your working directory to your package
+## project's root directory and that you've read and understood the 
+## assumptions that this function makes!
+    
+bump(what = classr::createInstance(cl = "Bumpr.RPackageVersion.S3"))
+bump(what = classr::createInstance(cl = "Bumpr.GitVersion.S3"))
 
 }
 }
@@ -36,7 +47,7 @@ Janko Thyson \email{janko.thyson@rappster.de}
 }
 \seealso{
 \code{
-  	\link[reactr]{bump-Bumpr.Git.S3-character-character-method}
+  	\link[reactr]{bump-Bumpr.GitVersion.S3-character-character-method}
 }
 }
 
