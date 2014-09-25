@@ -1,3 +1,10 @@
+# Version 0.3.2
+fatal: ambiguous argument 'v0.3.2...HEAD': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+
+----------
+
 # Version 0.3.1
  - alternative remote repositories
 
