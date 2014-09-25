@@ -14,7 +14,7 @@
 #' @template threedot
 #' @example inst/examples/bump.r
 #' @seealso \code{
-#'   	\link[reactr]{bump-Bumpr.Git.S3-character-character-method}
+#'   	\link[reactr]{bump-Bumpr.GitVersion.S3-character-character-method}
 #' }
 #' @template author
 #' @template references
@@ -37,17 +37,17 @@ setGeneric(
 )
 
 #' @title
-#' Bump Version
+#' Bump Package Version Number
 #'
 #' @description 
 #' See generic: \code{\link[reactr]{bump}}
 #'      
 #' @inheritParams bump
-#' @param what \code{\link{Bumpr.Git.S3}}.
+#' @param what \code{\link{Bumpr.RPackageVersion.S3}}.
 #' @param from \code{\link{missing}}.
 #' @param to \code{\link{missing}}.
 #' @return See method
-#'    \code{\link[reactr]{bump-character-character-Bumpr.Git.S3-method}}
+#'    \code{\link[reactr]{bump-character-character-Bumpr.RPackageVersion.S3-method}}
 #' @example inst/examples/bump.r
 #' @seealso \code{
 #'    \link[reactr]{bump}
@@ -58,7 +58,7 @@ setGeneric(
 setMethod(
   f = "bump", 
   signature = signature(
-    what = "Bumpr.Git.S3",
+    what = "Bumpr.RPackageVersion.S3",
     from = "missing",
     to = "missing"
   ), 
@@ -71,6 +71,9 @@ setMethod(
   ) {
     
   ## From and to //
+  if (!file.exists("DESCRIPTION")) {
+    stop("Not a valid R package project. Consult 'devtools' package")
+  }    
   from <- unname(read.dcf("DESCRIPTION", field = "Version")[1,1])
   if (is.na(from)) {
     stop("Invalid version in DESCRIPTION")
@@ -89,16 +92,25 @@ setMethod(
 )
 
 #' @title
-#' Get Value from Environment
+#' Bump Package Version Number
 #'
 #' @description 
 #' See generic: \code{\link[reactr]{bump}}
-#'   	 
+#'      
 #' @inheritParams bump
-#' @param what \code{\link{Bumpr.Git.S3}}.
+#' @param what \code{\link{Bumpr.RPackageVersion.S3}}.
 #' @param from \code{\link{character}}.
 #' @param to \code{\link{character}}.
-#' @return \code{\link{ANY}}. Variable value
+#' @param taken \code{\link{character}}.
+#'    Version numbers that are already taken. Usually, these are the Git 
+#'    tags that correspond to release versions. If used in combination 
+#'    with \code{\link{bump-Bumpr-Git.S3-character-character-method}}, this
+#'    information is automatically retrieved.
+#' @param desc_fields \code{\link{list}}.
+#'    Additional fields (besides \code{Version}) in DESCRIPTION file that 
+#'    should be updated with a version number bump. Specified as name-value pairs.
+#' @return \code{\link{list}}. (\code{old} and \code{new} package version or 
+#'    \code{list()} if the function exited before completing the bump.
 #' @example inst/examples/bump.r
 #' @seealso \code{
 #'    \link[reactr]{bump}
@@ -109,7 +121,7 @@ setMethod(
 setMethod(
   f = "bump", 
   signature = signature(
-    what = "Bumpr.Git.S3",
+    what = "Bumpr.RPackageVersion.S3",
     from = "character",
     to = "character"
   ), 
@@ -117,6 +129,236 @@ setMethod(
     what,
     from,
     to,
+    taken = character(),
+    desc_fields = list("Date" = NULL),
+    ...
+  ) {
+    
+  ## Private functions //
+  .processUserInput <- function(input, dflt = "yes") {
+    input <- ifelse(grepl("\\D", input), tolower(input), dflt)
+    if (grepl("[qQ]|Quit|quit|QUIT", input)) {
+      out <- NULL
+    } else if (grepl("[nN]|No|no|NO", input)) {
+      out <- FALSE
+    } else if (grepl("[yY]|Yes|yes|YES", input)) {
+      out <- TRUE
+    } else {
+      message(paste0("Invalid input: ", input))
+      out <- NULL
+    }
+  }   
+  .askUpdateDescriptionFile <- function(force = logical(), vsn) {
+    if (!length(force)) {
+      input <- readline(paste0("Updating version in DESCRIPTION file to '", 
+        vsn, "?' [(y)es | (n)o | (q)uit]: "))
+      out <- .processUserInput(input = input, dflt = "yes")
+    } else {
+      out <- force
+    }
+    return(out)
+  }    
+  .askNewVersionNumber <- function(taken) {
+    input <- readline(paste0("Enter a valid version number: [ENTER = ", vsn_sug, "] "))
+    input <- ifelse(grepl("\\D", input), input, NA)
+    if (is.na(input)){
+      message(paste0("Using suggested version: ", vsn_sug))
+      vsn_new <- vsn_sug
+    } else {
+      res <- ifelse(!grepl("^\\d+\\.\\d+(\\.\\d+){0,2}$", input), NA, input)
+      if (is.na(res)) {
+        msg <- c(
+          paste0("Invalid version number provided: ", input),
+          "(expecting {major}.{minor} or any one or both of .{patch} and .{dev}"
+        )
+        stop(paste(msg, collapse = "\n"))
+      }
+      vsn_new <- input
+    }
+    ## Check against taken version numbers //
+    while (vsn_new %in% taken) {
+      message(paste0("Version number '", vsn_new, "' already taken"))
+      message("Taken version numbers:")
+      message(paste(taken, collapse="\n"))
+      message("Choose another version number")
+      vsn_new <- .askNewVersionNumber(taken = taken)
+    }
+    vsn_new
+  }
+
+  ## Validate //
+  if (!file.exists("DESCRIPTION")) {
+    stop("Not a valid R package project. Consult 'devtools' package")
+  }
+  if (length(desc_fields)) {
+    invalid_fields <- setdiff(names(desc_fields), c("Date"))
+    if (length(invalid_fields)) {
+      msg <- c(
+        "Invalid additional DESCRIPTION fields specified:",
+        paste(invalid_fields, collapse = ", ")
+      )
+      stop(paste(msg, collapse="\n"))
+    }
+  }
+  
+  ## Rename //
+  vsn_old <- from
+  vsn_new <- to
+  
+  ## Read description file //
+  tmp <- read.dcf("DESCRIPTION")
+  desc <- as.list(tmp)
+  names(desc) <- colnames(tmp)  
+  
+  ## Taken versions //
+  if (length(taken)) {
+    message("Taken versions (last 10): ")
+    tmp <- sort(numeric_version(gsub("^v(?=\\d)", "", 
+      taken, perl = TRUE)))
+    if (length(tmp) > 10) {
+      tmp <- tmp[10:length(tmp)]
+    }
+    message(paste0(tmp, collapse="\n"))
+  }
+  
+  ## Ensure correct current version number //
+  if (!length(vsn_old)) {
+    vsn_old <- desc$Version
+  } else if (from != desc$Version) {
+    vsn_old <- desc$Version
+  }
+  message(paste0("Current version: ", vsn_old))
+  
+  if (!length(vsn_new)) {
+    ## Get suggested version //
+    vsn_1 <- unlist(strsplit(vsn_old, split = "\\."))
+    vsn_list <- list(major = character(), minor = character(), 
+                     patch = character(), dev = character())
+    for (ii in seq(along = vsn_1)) {
+      vsn_list[[ii]] <- vsn_1[ii]
+    }
+    vsn_vec <- unlist(vsn_list)
+    vsn_sug <- vsn_vec 
+    vsn_sug[length(vsn_vec)] <- as.numeric(vsn_sug[length(vsn_vec)]) + 1
+    vsn_sug <- paste(vsn_sug, collapse = ".")
+
+    message(paste0("Suggested version: ", vsn_sug))
+
+    ## New version //
+    vsn_new <- .askNewVersionNumber(taken = taken)
+  }
+  
+  ## Verify update of DESCRIPTION file //  
+  if (vsn_new != vsn_old) {
+    res <- .askUpdateDescriptionFile(vsn = vsn_new)
+    if (is.null(res) || !res) {
+      message("Quitting")
+      return(list())
+    }
+    ## Update DESCRIPTION file //
+    desc$Version <- vsn_new
+    if ("Date" %in% names(desc_fields)) {
+      desc$Date <- Sys.time()
+    }
+    
+    ## Write DESCRIPTION FILE
+    write.dcf(as.data.frame(desc), file = "DESCRIPTION")  
+  }
+
+  return(list(old = vsn_old, new = vsn_new))
+    
+  }
+)
+
+#' @title
+#' Bump Git Version Number
+#'
+#' @description 
+#' See generic: \code{\link[reactr]{bump}}
+#'      
+#' @inheritParams bump
+#' @param what \code{\link{Bumpr.GitVersion.S3}}.
+#' @param from \code{\link{missing}}.
+#' @param to \code{\link{missing}}.
+#' @param temp_credentials \code{\link{logical}}.
+#'    \code{TRUE}: delete HTTPS credentials after each bump;
+#'    \code{FALSE}: permanently store HTTPS credentials in \code{_netrc} file.
+#'    See details.   
+#' @return See method
+#'    \code{\link[reactr]{bump-character-character-Bumpr.GitVersion.S3-method}}
+#' @example inst/examples/bump.r
+#' @seealso \code{
+#'    \link[reactr]{bump}
+#' }
+#' @template author
+#' @template references
+#' @export
+setMethod(
+  f = "bump", 
+  signature = signature(
+    what = "Bumpr.GitVersion.S3",
+    from = "missing",
+    to = "missing"
+  ), 
+  definition = function(
+    what,
+    from,
+    to,
+    project = character(),
+    temp_credentials = FALSE,
+    ...
+  ) {
+    
+  ## From and to //
+  from <- unname(read.dcf("DESCRIPTION", field = "Version")[1,1])
+  if (is.na(from)) {
+    stop("Invalid version in DESCRIPTION")
+  }
+  to <- as.character(what$version)
+    
+  return(bump(
+    what = what,
+    from = from, 
+    to = to, 
+    project = project,
+    temp_credentials,
+    ...
+  ))
+    
+  }
+)
+
+#' @title
+#' Bump Git Version Number
+#'
+#' @description 
+#' See generic: \code{\link[reactr]{bump}}
+#'   	 
+#' @inheritParams bump
+#' @param what \code{\link{Bumpr.GitVersion.S3}}.
+#' @param from \code{\link{character}}.
+#' @param to \code{\link{character}}.
+#' @return \code{\link{list}}. (\code{old} and \code{new} package version or 
+#'    \code{list()} if the function exited before completing the bump.
+#' @example inst/examples/bump.r
+#' @seealso \code{
+#'    \link[reactr]{bump}
+#' }
+#' @template author
+#' @template references
+#' @export
+setMethod(
+  f = "bump", 
+  signature = signature(
+    what = "Bumpr.GitVersion.S3",
+    from = "character",
+    to = "character"
+  ), 
+  definition = function(
+    what,
+    from,
+    to,
+    project,
     temp_credentials,
     ...
   ) {
@@ -202,16 +444,6 @@ setMethod(
         message(paste0("Invalid input: ", input))
         out <- NULL
       } 
-    } else {
-      out <- force
-    }
-    return(out)
-  }
-  .ask_updateDescriptionFile <- function(force = logical(), vsn) {
-    if (!length(force)) {
-      input <- readline(paste0("Updating version in DESCRIPTION file to: '", 
-        vsn, "?' [(y)es | (n)o | (q)uit]: "))
-      out <- .processUserInput(input = input, dflt = "yes")
     } else {
       out <- force
     }
@@ -352,7 +584,7 @@ setMethod(
       if (is.na(input)) {
         message("Invalid input")
         message("Quitting")
-        return(character())
+        return(list())
       }
       url <- paste0("\"", input, "\"")
     }
@@ -383,7 +615,7 @@ setMethod(
     }
     res
   }
-#   .gitSetRemote()
+
   ##----------------------------------------------------------------------------
   ## Essential git stuff //
   ##----------------------------------------------------------------------------
@@ -402,7 +634,7 @@ setMethod(
     do_initial_commit <- .ask_gitDoInitialCommit()
     if (is.null(do_initial_commit) || !do_initial_commit) {
       message("You should take care of an initial commit")
-      return(character())
+      return(list())
     }
     
     ## Gitignore file //
@@ -410,7 +642,7 @@ setMethod(
       add_gitignore <- .ask_gitAddGitignoreFile()
       if (is.null(add_gitignore)) {
         message("Quiting")
-        return(character())
+        return(list())
       }
       if (add_gitignore) {
         .gitAddGitignoreFile()
@@ -421,7 +653,7 @@ setMethod(
     res <- .gitDoInitialCommit()
     if (is.null(res)) {
       message("Quiting")
-      return(character())
+      return(list())
     }
   }
 
@@ -434,7 +666,7 @@ setMethod(
     if (is.null(res)) {
       message("Make sure you set a remote repository in your local repository")
       message("Quiting")
-      return(character())
+      return(list())
     }
     .gitSetRemote()
   } 
@@ -443,78 +675,23 @@ setMethod(
   ## DESCRIPTION file and versions //
   ##----------------------------------------------------------------------------
   
-  ## Read description file //
-  tmp <- read.dcf("DESCRIPTION")
-  desc <- as.list(tmp)
-  names(desc) <- colnames(tmp)  
-  pkg_name <- desc$Package
-  
-  ## Ensure they are the same //
-  if (from != desc$Version) {
-    from <- desc$Version
-  }
-  
-  ## Get version //
-  vsn_0 <- from
-  vsn_1 <- unlist(strsplit(vsn_0, split = "\\."))
-  vsn_list <- list(major = character(), minor = character(), 
-                   patch = character(), dev = character())
-  for (ii in seq(along = vsn_1)) {
-    vsn_list[[ii]] <- vsn_1[ii]
-  }
-  vsn_vec <- unlist(vsn_list)
-  vsn_sug <- vsn_vec 
-  vsn_sug[length(vsn_vec)] <- as.numeric(vsn_sug[length(vsn_vec)]) + 1
-  vsn_sug <- paste(vsn_sug, collapse = ".")
-
-  message(paste0("Current version: ", vsn_0))
-  message(paste0("Suggested version: ", vsn_sug))
-
-  ## New version //
   git_tags <- system("git tag", intern = TRUE)
-  .getVersionInput <- function(git_tags) {
-    input <- readline(paste0("Enter a valid version number [", vsn_sug, "=ENTER]: "))
-    input <- ifelse(grepl("\\D", input), input, NA)
-    if (is.na(input)){
-      message(paste0("Using suggested version: ", vsn_sug))
-      vsn_new <- vsn_sug
-    } else {
-      res <- ifelse(!grepl("^\\d+\\.\\d+(\\.\\d+){0,2}$", input), NA, input)
-      if (is.na(res)) {
-        msg <- c(
-          paste0("Invalid version number provided: ", input),
-          "(expecting {major}.{minor} or any one or both of .{patch} and .{dev}"
-        )
-        stop(paste(msg, collapse = "\n"))
-      }
-      vsn_new <- input
-    }
-    ## Check against git tags //
-    while (paste0("v", vsn_new) %in% git_tags) {
-      message(paste0("Tag for version '", vsn_new, "' already exists"))
-      message("Git tags:")
-      message(paste(git_tags, collapse="\n"))
-      message("Choose another version")
-      vsn_new <- .getVersionInput(git_tags = git_tags)
-    }
-    vsn_new
-  }
-  vsn_new <- .getVersionInput(git_tags = git_tags)
-  
-  ## Verify update of DESCRIPTION file //  
-  res <- .ask_updateDescriptionFile(vsn = vsn_new)
-  if (is.null(res)) {
+  res <- bumpPackageVersion(taken = git_tags)
+  if (!length(res)) {
     message("Quitting")
-    return(character())
+    return(list())
+  }
+  vsn_new <- res$new
+  vsn_old <- res$old
+
+  idx <- which(grepl("^v\\d.*", git_tags))
+  if (length(idx)) {
+    git_vsns <- gsub("^v(?=\\d)", "",git_tags[idx], perl = TRUE)
+    if (!vsn_old %in% git_vsns) {
+      vsn_old <- max(sort(numeric_version(git_vsns)))
+    }
   }
 
-  ## Update DESCRIPTION FILE
-  desc$Version <- vsn_new
-  desc$Date <- Sys.time()
-  
-  ## Write DESCRIPTION FILE
-  write.dcf(as.data.frame(desc), file = "DESCRIPTION")
-  
   ##----------------------------------------------------------------------------
   ## Git //
   ##----------------------------------------------------------------------------
@@ -522,7 +699,7 @@ setMethod(
   res <- .ask_gitReadyToBumpVersion()
   if (is.null(res)) {
     message("Quitting")
-    return(character())
+    return(list())
   }
   
   ## Validated remote repository //
@@ -530,22 +707,22 @@ setMethod(
   git_repos <- .ask_gitValidatedRemoteName(git_remote = git_remote)
   if (is.null(git_repos)) {
     message("Quitting")
-    return(character())
+    return(list())
   }
 
   if (!.gitIsRemoteRepository(name = git_repos)) {
     if(is.null(.gitCheckForBranchesInRemote(name = git_repos))) {
       message("Quitting")
-      return(character())
+      return(list())
     }
     message(paste0("Not a git remote repository: ", git_repos))
     message("Make sure you have initialized either a bare repository or cloned an existing one")
     message("Quitting")
-    return(character())
+    return(list())
   }
   if(is.null(.gitCheckForBranchesInRemote(name = git_repos))) {
     message("Quitting")
-    return(character())
+    return(list())
   }
 
   ## Git user credentials //
@@ -557,7 +734,7 @@ setMethod(
       if (is.na(idx)) {
         message("Invalid 'user.email': ", input)
         message("Quitting")
-        return(character())
+        return(list())
       }
       git_user_email <- input 
     }
@@ -571,7 +748,7 @@ setMethod(
       if (is.na(idx)) {
         message("Invalid 'user.name': ", input)
         message("Quitting")
-        return(character())
+        return(list())
       }
       git_user_name <- input 
     }
@@ -587,7 +764,7 @@ setMethod(
 #     git_tag <- "\"Initial commit\""
     git_tag <- "\"\""
   } else {
-    git_tag <- paste0("\"v", vsn_0)
+    git_tag <- paste0("\"v", vsn_old)
   }
 
   tmp_new <- c(
@@ -608,7 +785,11 @@ setMethod(
     write("", file = "NEWS.md")
   }
   news_content <- c(
-    paste0("# CHANGES IN ", pkg_name, " VERSION ", vsn_new),
+    if (length(project)) {
+      paste0("# CHANGES IN ", project, " VERSION ", vsn_new)
+    } else {
+      paste0("# CHANGES IN VERSION ", vsn_new)
+    },
     "",
     "## NEW FEATURES",
     "",
@@ -640,7 +821,7 @@ setMethod(
     use_stored_creds <- .ask_useStoredCredentials()
     if (is.null(use_stored_creds)) {
       message("Quitting")
-      return(character())
+      return(list())
     }
   } else {
     use_stored_cred <- FALSE
@@ -659,7 +840,7 @@ setMethod(
         "Quitting"
       )
       message(paste(msg, collapse = "\n"))
-      return(character())
+      return(list())
     }
   } else {
     input <- readline("Username for 'https://github.com': ")
@@ -667,7 +848,7 @@ setMethod(
     if (is.na(idx)){
       message("Empty username")
       message("Quitting")
-      return(character())
+      return(list())
     }
     git_https_username <- input
   
@@ -677,7 +858,7 @@ setMethod(
     if (is.na(idx)){
       message("Empty password")
       message("Quitting")
-      return(character())
+      return(list())
     }
     git_https_password <- input
     cnt <- c(
@@ -718,7 +899,7 @@ setMethod(
     }
   )
   
-  return(vsn_new)
+  return(list(old = vsn_old, new = vsn_new))
     
   }
 )

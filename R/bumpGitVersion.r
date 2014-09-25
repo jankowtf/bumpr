@@ -1,16 +1,40 @@
 #' @title
-#' Bump Git Version
+#' Bump Git Version Number
 #'
 #' @description 
-#' Bumps the version of a git project to the next version.
+#' Bumps an R package project to the next Git version number.
 #' 
 #' @details
-#' Asumptions:
+#'      Performs all sorts of Git-related checks and tasks in order to take care
+#'      that everything necessary is done that is related to bumping a project
+#'      to a higher version number.
+#'       
+#'      This provided version number is transferred to \code{v{version-number}},
+#'      e.g. \code{v0.1.1}, and added as a Git tag. 
+
+#'      All commits linked to the \emph{previous} version/tag are queried and added
+#'      to file \code{CHANGES.md}. Additionally, a template section to state the 
+#'      changes in the \emph{new} version is added in file \code{NEWS.md}.
+#'      
+#'      Files \code{DESCRIPTION} and \code{CHANGES.md} are automatically 
+#'      commited to signal the version bump.
+#'      
+#'      Optionally, you can push the new version (i.e. the new tag) as well 
+#'      as the associated commit to a remote repository (default: \code{origin}).
+#'      This can be any valid Git remote repository, including a GitHub
+#'      repository
+#'      
+#'      Essentially, this function is a mere convenience wrapper for the 
+#'      actual workhorse function \code{\link[bumpr]{bump}} and its 
+#'      method associated to class \code{Bumpr.GitVersion.s3}.
+#' 
+#' @section Asumptions:
 #' \itemize{
 #'   \item{\strong{R package project}: } {
 #'   
 #'      You are using this function to systematically manage the versions 
-#'      of an R package project.
+#'      of an R package project that follows the official conventions
+#'      (see \url{http://cran.r-project.org/doc/manuals/r-release/R-exts.html}
 #'   }
 #'   \item{\strong{Local Git repository}: }{
 #'   
@@ -27,7 +51,9 @@
 #'      Additional remote repositories with different 
 #'      names are not a problem. You can choose them interactively. 
 #'      (Run \code{git remote} in your git shell to find out about your 
-#'      remote repositories)
+#'      remote repositories). 
+#'      
+#'      GitHub repositories are supported
 #'   }
 #'   \item{\strong{HTTP credentials}: }{
 #'   
@@ -67,6 +93,8 @@
 #'   }
 #' }
 #' 
+#' @param project \code{\link{character}}.
+#'    Name of the project under Git version control.
 #' @param temp_credentials \code{\link{logical}}.
 #'    \code{TRUE}: delete HTTPS credentials after each bump;
 #'    \code{FALSE}: permanently store HTTPS credentials in \code{_netrc} file.
@@ -76,7 +104,7 @@
 #' @template threedot
 #' @example inst/examples/bumpGitVersion.r
 #' @seealso \code{
-#'   	\link[reactr]{bumpGitVersion-Bumpr.Git.S3-method}
+#'   	\link[reactr]{bumpGitVersion-Bumpr.GitVersion.S3-method}
 #' }
 #' @template author
 #' @template references
@@ -87,6 +115,7 @@ setGeneric(
     ".ns"
   ),
   def = function(
+    project = character(),
     temp_credentials = FALSE,
     .ns = NULL,
     ...
@@ -96,15 +125,15 @@ setGeneric(
 )
 
 #' @title
-#' Bump Git Version
+#' Bump Git Version Number
 #'
 #' @description 
 #' See generic: \code{\link[reactr]{bumpGitVersion}}
 #'      
 #' @inheritParams bumpGitVersion
-#' @param .ns \code{\link{Bumpr.Git.S3}}.
+#' @param .ns \code{\link{Bumpr.GitVersion.S3}}.
 #' @return See method
-#'    \code{\link[reactr]{bumpGitVersion-Bumpr.Git.S3-method}}
+#'    \code{\link[reactr]{bumpGitVersion-Bumpr.GitVersion.S3-method}}
 #' @example inst/examples/bumpGitVersion.r
 #' @seealso \code{
 #'    \link[reactr]{bumpGitVersion}
@@ -119,12 +148,13 @@ setMethod(
     .ns = "missing"
   ), 
   definition = function(
+    project,
     temp_credentials,
     .ns,
     ...
   ) {
     
-  .ns <- classr::createInstance(cl = "Bumpr.Git.S3", 
+  .ns <- classr::createInstance(cl = "Bumpr.GitVersion.S3", 
     obj = list(
       version = character(),
       git_repos = "origin",
@@ -134,6 +164,7 @@ setMethod(
     )
   )    
   return(bumpGitVersion(
+    project = project,
     temp_credentials = temp_credentials,
     .ns = .ns,
     ...
@@ -149,14 +180,15 @@ setMethod(
 )
 
 #' @title
-#' Bump Git Version
+#' Bump Git Version Number
 #'
 #' @description 
 #' See generic: \code{\link[reactr]{bumpGitVersion}}
 #'   	 
 #' @inheritParams bumpGitVersion
-#' @param .ns \code{\link{Bumpr.Git.S3}}.
-#' @return \code{\link{character}}. Git version the project has been bumped to.
+#' @param .ns \code{\link{Bumpr.GitVersion.S3}}.
+#' @return \code{\link{character}}. New Git version that the project has 
+#'    been bumped to.
 #' @example inst/examples/bumpGitVersion.r
 #' @seealso \code{
 #'    \link[reactr]{bumpGitVersion}
@@ -167,15 +199,21 @@ setMethod(
 setMethod(
   f = "bumpGitVersion", 
   signature = signature(
-    .ns = "Bumpr.Git.S3"
+    .ns = "Bumpr.GitVersion.S3"
   ), 
   definition = function(
+    project,
     temp_credentials,
     .ns,
     ...
   ) {
 
-  return(bump(what = .ns, temp_credentials = temp_credentials, ...))
+  return(bump(
+    what = .ns, 
+    project = project,
+    temp_credentials = temp_credentials, 
+    ...
+  ))
     
   }
 )

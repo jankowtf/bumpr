@@ -2,6 +2,8 @@
 
 export(bump)
 export(bumpGitVersion)
+export(bumpPackageVersion)
 exportMethods(bump)
 exportMethods(bumpGitVersion)
+exportMethods(bumpPackageVersion)
 import(classr)
