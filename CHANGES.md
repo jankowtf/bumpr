@@ -1,3 +1,9 @@
+# Version 0.3.4
+ - Merge branch 'feature-refactorBumpGitVersion' into develop
+ - fixed minor bug with identifying old git tags
+
+----------
+
 # Version 0.3.3
  - implemented feature `refactorBumpGitVersion`
 
