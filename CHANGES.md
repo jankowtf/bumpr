@@ -1,3 +1,8 @@
+# Version 0.3.3
+ - implemented feature `refactorBumpGitVersion`
+
+----------
+
 # Version 0.3.2
 fatal: ambiguous argument 'v0.3.2...HEAD': unknown revision or path not in the working tree.
 Use '--' to separate paths from revisions, like this:
