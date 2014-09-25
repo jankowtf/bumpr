@@ -1,8 +1,8 @@
 #' @title
-#' Bump Git Version
+#' Bump Git Version Number
 #'
 #' @description 
-#' Bumps the version of a git project to the next version.
+#' Bumps an R package project to the next Git version number.
 #' 
 #' @details
 #' Asumptions:
@@ -10,7 +10,8 @@
 #'   \item{\strong{R package project}: } {
 #'   
 #'      You are using this function to systematically manage the versions 
-#'      of an R package project.
+#'      of an R package project that follows the official conventions
+#'      (see \url{http://cran.r-project.org/doc/manuals/r-release/R-exts.html}
 #'   }
 #'   \item{\strong{Local Git repository}: }{
 #'   
@@ -96,7 +97,7 @@ setGeneric(
 )
 
 #' @title
-#' Bump Git Version
+#' Bump Git Version Number
 #'
 #' @description 
 #' See generic: \code{\link[reactr]{bumpGitVersion}}
@@ -149,14 +150,15 @@ setMethod(
 )
 
 #' @title
-#' Bump Git Version
+#' Bump Git Version Number
 #'
 #' @description 
 #' See generic: \code{\link[reactr]{bumpGitVersion}}
 #'   	 
 #' @inheritParams bumpGitVersion
 #' @param .ns \code{\link{Bumpr.Git.S3}}.
-#' @return \code{\link{character}}. Git version the project has been bumped to.
+#' @return \code{\link{character}}. New Git version that the project has 
+#'    been bumped to.
 #' @example inst/examples/bumpGitVersion.r
 #' @seealso \code{
 #'    \link[reactr]{bumpGitVersion}
