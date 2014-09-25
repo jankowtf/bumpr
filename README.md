@@ -14,82 +14,24 @@ require("bumpr")
 
 ## Quick intro
 
-### Assumptions
+See `?bumpr` for the overall purpose of this package.
 
-Please note the following assumptions that the current main function, `bumpGitVersion()`, makes:
+## Bump R package version (no Git required)
 
-
-1. **R package project:**
-
-   You are using this function to systematically manage the versions
-of an *R package* project.
-
-2. **Local Git repository:**
-
-   Your package project is under Git version control, i.e. a local Git
-repository has been created in your package project's root directory.
-
-  Look for directory `.git` in your package project's root directory.
-
-3. **Remote Git repository:**
-
-   At the very least one remote repository with name `origin` has been defined for your local Git repository.
-
-    Additional remote repositories with different names are not a problem. You can choose them interactively. Run `git remote` in your git shell to find out about your remote repositories
-
-4. **HTTP credentials:**
-
-   If you want to push to a GitHub repository or any other remote repository that relies on HTTPS for authentication, the function assumes that you **are willing to store (at least temporarily) your HTTP credentials in this file**:
-
-  ```
-  file.path(Sys.getenv("HOME"), "_netrc")
-  ```
-
-  Currently only tested for GitHub repositories as this is the location where the API seems to expect HTTP credentials when pushing to such a repository.
-
-  **However, You can choose to destroy this file after each bump by setting**:
-
-  ```
-  temp_credentials = TRUE
-  ```
-
-  I will try to find better ways of handling HTTPS credentials in future releases.
-
-### Recommendation
-
-- Initial commit
-
-  Make sure that you already issued an initial commit for your *local*
-repository and pushed this to your remote repository.
-The function does have built-in checks for very early stages of a
-Git repository (i.e. no commits yet, no `.gitignore` file yet,
-no branches on the remote repository yet), but I would not consider
-this completely stable and tested yet. If you want to check out what
-the function does in such early stages, I would recommend testing it
-with a toy Git/GitHub repository first
-
-### See version bumping in action
-
-That being said, have fun with easy version bumping and let me know what you
-think.
-
-Bumping from current version `0.1.3` (retrieved from `DESCRIPTION`) to a new version.
+Bumping from current version `0.3.2` (retrieved from `DESCRIPTION`) to a new version
 
 ```
 bumpGitVersion()
-# Current version: 0.3
-# Suggested version: 0.4
-# Enter a valid version number [0.4=ENTER]: 0.3.1
-# Updating version in DESCRIPTION file to: '0.3.1?' [(y)es | (n)o | (q)uit]: 
-# Ready to bump version in git?' [(y)es | (n)o | (q)uit]: 
-# Name of remote git repository (hit ENTER for default = 'origin'): 
-# Using remote git repository: origin
-# Use stored HTTPS credentials (no = type them)? [(y)es | (n)o | (q)uit ]: 
-# 
-# [release-v0.3.1 a9d0a5c] Version bump to 0.3.1 2 files changed, 7 insertions(+), 2 deletions(-)
-# 
-# To https://github.com/Rappster/bumpr * [new tag]         v0.3.1 -> v0.3.1
+# Current version: 0.3.1
+# Suggested version: 0.3.2
+# Enter a valid version number: [ENTER = 0.3.2] 
+# Using suggested version: 0.3.2
+# Updating version in DESCRIPTION file to '0.3.2?' [(y)es | (n)o | (q)uit]: 
+# $old
 # [1] "0.3.1"
+# 
+# $new
+# [1] "0.3.2"
 ```
 
 #### Explanation what just happened
@@ -102,21 +44,83 @@ it complies with the [semtatic versioning conventions](http://semver.org/).
 
 - You are then asked if you want to update your `DESCRIPTION` file (fields `Version` and `Date`).
 
+- The function returns the old and new version as a `list` string. If
+along the way something when wrong (wrong user input) or when you wanted to quit on purpose, the function returns `list()`.
+
+## Bump Git version 
+
+**Please read the assumptions and recommendations stated in `?bumpGitVersion()`
+before you are running this function!**
+
+As `bumpPackageVersion()` is called inside `bumpGitVersion()` and we already
+ran `bumpPackageVersion()` explicitly, we'll stay at the same (new) version
+number when prompted. If you just run `bumpGitVersion()` make your choices
+accordingly.
+
+Recommended way of using this function when version-controlling your package
+project with Git: run `bumpGitVersion()` **without** previously running
+`bumpPackageVersion()`
+
+```
+bumpGitVersion()
+# Taken versions (last 10): 
+# 0.1.0.12
+# 0.1.0.13
+# 0.1.0.14
+# 0.1.1
+# 0.1.3
+# 0.2
+# 0.2.1
+# 0.2.2
+# 0.2.3
+# 0.2.4
+# 0.3
+# 0.3.1
+# Current version: 0.3.2
+# Suggested version: 0.3.3
+# Enter a valid version number: [ENTER = 0.3.3] 0.3.2
+# Ready to bump version in git?' [(y)es | (n)o | (q)uit]: 
+# Name of remote git repository (hit ENTER for default = 'origin'): 
+# Using remote git repository: origin
+# Use stored HTTPS credentials (no = type them)? [(y)es | (n)o | (q)uit ]: 
+# 
+# [feature-refactorBumpGitVersion 687df71] Version bump to 0.3.2 2 files changed, 13 insertions(+), 5 deletions(-)
+# 
+# To https://github.com/Rappster/bumpr * [new tag]         v0.3.2 -> v0.3.2
+# $old
+# [1] "0.3.2"
+# 
+# $new
+# [1] "0.3.2"
+```
+
+#### Explanation what just happened
+
+- Consider:
+  - If you have **not** run `bumpPackageVersion()` prior to calling this 
+    function (the recommended way if you are version-controlling your package
+    project with Git), the simply follow the instructions.
+  - If you **have** run `bumpPackageVersion()` explicitly prior to calling this
+    function, then re-enter the **OLD** version (unless you want to bump the package version number yet again).
+
 - Then a last check before commencing with Git/GitHub related stuff is made.
 
-- Based on the specification of your remote repository (**note that this must
+- Based on the specification of your remote repository (**note that this should
 have been defined prior to running `bumpGitVersion()`**) a new commit
-is issued and **after** that a new tag corresponding to `v<new-version>` (e.g. `v0.2`) is created so **future** commits are automatically tagged with it.
+is issued and **after** that a new tag corresponding to `v<new-version>` (e.g. `v0.3.2`) is created so **future** commits are automatically tagged with it.
 
-- What also happens is that the file `CHANGES.md` is updated.
+- What also happens is that the files `CHANGES.md` and \code{NEWS.md} are updated
+  as described in `?bumpr`.
 
 - Before pushing to the remote (GitHub) repository, you are asked how you'd like
 to specify your HTTP credentials: either by looking up the information in file
-`_netrc` in your `HOME` directory or by typing it into the console.
+`_netrc` in your `HOME` directory or by typing it into the console. 
 
   This is also where argument `temp_credentials` comes into play: when `TRUE`
   the function makes sure that file `_netrc` is deleted after the version bump is
   finished.
 
-- The function finally returns the new version as a `character` string. If
-along the way something when wrong (wrong user input) or when you wanted to exit on purpose, the function returns `character()`.
+  If your remote repository does not require HTTPS authentication, simply hit `ENTER`.
+
+- The function returns the old and new version as a `list` string. If
+along the way something when wrong (wrong user input) or when you wanted to quit on purpose, the function returns `list()`.

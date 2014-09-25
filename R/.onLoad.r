@@ -9,7 +9,7 @@
 #' @template references
 #' @export .onLoad
 .onLoad <- function(libname, pkgname) {
-    setOldClass("Bumpr.Git.S3", 
+    setOldClass("Bumpr.GitVersion.S3", 
       prototype = list(
         version = "0.1.0",
         git_repos_name = "origin",
@@ -18,5 +18,5 @@
         user_name = character()
       )
     )
-    setOldClass("Bumpr.RPackage.S3")
+    setOldClass("Bumpr.RPackageVersion.S3")
 }
