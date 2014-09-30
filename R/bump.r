@@ -178,9 +178,9 @@ setMethod(
     ## Check against taken version numbers //
     while (vsn_new %in% taken) {
       message(paste0("Version number '", vsn_new, "' already taken"))
-      message("Taken version numbers:")
+      message("Taken version numbers (last 10):")
       if (length(taken) > 10) {
-        message(paste(taken[10:length(taken)], collapse="\n"))
+        message(paste(taken[(length(taken) - 10):length(taken)], collapse="\n"))
       } else {
         message(paste(taken, collapse="\n"))
       }
@@ -216,11 +216,10 @@ setMethod(
   
   ## Taken versions //
   if (length(taken)) {
-    message("Taken versions (last 10): ")
-    tmp <- sort(numeric_version(gsub("^v(?=\\d)", "", 
-      taken, perl = TRUE)))
+    message("Taken versions numbers (last 10): ")
+    tmp <- sort(numeric_version(gsub("^v(?=\\d)", "", taken, perl = TRUE)))
     if (length(tmp) > 10) {
-      tmp <- tmp[10:length(tmp)]
+      tmp <- tmp[(length(tmp) - 10):length(tmp)]
     }
     message(paste0(tmp, collapse="\n"))
   }
