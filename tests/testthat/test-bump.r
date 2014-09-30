@@ -4,7 +4,7 @@ test_that("bump", {
   skip("interactive only")
   
   ## Class instance //    
-  ns Bumpr.GitVersion.S3reateInstance(cl = "Bumpr.Git.S3", 
+  Bumpr.GitVersion.S3reateInstance(cl = "Bumpr.Git.S3", 
     obj = list(
       version = character(),
       git_repos = "origin",

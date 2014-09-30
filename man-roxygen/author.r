@@ -1,1 +1,1 @@
-#' @author Janko Thyson \email{janko.thyson@@rappster.de}
+#' @author Janko Thyson \email{janko.thyson@gmail.com}

@@ -1,3 +1,27 @@
+# Version 0.3.5
+ - Fixes #5
+ - Cleanup commit
+ - Merge branch 'release-0.3.4' into develop
+ - Updated `README.md`
+
+----------
+
+# Version 0.3.5
+ - Fixes #5
+ - Cleanup commit
+ - Merge branch 'release-0.3.4' into develop
+ - Updated `README.md`
+
+----------
+
+# Version 0.3.5
+ - Fixes #5
+ - Cleanup commit
+ - Merge branch 'release-0.3.4' into develop
+ - Updated `README.md`
+
+----------
+
 # Version 0.3.4
  - Merge branch 'feature-refactorBumpGitVersion' into develop
  - fixed minor bug with identifying old git tags
