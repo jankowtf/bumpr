@@ -287,6 +287,11 @@ setMethod(
 #'    \code{TRUE}: delete HTTPS credentials after each bump;
 #'    \code{FALSE}: permanently store HTTPS credentials in \code{_netrc} file.
 #'    See details.   
+#' @param pat \code{\link{logical}}.
+#'    \code{TRUE}: use a personal authentication token as stored in the system
+#'    environment variable \code{GITHUB_PAT};
+#'    \code{FALSE}: rely on basic HTTPS authentication (username and password
+#'    including the use of a (temporary) credentials file \code{_netrc}).
 #' @return See method
 #'    \code{\link[reactr]{bump-character-character-Bumpr.GitVersion.S3-method}}
 #' @example inst/examples/bump.r
@@ -309,6 +314,7 @@ setMethod(
     to,
     project = character(),
     temp_credentials = FALSE,
+    pat = TRUE,
     ...
   ) {
     
@@ -324,7 +330,8 @@ setMethod(
     from = from, 
     to = to, 
     project = project,
-    temp_credentials,
+    temp_credentials = temp_credentials,
+    pat = pat,
     ...
   ))
     
@@ -363,6 +370,7 @@ setMethod(
     to,
     project,
     temp_credentials,
+    pat,
     ...
   ) {
     
@@ -819,61 +827,76 @@ setMethod(
   }
   path_netrc <- file.path(sys_home, "_netrc")
   path_netrc_tmp <- gsub("_netrc", "_netrc_0", path_netrc)
-  
-  if (!temp_credentials) {
-    use_stored_creds <- .ask_useStoredCredentials()
-    if (is.null(use_stored_creds)) {
-      message("Quitting")
-      return(list())
+
+  if (!pat) {
+    if (!temp_credentials) {
+      use_stored_creds <- .ask_useStoredCredentials()
+      if (is.null(use_stored_creds)) {
+        message("Quitting")
+        return(list())
+      }
+    } else {
+      use_stored_cred <- FALSE
     }
-  } else {
-    use_stored_cred <- FALSE
-  }
-  
-  if (use_stored_creds) {
-    if (!file.exists(path_netrc)) {
-      msg <- c(
-        "Missing file '_netrc' with HTTPS credentials",
-        paste0("Create that file in: ", sys_home),
-        "Make sure it contains the following content:",
-        "  machine github.com",
-        "  login <your-username>",
-        "  password <your-password>",
-        "  protocol https",
-        "Quitting"
+    
+    if (use_stored_creds) {
+      if (!file.exists(path_netrc)) {
+        msg <- c(
+          "Missing file '_netrc' with HTTPS credentials",
+          paste0("Create that file in: ", sys_home),
+          "Make sure it contains the following content:",
+          "  machine github.com",
+          "  login <your-username>",
+          "  password <your-password>",
+          "  protocol https",
+          "Quitting"
+        )
+        message(paste(msg, collapse = "\n"))
+        return(list())
+      }
+    } else {
+      input <- readline("Username for 'https://github.com': ")
+      idx <- ifelse(grepl("\\D", input), input, NA)
+      if (is.na(idx)){
+        message("Empty username")
+        message("Quitting")
+        return(list())
+      }
+      git_https_username <- input
+    
+      input <- readline(paste0("Password for 'https://", 
+        git_user_email, "@github.com': "))
+      idx <- ifelse(grepl("\\D", input), input, NA)
+      if (is.na(idx)){
+        message("Empty password")
+        message("Quitting")
+        return(list())
+      }
+      git_https_password <- input
+      cnt <- c(
+        "machine github.com",
+        paste0("login ", git_https_username),
+        paste0("password ", git_https_password),
+        "protocol https"
       )
-      message(paste(msg, collapse = "\n"))
-      return(list())
+      if (file.exists(path_netrc)) {
+        file.rename(from = path_netrc, to = path_netrc_tmp)
+      }
+      write(cnt, file = path_netrc)
     }
   } else {
-    input <- readline("Username for 'https://github.com': ")
-    idx <- ifelse(grepl("\\D", input), input, NA)
-    if (is.na(idx)){
-      message("Empty username")
-      message("Quitting")
-      return(list())
+    git_https_username <- devtools::github_pat()
+    if (is.null(git_https_username)) {
+      msg <- c(
+        "No personal access token available",
+        "Please provide via environment variable 'GITHUB_PAT'"
+      )
+      stop(paste(msg, collapse = "\n"))
     }
-    git_https_username <- input
-  
-    input <- readline(paste0("Password for 'https://", 
-      git_user_email, "@github.com': "))
-    idx <- ifelse(grepl("\\D", input), input, NA)
-    if (is.na(idx)){
-      message("Empty password")
-      message("Quitting")
-      return(list())
+    git_https_password <- ""
+    if (grepl("^https://", git_repos)) {
+      git_repos <- gsub("https://", paste0("https://", git_https_username, "@"), git_repos)  
     }
-    git_https_password <- input
-    cnt <- c(
-      "machine github.com",
-      paste0("login ", git_https_username),
-      paste0("password ", git_https_password),
-      "protocol https"
-    )
-    if (file.exists(path_netrc)) {
-      file.rename(from = path_netrc, to = path_netrc_tmp)
-    }
-    write(cnt, file = path_netrc)
   }
 
   ## Git commands //
