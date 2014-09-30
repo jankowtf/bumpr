@@ -1,4 +1,4 @@
-bumpr (v0.3.4)
+bumpr (v0.3.6)
 ======
 
 Easy systematic version bumping and more
@@ -19,13 +19,13 @@ See `?bumpr` for the overall purpose of this package.
 ## Bump R package version (no Git required)
 
 Retrieves the current package version from the `DESCRIPTION` file,
-suggest the next version number and prompts the user for a new 
+suggests the next version number and prompts the user for a new 
 version number. After asking permission, the new version number is 
-written to the `DESCRIPTION` file along with additional
+written to the `DESCRIPTION` file along with the additional
 information provided via `desc_fields`. Currently, only 
 an element of form `Date = NULL` is allowed/used, which 
 corresponds to also updating the `Date` field of the 
-`DESCRIPTION` file. `desc_fields = list()` suppresses that.
+`DESCRIPTION` file to the current system time. `desc_fields = list()` suppresses that.
 
 ### Example
 
@@ -55,7 +55,7 @@ it complies with the [semtatic versioning conventions](http://semver.org/).
 
 - You are then asked if you want to update your `DESCRIPTION` file (fields `Version` and `Date`).
 
-- The function returns the old and new version as a `list` string. If
+- The function returns the old and new version as a `list`. If
 along the way something when wrong (wrong user input) or when you wanted to quit on purpose, the function returns `list()`.
 
 ## Bump Git version 
@@ -64,7 +64,7 @@ Performs all sorts of Git-related checks and tasks in order to take care
 that everything necessary is done that is related to bumping a project
 to a higher version number.
  
-This provided version number is transferred to `v{version-number``,
+This provided version number is transferred to `v{version-number}`,
 e.g. `v0.1.1`, and added as a Git tag. 
 
 All commits linked to the *previous* version/tag are queried and added
@@ -95,10 +95,6 @@ project with Git: run `bumpGitVersion()` **without** previously running
 ```
 bumpGitVersion()
 # Taken versions (last 10): 
-# 0.1.0.12
-# 0.1.0.13
-# 0.1.0.14
-# 0.1.1
 # 0.1.3
 # 0.2
 # 0.2.1
@@ -141,7 +137,7 @@ bumpGitVersion()
 
 - Based on the specification of your remote repository (**note that this should
 have been defined prior to running `bumpGitVersion()`**) a new commit
-is issued and **after** that a new tag corresponding to `v<new-version>` (e.g. `v0.3.4`) is created so **future** commits are automatically tagged with it.
+is issued and **after** that a new tag corresponding to `v{new-version}` (e.g. `v0.3.4`) is created so **future** commits are automatically tagged with it.
 
 - What also happens is that the files `CHANGES.md` and `NEWS.md` are updated
   as described in `?bumpr`.
@@ -155,6 +151,8 @@ to specify your HTTP credentials: either by looking up the information in file
   finished.
 
   If your remote repository does not require HTTPS authentication, simply hit `ENTER`.
+
+- As of version `0.3.6`, you can also use a personal authentication token (PAT), also known as *OAuth* token.
 
 - The function returns the old and new version as a `list` string. If
 along the way something when wrong (wrong user input) or when you wanted to quit on purpose, the function returns `list()`.
