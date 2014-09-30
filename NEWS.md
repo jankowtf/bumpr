@@ -1,3 +1,36 @@
+# CHANGES IN VERSION 0.3.6
+
+## NEW FEATURES
+
+- added: argument `pat` to specify personal authentication tokens in `bump()`.
+  The token needs to be set via system environment variable `GITHUB_PAT`. This closed #1.
+
+## BUG FIXES
+
+- Fixed bugs #5
+
+## MAJOR CHANGES
+
+## MINOR CHANGES
+
+## MISC
+
+-----
+
+# CHANGES IN VERSION 0.3.6
+
+## NEW FEATURES
+
+## BUG FIXES
+
+## MAJOR CHANGES
+
+## MINOR CHANGES
+
+## MISC
+
+-----
+
 # CHANGES IN VERSION 0.3.5
 
 ## NEW FEATURES

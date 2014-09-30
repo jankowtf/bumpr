@@ -1,3 +1,17 @@
+# Version 0.3.6
+ - Merge branch 'feature-pat' into develop
+ - Fixes #1
+ - Bumped to version 0.3.5
+
+----------
+
+# Version 0.3.6
+ - Merge branch 'feature-pat' into develop
+ - Fixes #1
+ - Bumped to version 0.3.5
+
+----------
+
 # Version 0.3.5
  - Fixes #5
  - Cleanup commit
