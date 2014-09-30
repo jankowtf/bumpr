@@ -179,7 +179,11 @@ setMethod(
     while (vsn_new %in% taken) {
       message(paste0("Version number '", vsn_new, "' already taken"))
       message("Taken version numbers:")
-      message(paste(taken, collapse="\n"))
+      if (length(taken) > 10) {
+        message(paste(taken[10:length(taken)], collapse="\n"))
+      } else {
+        message(paste(taken, collapse="\n"))
+      }
       message("Choose another version number")
       vsn_new <- .askNewVersionNumber(taken = taken)
     }
