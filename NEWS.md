@@ -1,3 +1,20 @@
+# CHANGES IN VERSION 0.3.10
+
+## NEW FEATURES
+
+## BUG FIXES
+
+- fixed: handling of `user.name`
+- fixed: check if section for new version already exists in `NEWS.md`
+
+## MAJOR CHANGES
+
+## MINOR CHANGES
+
+## MISC
+
+-----
+
 # CHANGES IN VERSION 0.3.9
 
 ## NEW FEATURES

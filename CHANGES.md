@@ -1,3 +1,14 @@
+# Version 0.3.10
+ - Merge branch 'master' into develop
+ - Update README.md
+ - Merge branch 'develop'
+ - Merge branch 'release-0.3.7' into develop
+ - Merge branch 'release-0.3.9'
+ - Cleanup commit due to commit on wrong branch
+ - fixes #9 fixes #10
+
+----------
+
 # Version 0.3.9
 
 ----------
