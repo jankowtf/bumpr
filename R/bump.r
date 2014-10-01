@@ -407,6 +407,24 @@ setMethod(
     }
     return(out)
   }  
+  .ask_gitGlobalOrLocalEmail <- function(force = logical()) {
+    if (!length(force)) {
+      input <- readline("Git user information ('user.email' and 'user.name'): global or local? [(g)lobal | (l)ocal | (q)uit ]: ")
+      if (grepl("[qQ]|quit|Quit|QUIT", input)) {
+        out <- NULL
+      } else if (grepl("[gG]|global|Global|GLOBAL", input)) {
+        out <- "global"
+      } else if (grepl("[lL]|local|Local|LOCAL", input)) {
+        out <- "local"
+      } else {
+        message(paste0("Invalid input: ", input))
+        out <- NULL
+      }
+    } else {
+      out <- force
+    }
+    return(out)
+  }
   .ask_gitSetRemote <- function(force = logical()) {
     if (!length(force)) {
       input <- readline("Would you like to add a remote repository now? [(y)es | (n)o | (q)uit ]: ")
@@ -737,33 +755,67 @@ setMethod(
   }
 
   ## Git user credentials //
-  git_user_email <- suppressWarnings(system("git config user.email", intern = TRUE))
+  git_global_or_local <- .ask_gitGlobalOrLocalEmail()
+  if (!length(git_global_or_local)) {
+    message("Quitting")
+    return(list())
+  }
+  if (git_global_or_local == "global") {
+    git_cmd_useremail <- "git config --global user.email"
+    git_cmd_username <- "git config --global user.name"
+  } else if (git_global_or_local == "local")
+    git_cmd_useremail <- "git config user.email"
+    git_cmd_username <- "git config user.name"
+  }
+  git_user_email <- suppressWarnings(system(git_cmd_useremail, intern = TRUE))
   if (!length(git_user_email)) {
     if (!length(what$user_email)) {
-      input <- readline("git user.email: ")
+      if (git_global_or_local == "global") {
+        input <- readline("Provide '--global user.email': ")
+      } else if (git_global_or_local == "local") {
+        input <- readline("Provide 'user.email': ")
+      }
       idx <- ifelse(grepl("\\D", input), input, NA)
       if (is.na(idx)) {
-        message("Invalid 'user.email': ", input)
+        message("Invalid input: ", input)
         message("Quitting")
         return(list())
       }
       git_user_email <- input 
+    } else {
+      git_user_email <- what$user_email 
     }
-    system(paste0("git config user.email \"", what$user_email, "\""), intern = TRUE)  
+    if (git_global_or_local == "global") {
+      git_cmd_useremail <- paste0("git config --global user.email \"", git_user_email, "\"")
+    } else if (git_global_or_local == "local")
+      git_cmd_useremail <- paste0("git config user.email \"", git_user_email, "\"")
+    }
+    system(git_cmd_useremail, intern = TRUE)  
   }
   git_user_name <- suppressWarnings(system("git config user.name", intern = TRUE))
   if (!length(git_user_name)) {
     if (!length(what$user_name)) {
-      input <- readline("git user.name: ")
+      if (git_global_or_local == "global") {
+        input <- readline("Provide '--global user.name': ")
+      } else if (git_global_or_local == "local") {
+        input <- readline("Provide 'user.name': ")
+      }
       idx <- ifelse(grepl("\\D", input), input, NA)
       if (is.na(idx)) {
-        message("Invalid 'user.name': ", input)
+        message("Invalid input: ", input)
         message("Quitting")
         return(list())
       }
       git_user_name <- input 
+    } else {
+      git_user_name <- what$user_name
     }
-    system(paste0("git config user.name \"", what$user_name, "\""), intern = TRUE)  
+    if (git_global_or_local == "global") {
+      git_cmd_username <- paste0("git config --global user.name \"", git_user_name, "\"")
+    } else if (git_global_or_local == "local")
+      git_cmd_username <- paste0("git config user.name \"", git_user_name, "\"")
+    }
+    system(git_user_name, intern = TRUE)  
   }
 
   ## CHANGES //
