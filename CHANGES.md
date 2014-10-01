@@ -1,3 +1,7 @@
+# Version 0.3.8
+
+----------
+
 # Version 0.3.7
  - fixes #8
  - Fixes #7
