@@ -1,3 +1,51 @@
+# CHANGES IN VERSION 0.3.9
+
+## NEW FEATURES
+
+## BUG FIXES
+
+## MAJOR CHANGES
+
+## MINOR CHANGES
+
+## MISC
+
+-----
+
+# CHANGES IN VERSION 0.3.8
+
+## NEW FEATURES
+
+## BUG FIXES
+
+## MAJOR CHANGES
+
+- fixed #9: `NEWS.md` only appended when actually necessary (actual new version bump)
+- fixed #10: user is now explicitly asked if Personal Authentication Token (PAT) or basic HTTPS authentication (user name and password) should be used.
+
+## MINOR CHANGES
+
+## MISC
+
+-----
+
+# CHANGES IN VERSION 0.3.7
+
+## NEW FEATURES
+
+## BUG FIXES
+
+## MAJOR CHANGES
+
+- fixes #7: now possible to explicitly set remote repository name
+- fixes #8: ability to choose between local and global git user information
+
+## MINOR CHANGES
+
+## MISC
+
+-----
+
 # CHANGES IN VERSION 0.3.6
 
 ## NEW FEATURES

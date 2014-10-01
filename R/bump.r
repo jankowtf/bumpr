@@ -287,11 +287,6 @@ setMethod(
 #'    \code{TRUE}: delete HTTPS credentials after each bump;
 #'    \code{FALSE}: permanently store HTTPS credentials in \code{_netrc} file.
 #'    See details.   
-#' @param pat \code{\link{logical}}.
-#'    \code{TRUE}: use a personal authentication token as stored in the system
-#'    environment variable \code{GITHUB_PAT};
-#'    \code{FALSE}: rely on basic HTTPS authentication (username and password
-#'    including the use of a (temporary) credentials file \code{_netrc}).
 #' @return See method
 #'    \code{\link[reactr]{bump-character-character-Bumpr.GitVersion.S3-method}}
 #' @example inst/examples/bump.r
@@ -314,7 +309,6 @@ setMethod(
     to,
     project = character(),
     temp_credentials = FALSE,
-    pat = TRUE,
     ...
   ) {
     
@@ -331,7 +325,6 @@ setMethod(
     to = to, 
     project = project,
     temp_credentials = temp_credentials,
-    pat = pat,
     ...
   ))
     
@@ -370,7 +363,6 @@ setMethod(
     to,
     project,
     temp_credentials,
-    pat,
     ...
   ) {
     
@@ -388,7 +380,6 @@ setMethod(
       out <- NULL
     }
   }    
-    
   .ask_gitAddGitignoreFile <- function(force = logical()) {
     if (!length(force)) {
       input <- readline("Add a '.gitignore' file (highly recommended)? [(y)es | (n)o | (q)uit]: ")
@@ -398,6 +389,34 @@ setMethod(
     }
     return(out)
   }  
+  .ask_gitChangeOrSetRemote <- function(force = logical()) {
+    if (!length(force)) {
+      input <- readline("Change remote name or set? [(c)hange | (s)et | (q)uit ]: ")
+      input <- ifelse(grepl("\\D", input), input, "change")
+      if (grepl("[qQ]|Quit|quit|QUIT", input)) {
+        out <- NULL
+      } else if (grepl("[cC]|Change|change|CHANGE", input)) {
+        out <- "change"
+      } else if (grepl("[sS]|set|Set|SET", input)) {
+        out <- "set"
+      } else {
+        message(paste0("Invalid input: ", input))
+        out <- NULL
+      } 
+    } else {
+      out <- force
+    }
+    return(out)
+  }
+  .ask_gitChangePat <- function(force = logical()) {
+    if (!length(force)) {
+      input <- readline("Change current PAT? [(y)es | (n)o | (q)uit]: ")
+      out <- .processUserInput(input = input, dflt = "yes")
+    } else {
+      out <- force
+    }
+    return(out)
+  }
   .ask_gitDoInitialCommit <- function(force = logical()) {
     if (!length(force)) {
       input <- readline("Perform initial commit (or quit)? [(y)es | (n)o | (q)uit]: ")
@@ -409,7 +428,8 @@ setMethod(
   }  
   .ask_gitGlobalOrLocalEmail <- function(force = logical()) {
     if (!length(force)) {
-      input <- readline("Git user information ('user.email' and 'user.name'): global or local? [(g)lobal | (l)ocal | (q)uit ]: ")
+      input <- readline("Git 'user.email' and 'user.name': global or local? [(g)lobal | (l)ocal | (q)uit ]: ")
+      input <- ifelse(grepl("\\D", input), tolower(input), "global")
       if (grepl("[qQ]|quit|Quit|QUIT", input)) {
         out <- NULL
       } else if (grepl("[gG]|global|Global|GLOBAL", input)) {
@@ -420,15 +440,6 @@ setMethod(
         message(paste0("Invalid input: ", input))
         out <- NULL
       }
-    } else {
-      out <- force
-    }
-    return(out)
-  }
-  .ask_gitSetRemote <- function(force = logical()) {
-    if (!length(force)) {
-      input <- readline("Would you like to add a remote repository now? [(y)es | (n)o | (q)uit ]: ")
-      out <- .processUserInput(input = input, dflt = "yes")
     } else {
       out <- force
     }
@@ -459,26 +470,6 @@ setMethod(
     }
     return(out)
   }
-  .ask_gitChangeOrSetRemote <- function(force = logical()) {
-    if (!length(force)) {
-      input <- readline("Change remote name or set? [(c)hange | (s)et | (q)uit ]: ")
-      input <- ifelse(grepl("\\D", input), input, "change")
-      if (grepl("[qQ]|Quit|quit|QUIT", input)) {
-        out <- NULL
-      } else if (grepl("[cC]|Change|change|CHANGE", input)) {
-        out <- "change"
-      } else if (grepl("[sS]|set|Set|SET", input)) {
-        out <- "set"
-      } else {
-        message(paste0("Invalid input: ", input))
-        out <- NULL
-      } 
-    } else {
-      out <- force
-    }
-    return(out)
-  }
-
   .ask_gitReadyToBumpVersion <- function(force = logical(), vsn) {
     if (!length(force)) {
       input <- readline("Ready to bump version in git?' [(y)es | (n)o | (q)uit]: ")
@@ -488,7 +479,43 @@ setMethod(
     }
     return(out)
   }
-  
+  .ask_gitSetRemote <- function(force = logical()) {
+    if (!length(force)) {
+      input <- readline("Would you like to add a remote repository now? [(y)es | (n)o | (q)uit ]: ")
+      out <- .processUserInput(input = input, dflt = "yes")
+    } else {
+      out <- force
+    }
+    return(out)
+  }
+  .ask_gitShowPat <- function(force = logical()) {
+    if (!length(force)) {
+      input <- readline("Show current PAT to verify its correctness? [(n)o | (y)es | (q)uit]: ")
+      out <- .processUserInput(input = input, dflt = "no")
+    } else {
+      out <- force
+    }
+    return(out)
+  }  
+  .ask_gitUsePat <- function(force = logical()) {
+    if (!length(force)) {
+      input <- readline("Use PAT or 'basic' HTTPS authentication? [(p)at | (b)asic | (q)uit ]: ")
+      input <- ifelse(grepl("\\D", input), tolower(input), "pat")
+      if (grepl("[qQ]|quit|Quit|QUIT", input)) {
+        out <- NULL
+      } else if (grepl("[pP]|pat|Pat|PAT", input)) {
+        out <- "pat"
+      } else if (grepl("[bB]|basic|Basic|BASIC", input)) {
+        out <- "basic"
+      } else {
+        message(paste0("Invalid input: ", input))
+        out <- NULL
+      }
+    } else {
+      out <- force
+    }
+    return(out)
+  }
   .ask_gitValidatedRemoteName <- function(
     git_remote
   ) {
@@ -763,7 +790,7 @@ setMethod(
   if (git_global_or_local == "global") {
     git_cmd_useremail <- "git config --global user.email"
     git_cmd_username <- "git config --global user.name"
-  } else if (git_global_or_local == "local")
+  } else if (git_global_or_local == "local") {
     git_cmd_useremail <- "git config user.email"
     git_cmd_username <- "git config user.name"
   }
@@ -787,7 +814,7 @@ setMethod(
     }
     if (git_global_or_local == "global") {
       git_cmd_useremail <- paste0("git config --global user.email \"", git_user_email, "\"")
-    } else if (git_global_or_local == "local")
+    } else if (git_global_or_local == "local") {
       git_cmd_useremail <- paste0("git config user.email \"", git_user_email, "\"")
     }
     system(git_cmd_useremail, intern = TRUE)  
@@ -812,65 +839,12 @@ setMethod(
     }
     if (git_global_or_local == "global") {
       git_cmd_username <- paste0("git config --global user.name \"", git_user_name, "\"")
-    } else if (git_global_or_local == "local")
+    } else if (git_global_or_local == "local") {
       git_cmd_username <- paste0("git config user.name \"", git_user_name, "\"")
     }
     system(git_user_name, intern = TRUE)  
   }
 
-  ## CHANGES //
-  tmpfile <- tempfile()
-  if (!file.exists("CHANGES.md")) {
-    write("", file = "CHANGES.md")
-  }
-  if (!has_initial_commit) {
-#     git_tag <- "\"Initial commit\""
-    git_tag <- "\"\""
-  } else {
-    git_tag <- paste0("\"v", vsn_old)
-  }
-
-  tmp_new <- c(
-    paste0("# Version ", vsn_new),
-    system(paste0("git log --oneline --pretty=format:\" - %s\" ", git_tag, "...HEAD"),
-           intern = TRUE),
-    "",
-    "----------",
-    "",
-    readLines("CHANGES.md")
-  )
-  write(tmp_new, file = tmpfile)
-  file.rename(from = tmpfile, to = "CHANGES.md")
-
-  ## NEWS //
-  tmpfile <- tempfile()
-  if (!file.exists("NEWS.md")) {
-    write("", file = "NEWS.md")
-  }
-  news_content <- c(
-    if (length(project)) {
-      paste0("# CHANGES IN ", project, " VERSION ", vsn_new)
-    } else {
-      paste0("# CHANGES IN VERSION ", vsn_new)
-    },
-    "",
-    "## NEW FEATURES",
-    "",
-    "## BUG FIXES",
-    "",
-    "## MAJOR CHANGES",
-    "",
-    "## MINOR CHANGES",
-    "",
-    "## MISC",
-    "",
-    "-----" ,
-    "",
-    readLines("NEWS.md")
-  )
-  write(news_content, file = tmpfile)
-  file.rename(from = tmpfile, to = "NEWS.md")
-  
   ## HTTPS credentials //
   sys_home <- Sys.getenv("HOME")
   if (sys_home == "") {
@@ -880,7 +854,12 @@ setMethod(
   path_netrc <- file.path(sys_home, "_netrc")
   path_netrc_tmp <- gsub("_netrc", "_netrc_0", path_netrc)
 
-  if (!pat) {
+  pat_or_basic <- .ask_gitUsePat()
+  if (!length(pat_or_basic)) {
+    message("Quitting")
+    return(list())
+  }
+  if (pat_or_basic == "basic") {
     if (!temp_credentials) {
       use_stored_creds <- .ask_useStoredCredentials()
       if (is.null(use_stored_creds)) {
@@ -936,19 +915,103 @@ setMethod(
       }
       write(cnt, file = path_netrc)
     }
-  } else {
-    git_https_username <- devtools::github_pat()
-    if (is.null(git_https_username)) {
-      msg <- c(
-        "No personal access token available",
-        "Please provide via environment variable 'GITHUB_PAT'"
-      )
-      stop(paste(msg, collapse = "\n"))
+  } else if (pat_or_basic == "pat") {
+    git_pat <- Sys.getenv("GITHUB_PAT")
+    if (git_pat == "") {
+      input <- readline("Provide personal authentication token (PAT): ")
+      idx <- ifelse(grepl("\\D", input), input, NA)
+      if (is.na(idx)){
+        message("Invalid input")
+        message("Quitting")
+        return(list())
+      }
+      Sys.setenv("GITHUB_PAT" = git_pat)
+    } else {
+      check_pat <- .ask_gitShowPat()
+      if (!length(check_pat)) {
+        message("Quitting") 
+        return(list())
+      }
+      change_pat <- FALSE
+      if (check_pat) {
+        message(sprintf("Current PAT: %s", git_pat))
+        change_pat <- .ask_gitChangePat()
+        if (!length(change_pat)) {
+          message("Quitting") 
+          return(list())
+        }
+      }
+      if (change_pat) {
+        input <- readline("Provide personal authentication token (PAT): ")
+        idx <- ifelse(grepl("\\D", input), input, NA)
+        if (is.na(idx)){
+          message("Invalid input")
+          message("Quitting")
+          return(list())
+        }
+        Sys.setenv("GITHUB_PAT" = git_pat)
+      }
     }
-    git_https_password <- ""
+#     git_https_password <- ""
     if (grepl("^https://", git_repos)) {
-      git_repos <- gsub("https://", paste0("https://", git_https_username, "@"), git_repos)  
+      git_repos <- gsub("https://", paste0("https://", git_pat, "@"), git_repos)  
     }
+  }
+
+  ## CHANGES //
+  tmpfile <- tempfile()
+  if (!file.exists("CHANGES.md")) {
+    write("", file = "CHANGES.md")
+  }
+  if (!has_initial_commit) {
+#     git_tag <- "\"Initial commit\""
+    git_tag <- "\"\""
+  } else {
+    git_tag <- paste0("\"v", vsn_old)
+  }
+
+  tmp_new <- c(
+    paste0("# Version ", vsn_new),
+    system(paste0("git log --oneline --pretty=format:\" - %s\" ", git_tag, "...HEAD"),
+           intern = TRUE),
+    "",
+    "----------",
+    "",
+    readLines("CHANGES.md")
+  )
+  write(tmp_new, file = tmpfile)
+  file.rename(from = tmpfile, to = "CHANGES.md")
+
+  ## NEWS //
+  tmpfile <- tempfile()
+  if (!file.exists("NEWS.md")) {
+    write("", file = "NEWS.md")
+  }
+  cnt_old <- readLines("NEWS.md")
+  if (!grepl(paste0("VERSION ", vsn_new), cnt_old)) {
+    news_content <- c(
+      if (length(project)) {
+        paste0("# CHANGES IN ", project, " VERSION ", vsn_new)
+      } else {
+        paste0("# CHANGES IN VERSION ", vsn_new)
+      },
+      "",
+      "## NEW FEATURES",
+      "",
+      "## BUG FIXES",
+      "",
+      "## MAJOR CHANGES",
+      "",
+      "## MINOR CHANGES",
+      "",
+      "## MISC",
+      "",
+      "-----" ,
+      "",
+      cnt_old
+    )
+    write(news_content, file = tmpfile)
+    file.rename(from = tmpfile, to = "NEWS.md")
   }
 
   ## Git commands //
