@@ -604,7 +604,6 @@ setMethod(
     }  
     res
   }
-  
   .gitIsRemoteRepository <- function(name = "origin") {
     res <- suppressWarnings(system(paste0("git ls-remote ", name),
                                    intern = TRUE))
@@ -842,7 +841,7 @@ setMethod(
     } else if (git_global_or_local == "local") {
       git_cmd_username <- paste0("git config user.name \"", git_user_name, "\"")
     }
-    system(git_user_name, intern = TRUE)  
+    system(git_cmd_username, intern = TRUE)  
   }
 
   ## HTTPS credentials //
@@ -988,7 +987,7 @@ setMethod(
     write("", file = "NEWS.md")
   }
   cnt_old <- readLines("NEWS.md")
-  if (!grepl(paste0("VERSION ", vsn_new), cnt_old)) {
+  if (!grepl(paste0("VERSION ", vsn_new), cnt_old[1])) {
     news_content <- c(
       if (length(project)) {
         paste0("# CHANGES IN ", project, " VERSION ", vsn_new)
