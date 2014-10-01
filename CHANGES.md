@@ -1,3 +1,27 @@
+# Version 0.3.7
+ - fixes #8
+ - Fixes #7
+ - Merge branch 'master' into develop
+ - bumped to version 0.3.6 fixes #4
+ - Merge branch 'release-0.3.6'
+ - Merge branch 'release-0.3.5'
+ - Merge branch 'release-0.3.4'
+ - Merge branch 'release-0.3.3'
+
+----------
+
+# Version 0.3.7
+ - fixes #8
+ - Fixes #7
+ - Merge branch 'master' into develop
+ - bumped to version 0.3.6 fixes #4
+ - Merge branch 'release-0.3.6'
+ - Merge branch 'release-0.3.5'
+ - Merge branch 'release-0.3.4'
+ - Merge branch 'release-0.3.3'
+
+----------
+
 # Version 0.3.6
  - Merge branch 'feature-pat' into develop
  - Fixes #1
