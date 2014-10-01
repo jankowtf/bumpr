@@ -679,7 +679,7 @@ setMethod(
       message("Quiting")
       return(list())
     }
-    .gitSetRemote()
+    .gitSetRemote(name = character())
   } 
 
   ##----------------------------------------------------------------------------
