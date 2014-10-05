@@ -1,3 +1,22 @@
+# CHANGES IN VERSION 0.3.12
+
+## NEW FEATURES
+
+## BUG FIXES
+
+- changed: links in documentation
+- changed: roxygen template `author`
+- renamed: `/inst/examples/PackageVersion.S3.r` --> `/inst/examples/RPackageVersion.S3.r`
+- added: roxygen template `intended-use`
+
+## MAJOR CHANGES
+
+## MINOR CHANGES
+
+## MISC
+
+-----
+
 # CHANGES IN VERSION 0.3.11
 
 ## NEW FEATURES
