@@ -4,7 +4,8 @@
 \alias{bumpGitVersion,GitVersion.S3-method}
 \title{Bump Git Version Number}
 \usage{
-\S4method{bumpGitVersion}{GitVersion.S3}(project = character(),
+
+  \S4method{bumpGitVersion}{GitVersion.S3}(project = devtools::as.package(".")$package,
   temp_credentials = FALSE, .ns = NULL, ...)
 }
 \arguments{

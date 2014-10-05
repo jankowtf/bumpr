@@ -1,3 +1,16 @@
+# Version 0.3.13
+ - Merge branch 'feat-projectName' into develop
+ - feature projectName
+ - Merge branch 'master' of https://github.com/Rappster/bumpr into develop
+ - Update README.md
+ - Update README.md
+ - Merge branch 'master' into develop
+ - Merge branch 'release-0.3.12'
+ - build commit
+ - bump commit
+
+----------
+
 # Version 0.3.12
  - Merge branch 'master' into develop
  - Merge branch 'release-0.3.11'
