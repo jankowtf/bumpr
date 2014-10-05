@@ -1,4 +1,4 @@
-bumpr (v0.3.10)
+bumpr (v0.3.11)
 ======
 
 Easy systematic version bumping and more
@@ -7,7 +7,6 @@ Easy systematic version bumping and more
 
 ```
 require("devtools")
-devtools::install_github("Rappster/classr")
 devtools::install_github("Rappster/bumpr")
 require("bumpr")
 ```
@@ -33,16 +32,28 @@ Bumping from current version `0.3.3` to a new version
 
 ```
 bumpPackageVersion()
-# Current version: 0.3.9
-# Suggested version: 0.3.10
-# Enter a valid version number: [ENTER = 0.3.10] 
-# Using suggested version: 0.3.10
-# Updating version in DESCRIPTION file to '0.3.10?' [(y)es | (n)o | (q)uit]: 
+# Taken versions numbers (last 10): 
+# 0.3
+# 0.3.1
+# 0.3.2
+# 0.3.3
+# 0.3.4
+# 0.3.5
+# 0.3.6
+# 0.3.7
+# 0.3.8
+# 0.3.9
+# 0.3.10
+# Current version: 0.3.10
+# Suggested version: 0.3.11
+# Enter a valid version number: [ENTER = 0.3.11] 
+# Using suggested version: 0.3.11
+# Updating version in DESCRIPTION file to '0.3.11?' [(y)es | (n)o | (q)uit]: 
 # $old
-# [1] "0.3.9"
+# [1] "0.3.10"
 # 
 # $new
-# [1] "0.3.10"
+# [1] "0.3.11"
 ```
 
 #### Explanation what just happened
@@ -100,8 +111,8 @@ The example assumes that `bumpGitVersion()` is called without previously having 
 
 ```
 bumpGitVersion()
+
 # Taken versions numbers (last 10): 
-# 0.2.4
 # 0.3
 # 0.3.1
 # 0.3.2
@@ -112,11 +123,12 @@ bumpGitVersion()
 # 0.3.7
 # 0.3.8
 # 0.3.9
-# Current version: 0.3.9
-# Suggested version: 0.3.10
-# Enter a valid version number: [ENTER = 0.3.10] 
-# Using suggested version: 0.3.10
-# Updating version in DESCRIPTION file to '0.3.10?' [(y)es | (n)o | (q)uit]: 
+# 0.3.10
+# Current version: 0.3.10
+# Suggested version: 0.3.11
+# Enter a valid version number: [ENTER = 0.3.11] 
+# Using suggested version: 0.3.11
+# Updating version in DESCRIPTION file to '0.3.11?' [(y)es | (n)o | (q)uit]: 
 # Ready to bump version in git?' [(y)es | (n)o | (q)uit]: 
 # Name of remote git repository (hit ENTER for default = 'origin'): 
 # Using remote git repository: origin
@@ -126,14 +138,14 @@ bumpGitVersion()
 # Current PAT: {pat-value}
 # Change current PAT? [(y)es | (n)o | (q)uit]: n
 # 
-# [develop a3e3ec1] Version bump to 0.3.10 2 files changed, 13 insertions(+), 2 deletions(-)
+# [release-0.3.11 f1c4fdd] Version bump to 0.3.11 2 files changed, 12 insertions(+), 5 deletions(-)
 # 
-# To https://github.com/Rappster/bumpr * [new tag]         v0.3.10 -> v0.3.10
+# To https://github.com/Rappster/bumpr * [new tag]         v0.3.11 -> v0.3.11
 # $old
-# [1] "0.3.9"
+# [1] "0.3.10"
 # 
 # $new
-# [1] "0.3.10"
+# [1] "0.3.11"
 ```
 
 #### Explanation what just happened
@@ -149,7 +161,7 @@ it complies with the [semtatic versioning conventions](http://semver.org/).
 - Then a last check before commencing with Git/GitHub related stuff is made.
 
 - Based on the specification of your remote repository (**note that it is recommended to define it prior to running `bumpGitVersion()` but it can also be set by the function in case it has not been defined yet**) a new commit
-is issued and **after** that a new tag corresponding to `v{new-version}` (e.g. `v0.3.10`) is created so **future** commits are automatically tagged with it.
+is issued and **after** that a new tag corresponding to `v{new-version}` (e.g. `v0.3.11`) is created so **future** commits are automatically tagged with it.
 
 - What also happens is that the files `CHANGES.md` and `NEWS.md` are updated
   as described in `?bumpr`.

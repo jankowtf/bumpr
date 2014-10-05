@@ -79,7 +79,6 @@ setGeneric(
 #' @template author
 #' @template references
 #' @export
-#' @import classr
 setMethod(
   f = "bumpPackageVersion", 
   signature = signature(

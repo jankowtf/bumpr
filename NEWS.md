@@ -1,3 +1,21 @@
+# CHANGES IN VERSION 0.3.11
+
+## NEW FEATURES
+
+## BUG FIXES
+
+## MAJOR CHANGES
+
+- removed: dependency from package `classr`
+- added: class `GitVersion.S3`
+- added: class `RPackageVersion.S3`
+
+## MINOR CHANGES
+
+## MISC
+
+-----
+
 # CHANGES IN VERSION 0.3.10
 
 ## NEW FEATURES
