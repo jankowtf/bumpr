@@ -3,8 +3,8 @@
 \alias{bumpGitVersion}
 \title{Bump Git Version Number}
 \usage{
-bumpGitVersion(project = character(), temp_credentials = FALSE,
-  .ns = NULL, ...)
+bumpGitVersion(project = devtools::as.package(".")$package,
+  temp_credentials = FALSE, .ns = NULL, ...)
 }
 \arguments{
 \item{project}{\code{\link{character}}.

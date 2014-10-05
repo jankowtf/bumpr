@@ -4,7 +4,8 @@
 \alias{bumpGitVersion,missing-method}
 \title{Bump Git Version Number}
 \usage{
-\S4method{bumpGitVersion}{missing}(project = character(),
+
+  \S4method{bumpGitVersion}{missing}(project = devtools::as.package(".")$package,
   temp_credentials = FALSE, .ns = NULL, ...)
 }
 \arguments{
