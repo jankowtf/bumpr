@@ -48,12 +48,12 @@ bumpPackageVersion()
 # Suggested version: 0.3.12
 # Enter a valid version number: [ENTER = 0.3.12] 
 # Using suggested version: 0.3.12
-# Updating version in DESCRIPTION file to '0.3.11?' [(y)es | (n)o | (q)uit]: 
+# Updating version in DESCRIPTION file to '0.3.12?' [(y)es | (n)o | (q)uit]: 
 # $old
-# [1] "0.3.10"
+# [1] "0.3.11"
 # 
 # $new
-# [1] "0.3.11"
+# [1] "0.3.12"
 ```
 
 #### Explanation what just happened
@@ -138,14 +138,14 @@ bumpGitVersion()
 # Current PAT: {pat-value}
 # Change current PAT? [(y)es | (n)o | (q)uit]: n
 # 
-# [release-0.3.11 f1c4fdd] Version bump to 0.3.11 2 files changed, 12 insertions(+), 5 deletions(-)
+# [release-0.3.12 f1c4fdd] Version bump to 0.3.12 2 files changed, 12 insertions(+), 5 deletions(-)
 # 
-# To https://github.com/Rappster/bumpr * [new tag]         v0.3.11 -> v0.3.11
+# To https://github.com/Rappster/bumpr * [new tag]         v0.3.12 -> v0.3.12
 # $old
-# [1] "0.3.10"
+# [1] "0.3.11"
 # 
 # $new
-# [1] "0.3.11"
+# [1] "0.3.12"
 ```
 
 #### Explanation what just happened
