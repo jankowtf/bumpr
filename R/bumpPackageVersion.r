@@ -42,7 +42,7 @@
 #' @template threedot
 #' @example inst/examples/bumpPackageVersion.r
 #' @seealso \code{
-#'   	\link[reactr]{bumpPackageVersion-Bumpr.GitVersion.S3-method}
+#'   	\link[bumpr]{bumpPackageVersion-GitVersion.S3-method}
 #' }
 #' @template author
 #' @template references
@@ -66,15 +66,15 @@ setGeneric(
 #' Bump Package Version Number
 #'
 #' @description 
-#' See generic: \code{\link[reactr]{bumpPackageVersion}}
+#' See generic: \code{\link[bumpr]{bumpPackageVersion}}
 #'      
 #' @inheritParams bumpPackageVersion
-#' @param .ns \code{\link{Bumpr.GitVersion.S3}}.
+#' @param .ns \code{\link{GitVersion.S3}}.
 #' @return See method
-#'    \code{\link[reactr]{bumpPackageVersion-Bumpr.GitVersion.S3-method}}
+#'    \code{\link[bumpr]{bumpPackageVersion-GitVersion.S3-method}}
 #' @example inst/examples/bumpPackageVersion.r
 #' @seealso \code{
-#'    \link[reactr]{bumpPackageVersion}
+#'    \link[bumpr]{bumpPackageVersion}
 #' }
 #' @template author
 #' @template references
@@ -92,11 +92,7 @@ setMethod(
     ...
   ) {
     
-  .ns <- classr::createInstance(cl = "Bumpr.RPackageVersion.S3", 
-    obj = list(
-      version = character()
-    )
-  )    
+  .ns <- bumpr::RPackageVersion.S3() 
   return(bumpPackageVersion(
     taken = taken,
     desc_fields = desc_fields,
@@ -111,15 +107,15 @@ setMethod(
 #' Bump Package Version Number
 #'
 #' @description 
-#' See generic: \code{\link[reactr]{Bumpr.RPackageVersion.S3}}
+#' See generic: \code{\link[bumpr]{RPackageVersion.S3}}
 #'   	 
 #' @inheritParams bumpPackageVersion
-#' @param .ns \code{\link{Bumpr.RPackageVersion.S3}}.
+#' @param .ns \code{\link{RPackageVersion.S3}}.
 #' @return \code{\link{character}}. New version that the package project has 
 #'    been bumped to.
 #' @example inst/examples/bumpPackageVersion.r
 #' @seealso \code{
-#'    \link[reactr]{bumpPackageVersion}
+#'    \link[bumpr]{bumpPackageVersion}
 #' }
 #' @template author
 #' @template references
@@ -127,7 +123,7 @@ setMethod(
 setMethod(
   f = "bumpPackageVersion", 
   signature = signature(
-    .ns = "Bumpr.RPackageVersion.S3"
+    .ns = "RPackageVersion.S3"
   ), 
   definition = function(
     taken,

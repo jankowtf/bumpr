@@ -8,7 +8,7 @@
   desc_fields = list(Date = NULL), .ns = NULL, ...)
 }
 \arguments{
-\item{.ns}{\code{\link{Bumpr.GitVersion.S3}}.}
+\item{.ns}{\code{\link{GitVersion.S3}}.}
 
 \item{taken}{\code{\link{character}}.
 Version numbers that are already taken. Usually, these are the Git
@@ -24,7 +24,7 @@ should be updated with a version number bump. Specified as name-value pairs.}
 }
 \value{
 See method
-   \code{\link[reactr]{bumpPackageVersion-Bumpr.GitVersion.S3-method}}
+   \code{\link[reactr]{bumpPackageVersion-GitVersion.S3-method}}
 }
 \description{
 See generic: \code{\link[reactr]{bumpPackageVersion}}

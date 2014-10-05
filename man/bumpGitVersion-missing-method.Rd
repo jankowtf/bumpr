@@ -8,7 +8,7 @@
   temp_credentials = FALSE, .ns = NULL, ...)
 }
 \arguments{
-\item{.ns}{\code{\link{Bumpr.GitVersion.S3}}.}
+\item{.ns}{\code{\link{GitVersion.S3}}.}
 
 \item{project}{\code{\link{character}}.
 Name of the project under Git version control.}
@@ -22,7 +22,7 @@ See details.}
 }
 \value{
 See method
-   \code{\link[reactr]{bumpGitVersion-Bumpr.GitVersion.S3-method}}
+   \code{\link[reactr]{bumpGitVersion-GitVersion.S3-method}}
 }
 \description{
 See generic: \code{\link[reactr]{bumpGitVersion}}
