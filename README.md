@@ -138,7 +138,7 @@ bumpGitVersion()
 # Current PAT: {pat-value}
 # Change current PAT? [(y)es | (n)o | (q)uit]: n
 # 
-# [release-0.3.12 f1c4fdd] Version bump to 0.3.12 2 files changed, 12 insertions(+), 5 deletions(-)
+# [release-0.3.12 fc1629b] Version bump to 0.3.12 2 files changed, 12 insertions(+), 5 deletions(-)
 # 
 # To https://github.com/Rappster/bumpr * [new tag]         v0.3.12 -> v0.3.12
 # $old
