@@ -109,13 +109,14 @@
 #' @template author
 #' @template references
 #' @export 
+#' @import devtools
 setGeneric(
   name = "bumpGitVersion",
   signature = c(
     ".ns"
   ),
   def = function(
-    project = character(),
+    project = devtools::as.package(".")$package,
     temp_credentials = FALSE,
     .ns = NULL,
     ...
