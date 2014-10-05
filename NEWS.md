@@ -5,6 +5,8 @@
 ## BUG FIXES
 
 - changed: links in documentation
+- changed: roxygen template `author`
+- renamed: `/inst/examples/PackageVersion.S3.r` --> `/inst/examples/RPackageVersion.S3.r`
 - added: roxygen template `intended-use`
 
 ## MAJOR CHANGES
