@@ -17,7 +17,7 @@
 #' @return Instance of class \code{RPackageVersion.S3}.
 #' @example inst/examples/RPackageVersion.S3.r
 #' @seealso \code{
-#'   	\link[filesystr]{GitVersion.S3}
+#'   	\link[bumpr]{GitVersion.S3}
 #' }
 #' @template author
 #' @template references

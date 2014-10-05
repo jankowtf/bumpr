@@ -1,3 +1,11 @@
+# Version 0.3.12
+ - Merge branch 'master' into develop
+ - Merge branch 'release-0.3.11'
+ - bump commit
+ - Merge branch 'release-0.3.10'
+
+----------
+
 # Version 0.3.11
  - Merge branch 'feat-classes' into develop
  - feature classes
