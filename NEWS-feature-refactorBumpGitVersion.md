@@ -7,11 +7,11 @@
 ## MAJOR CHANGES
 
 - added: argument `project` in `bumpGitVersion()` and 
-  `bump-Bumpr.GitVersion.S3-character-charcter-method`
-- refactor: `bump-Bumpr.RPackageVersion.S3-character-charcter-method`
+  `bump-GitVersion.S3-character-charcter-method`
+- refactor: `bump-RPackageVersion.S3-character-charcter-method`
   - return value changed to `list(old = {old-vsn}, new = {new-vsn})` and
     `list()` when exiting
-- refactor: `bump-Bumpr.GitVersion.S3-character-charcter-method`
+- refactor: `bump-GitVersion.S3-character-charcter-method`
   - now uses `bumpPackageVersion()` 
   - return value changed to `list(old = {old-vsn}, new = {new-vsn})` and
     `list()` when exiting

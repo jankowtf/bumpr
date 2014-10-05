@@ -66,7 +66,7 @@ Janko Thyson \email{janko.thyson@rappster.de}
 }
 \seealso{
 \code{
-  	\link[reactr]{bumpPackageVersion-Bumpr.GitVersion.S3-method}
+  	\link[reactr]{bumpPackageVersion-GitVersion.S3-method}
 }
 }
 

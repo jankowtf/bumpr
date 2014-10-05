@@ -10,7 +10,23 @@
 #' Version numbers must follow the \emph{semantical versioning} conventions
 #' (see \url{http://semver.org/}).
 #' 
-#' The core functions/methods of this package: 
+#' @section Classes and constructors:
+#' 
+#' \itemize{
+#'    \item{\code{\link[bumpr]{GitVersion.S3}}: }{
+#'    
+#'      Constructor function for instances of class 
+#'      \code{\link[bumpr]{GitVersion.S3}}
+#'    }
+#'    \item{\code{\link[bumpr]{RPackageVersion.S3}}: }{
+#'    
+#'      Constructor function for instances of class 
+#'      \code{\link[bumpr]{RPackageVersion.S3}}
+#'    }
+#' }
+#' 
+#' @section Main functions/methods:
+#' 
 #'  \itemize{
 #'    \item{\code{\link[bumpr]{bumpPackageVersion}}: }{
 #'    

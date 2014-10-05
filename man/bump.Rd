@@ -34,8 +34,8 @@ generic function.
 ## project's root directory and that you've read and understood the 
 ## assumptions that this function makes!
     
-bump(what = classr::createInstance(cl = "Bumpr.RPackageVersion.S3"))
-bump(what = classr::createInstance(cl = "Bumpr.GitVersion.S3"))
+bump(what = classr::createInstance(cl = "RPackageVersion.S3"))
+bump(what = classr::createInstance(cl = "GitVersion.S3"))
 
 }
 }
@@ -47,7 +47,7 @@ Janko Thyson \email{janko.thyson@rappster.de}
 }
 \seealso{
 \code{
-  	\link[reactr]{bump-Bumpr.GitVersion.S3-character-character-method}
+  	\link[reactr]{bump-GitVersion.S3-character-character-method}
 }
 }
 

@@ -12,7 +12,7 @@ devtools::install_github("Rappster/bumpr")
 require("bumpr")
 ```
 
-## Quick intro
+## Overview
 
 See `?bumpr` for the overall purpose of this package.
 
@@ -172,3 +172,66 @@ is issued and **after** that a new tag corresponding to `v{new-version}` (e.g. `
 
 - The function returns the old and new version as a `list` string. If
 along the way something when wrong (wrong user input) or when you wanted to quit on purpose, the function returns `list()`.
+
+-----
+
+## Classes and constructors
+
+Class `GitVersion.S3`
+
+```
+## Formal use //
+bumpr::GitVersion.S3()
+
+# $version
+# character(0)
+# 
+# $remote_name
+# character(0)
+# 
+# $remote_url
+# character(0)
+# 
+# $user_email
+# character(0)
+# 
+# $user_name
+# character(0)
+# 
+# attr(,"class")
+# [1] "GitVersion.S3" "list"   
+
+## Informal use //
+bumpr::GitVersion.S3("0.1.1")
+
+# [1] "0.1.1"
+# attr(,"class")
+# [1] "GitVersion.S3" "character"    
+```
+
+Class `RPackageVersion.S3`
+
+```
+## Formal use //
+bumpr::RPackageVersion.S3()
+
+# $version
+# character(0)
+# 
+# $lib
+# character(0)
+# 
+# $path
+# character(0)
+# 
+# attr(,"class")
+# [1] "RPackageVersion.S3" "list"   
+
+## Informal use //
+bumpr::RPackageVersion.S3("0.1.1")
+
+# [1] "0.1.1"
+# attr(,"class")
+# [1] "RPackageVersion.S3" "character"   
+```
+
