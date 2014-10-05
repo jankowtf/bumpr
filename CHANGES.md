@@ -1,3 +1,10 @@
+# Version 0.3.11
+ - Merge branch 'feat-classes' into develop
+ - feature classes
+ - fixed `user.name` fixed `NEWS.md` section check
+
+----------
+
 # Version 0.3.10
  - Merge branch 'master' into develop
  - Update README.md
