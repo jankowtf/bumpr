@@ -1,4 +1,4 @@
-bumpr (v0.3.12)
+bumpr (v0.3.13)
 ======
 
 Easy systematic version bumping and more
