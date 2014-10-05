@@ -10,7 +10,7 @@
 
 ## MAJOR CHANGES
 
-- added: `bumper-Bumpr.RPackageVersion.S3-character-character-method`.
+- added: `bumper-RPackageVersion.S3-character-character-method`.
   - possible to explicitly set version numbers via `from` and `to`
 
 ## MINOR CHANGES
@@ -21,8 +21,8 @@
 
 ## TESTS
 
-- added: unit test for `bumper-Bumpr.RPackageVersion.S3-character-character-method`
-  in `/tests/testthat/test-bump.r` (context `bumpr-Bumpr.RPackageVersion.S3`)
+- added: unit test for `bumper-RPackageVersion.S3-character-character-method`
+  in `/tests/testthat/test-bump.r` (context `bumpr-RPackageVersion.S3`)
 
 ## MISC
 

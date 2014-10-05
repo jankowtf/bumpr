@@ -104,7 +104,7 @@
 #' @template threedot
 #' @example inst/examples/bumpGitVersion.r
 #' @seealso \code{
-#'   	\link[reactr]{bumpGitVersion-Bumpr.GitVersion.S3-method}
+#'   	\link[bumpr]{bumpGitVersion-GitVersion.S3-method}
 #' }
 #' @template author
 #' @template references
@@ -128,20 +128,19 @@ setGeneric(
 #' Bump Git Version Number
 #'
 #' @description 
-#' See generic: \code{\link[reactr]{bumpGitVersion}}
+#' See generic: \code{\link[bumpr]{bumpGitVersion}}
 #'      
 #' @inheritParams bumpGitVersion
-#' @param .ns \code{\link{Bumpr.GitVersion.S3}}.
+#' @param .ns \code{\link{GitVersion.S3}}.
 #' @return See method
-#'    \code{\link[reactr]{bumpGitVersion-Bumpr.GitVersion.S3-method}}
+#'    \code{\link[bumpr]{bumpGitVersion-GitVersion.S3-method}}
 #' @example inst/examples/bumpGitVersion.r
 #' @seealso \code{
-#'    \link[reactr]{bumpGitVersion}
+#'    \link[bumpr]{bumpGitVersion}
 #' }
 #' @template author
 #' @template references
 #' @export
-#' @import classr
 setMethod(
   f = "bumpGitVersion", 
   signature = signature(
@@ -154,15 +153,8 @@ setMethod(
     ...
   ) {
     
-  .ns <- classr::createInstance(cl = "Bumpr.GitVersion.S3", 
-    obj = list(
-      version = character(),
-      git_repos = "origin",
-      user_email = character(),
-      user_name = character(),
-      home = Sys.getenv("HOME")
-    )
-  )    
+  .ns <- bumpr::GitVersion.S3()
+   
   return(bumpGitVersion(
     project = project,
     temp_credentials = temp_credentials,
@@ -183,15 +175,15 @@ setMethod(
 #' Bump Git Version Number
 #'
 #' @description 
-#' See generic: \code{\link[reactr]{bumpGitVersion}}
+#' See generic: \code{\link[bumpr]{bumpGitVersion}}
 #'   	 
 #' @inheritParams bumpGitVersion
-#' @param .ns \code{\link{Bumpr.GitVersion.S3}}.
+#' @param .ns \code{\link{GitVersion.S3}}.
 #' @return \code{\link{character}}. New Git version that the project has 
 #'    been bumped to.
 #' @example inst/examples/bumpGitVersion.r
 #' @seealso \code{
-#'    \link[reactr]{bumpGitVersion}
+#'    \link[bumpr]{bumpGitVersion}
 #' }
 #' @template author
 #' @template references
@@ -199,7 +191,7 @@ setMethod(
 setMethod(
   f = "bumpGitVersion", 
   signature = signature(
-    .ns = "Bumpr.GitVersion.S3"
+    .ns = "GitVersion.S3"
   ), 
   definition = function(
     project,

@@ -14,7 +14,7 @@
 #' @template threedot
 #' @example inst/examples/bump.r
 #' @seealso \code{
-#'   	\link[reactr]{bump-Bumpr.GitVersion.S3-character-character-method}
+#'   	\link[bumpr]{bump-GitVersion.S3-character-character-method}
 #' }
 #' @template author
 #' @template references
@@ -40,17 +40,19 @@ setGeneric(
 #' Bump Package Version Number
 #'
 #' @description 
-#' See generic: \code{\link[reactr]{bump}}
+#' See generic: \code{\link[bumpr]{bump}}.
+#' See main method: \code{\link[bumpr]{bump-RPackageVersion.S3-character-character-method}}.
 #'      
 #' @inheritParams bump
-#' @param what \code{\link{Bumpr.RPackageVersion.S3}}.
+#' @param what \code{\link{RPackageVersion.S3}}.
 #' @param from \code{\link{missing}}.
 #' @param to \code{\link{missing}}.
 #' @return See method
-#'    \code{\link[reactr]{bump-character-character-Bumpr.RPackageVersion.S3-method}}
+#'    \code{\link[bumpr]{bump-character-character-RPackageVersion.S3-method}}
 #' @example inst/examples/bump.r
 #' @seealso \code{
-#'    \link[reactr]{bump}
+#'    \link[bumpr]{bump},
+#'    \link[bumpr]{bump-RPackageVersion.S3-character-character-method}
 #' }
 #' @template author
 #' @template references
@@ -58,7 +60,7 @@ setGeneric(
 setMethod(
   f = "bump", 
   signature = signature(
-    what = "Bumpr.RPackageVersion.S3",
+    what = "RPackageVersion.S3",
     from = "missing",
     to = "missing"
   ), 
@@ -66,7 +68,8 @@ setMethod(
     what,
     from,
     to,
-    temp_credentials = FALSE,
+    desc_fields = list("Date" = NULL),
+    taken = character(),
     ...
   ) {
     
@@ -84,7 +87,8 @@ setMethod(
     what = what,
     from = from, 
     to = to, 
-    temp_credentials,
+    desc_fields = desc_fields,
+    taken = taken, 
     ...
   ))
     
@@ -95,10 +99,10 @@ setMethod(
 #' Bump Package Version Number
 #'
 #' @description 
-#' See generic: \code{\link[reactr]{bump}}
+#' See generic: \code{\link[bumpr]{bump}}
 #'      
 #' @inheritParams bump
-#' @param what \code{\link{Bumpr.RPackageVersion.S3}}.
+#' @param what \code{\link{RPackageVersion.S3}}.
 #' @param from \code{\link{character}}.
 #' @param to \code{\link{character}}.
 #' @param taken \code{\link{character}}.
@@ -113,7 +117,7 @@ setMethod(
 #'    \code{list()} if the function exited before completing the bump.
 #' @example inst/examples/bump.r
 #' @seealso \code{
-#'    \link[reactr]{bump}
+#'    \link[bumpr]{bump}
 #' }
 #' @template author
 #' @template references
@@ -121,7 +125,7 @@ setMethod(
 setMethod(
   f = "bump", 
   signature = signature(
-    what = "Bumpr.RPackageVersion.S3",
+    what = "RPackageVersion.S3",
     from = "character",
     to = "character"
   ), 
@@ -129,8 +133,8 @@ setMethod(
     what,
     from,
     to,
-    taken = character(),
     desc_fields = list("Date" = NULL),
+    taken = character(),
     ...
   ) {
     
@@ -277,10 +281,11 @@ setMethod(
 #' Bump Git Version Number
 #'
 #' @description 
-#' See generic: \code{\link[reactr]{bump}}
+#' See generic: \code{\link[bumpr]{bump}}.
+#' See main method: \code{\link[bumpr]{bump-GitVersion.S3-character-character-method}}.
 #'      
 #' @inheritParams bump
-#' @param what \code{\link{Bumpr.GitVersion.S3}}.
+#' @param what \code{\link{GitVersion.S3}}.
 #' @param from \code{\link{missing}}.
 #' @param to \code{\link{missing}}.
 #' @param temp_credentials \code{\link{logical}}.
@@ -288,10 +293,11 @@ setMethod(
 #'    \code{FALSE}: permanently store HTTPS credentials in \code{_netrc} file.
 #'    See details.   
 #' @return See method
-#'    \code{\link[reactr]{bump-character-character-Bumpr.GitVersion.S3-method}}
+#'    \code{\link[bumpr]{bump-GitVersion.S3-character-character-method}}
 #' @example inst/examples/bump.r
 #' @seealso \code{
-#'    \link[reactr]{bump}
+#'    \link[bumpr]{bump},
+#'    \link[bumpr]{bump-GitVersion.S3-character-character-method}
 #' }
 #' @template author
 #' @template references
@@ -299,7 +305,7 @@ setMethod(
 setMethod(
   f = "bump", 
   signature = signature(
-    what = "Bumpr.GitVersion.S3",
+    what = "GitVersion.S3",
     from = "missing",
     to = "missing"
   ), 
@@ -335,17 +341,17 @@ setMethod(
 #' Bump Git Version Number
 #'
 #' @description 
-#' See generic: \code{\link[reactr]{bump}}
+#' See generic: \code{\link[bumpr]{bump}}
 #'   	 
 #' @inheritParams bump
-#' @param what \code{\link{Bumpr.GitVersion.S3}}.
+#' @param what \code{\link{GitVersion.S3}}.
 #' @param from \code{\link{character}}.
 #' @param to \code{\link{character}}.
 #' @return \code{\link{list}}. (\code{old} and \code{new} package version or 
 #'    \code{list()} if the function exited before completing the bump.
 #' @example inst/examples/bump.r
 #' @seealso \code{
-#'    \link[reactr]{bump}
+#'    \link[bumpr]{bump}
 #' }
 #' @template author
 #' @template references
@@ -353,7 +359,7 @@ setMethod(
 setMethod(
   f = "bump", 
   signature = signature(
-    what = "Bumpr.GitVersion.S3",
+    what = "GitVersion.S3",
     from = "character",
     to = "character"
   ), 
