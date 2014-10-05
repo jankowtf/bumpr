@@ -1,3 +1,20 @@
+# CHANGES IN VERSION 0.3.12
+
+## NEW FEATURES
+
+## BUG FIXES
+
+- changed: links in documentation
+- added: roxygen template `intended-use`
+
+## MAJOR CHANGES
+
+## MINOR CHANGES
+
+## MISC
+
+-----
+
 # CHANGES IN VERSION 0.3.11
 
 ## NEW FEATURES

@@ -1,4 +1,4 @@
-bumpr (v0.3.11)
+bumpr (v0.3.12)
 ======
 
 Easy systematic version bumping and more
@@ -33,7 +33,6 @@ Bumping from current version `0.3.3` to a new version
 ```
 bumpPackageVersion()
 # Taken versions numbers (last 10): 
-# 0.3
 # 0.3.1
 # 0.3.2
 # 0.3.3
@@ -44,10 +43,11 @@ bumpPackageVersion()
 # 0.3.8
 # 0.3.9
 # 0.3.10
-# Current version: 0.3.10
-# Suggested version: 0.3.11
-# Enter a valid version number: [ENTER = 0.3.11] 
-# Using suggested version: 0.3.11
+# 0.3.11
+# Current version: 0.3.11
+# Suggested version: 0.3.12
+# Enter a valid version number: [ENTER = 0.3.12] 
+# Using suggested version: 0.3.12
 # Updating version in DESCRIPTION file to '0.3.11?' [(y)es | (n)o | (q)uit]: 
 # $old
 # [1] "0.3.10"
@@ -113,7 +113,6 @@ The example assumes that `bumpGitVersion()` is called without previously having 
 bumpGitVersion()
 
 # Taken versions numbers (last 10): 
-# 0.3
 # 0.3.1
 # 0.3.2
 # 0.3.3
@@ -124,10 +123,11 @@ bumpGitVersion()
 # 0.3.8
 # 0.3.9
 # 0.3.10
-# Current version: 0.3.10
-# Suggested version: 0.3.11
-# Enter a valid version number: [ENTER = 0.3.11] 
-# Using suggested version: 0.3.11
+# 0.3.11
+# Current version: 0.3.11
+# Suggested version: 0.3.12
+# Enter a valid version number: [ENTER = 0.3.12] 
+# Using suggested version: 0.3.12
 # Updating version in DESCRIPTION file to '0.3.11?' [(y)es | (n)o | (q)uit]: 
 # Ready to bump version in git?' [(y)es | (n)o | (q)uit]: 
 # Name of remote git repository (hit ENTER for default = 'origin'): 
