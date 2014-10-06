@@ -1,3 +1,11 @@
+# Version 0.4
+ - minor cleanup and build commit
+ - Merge branch 'master' into develop
+ - Merge branch 'release-0.3.14'
+ - fixed #12 rollback changes in DESCRIPTION better catching of conditions git functions more reliable and reusable
+
+----------
+
 # Version 0.3.14
  - Merge branch 'master' into develop
  - Merge branch 'release-0.3.13'
