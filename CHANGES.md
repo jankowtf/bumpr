@@ -1,3 +1,11 @@
+# Version 0.3.14
+ - Merge branch 'master' into develop
+ - Merge branch 'release-0.3.13'
+ - build commit
+ - bump commit
+
+----------
+
 # Version 0.3.13
  - Merge branch 'feat-projectName' into develop
  - feature projectName
