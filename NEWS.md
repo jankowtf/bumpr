@@ -1,3 +1,19 @@
+# CHANGES IN bumpr VERSION 0.4
+
+## NEW FEATURES
+
+## BUG FIXES
+
+## MAJOR CHANGES
+
+## MINOR CHANGES
+
+## MISC
+
+- just a bump to new minor release
+
+-----
+
 # CHANGES IN bumpr VERSION 0.3.14
 
 ## NEW FEATURES
