@@ -1,3 +1,28 @@
+# CHANGES IN bumpr VERSION 0.3.14
+
+## NEW FEATURES
+
+- automatic rollback of changes in `DESCRIPTION` file if `bumpGitVersion()` failed or 
+  was intentionally aborted
+
+## BUG FIXES
+
+- fixed: #12
+- fixed `tryCatch` construct
+- fixed processing of `PAT`: ensured that it is set as system environment 
+  variable `GITHUB_PAT`
+
+## MAJOR CHANGES
+
+- updated internal functions that are related to Git stuff to make them more reliable and reusable
+- condition of remote that is set locally but does not exist yet is no catched
+
+## MINOR CHANGES
+
+## MISC
+
+-----
+
 # CHANGES IN bumpr VERSION 0.3.13
 
 ## NEW FEATURES

@@ -1,4 +1,4 @@
-bumpr (v0.3.13)
+bumpr (v0.3.14)
 ======
 
 Easy systematic version bumping and more
@@ -28,13 +28,12 @@ corresponds to also updating the `Date` field of the
 
 ### Example
 
-Bumping from current version `0.3.12` to a new version
+Bumping from current version `0.3.13` to a new version
 
 ```
 bumpPackageVersion()
 
 # Taken versions numbers (last 10): 
-# 0.3.2
 # 0.3.3
 # 0.3.4
 # 0.3.5
@@ -45,11 +44,12 @@ bumpPackageVersion()
 # 0.3.10
 # 0.3.11
 # 0.3.12
-# Current version: 0.3.12
-# Suggested version: 0.3.13
-# Enter a valid version number: [ENTER = 0.3.13] 
-# Using suggested version: 0.3.13
-# Updating version in DESCRIPTION file to '0.3.13?' [(y)es | (n)o | (q)uit]: 
+# 0.3.13
+# Current version: 0.3.13
+# Suggested version: 0.3.14
+# Enter a valid version number: [ENTER = 0.3.14] 
+# Using suggested version: 0.3.14
+# Updating version in DESCRIPTION file to '0.3.14?' [(y)es | (n)o | (q)uit]: 
 # $old
 # [1] "0.3.11"
 # 
@@ -114,7 +114,6 @@ The example assumes that `bumpGitVersion()` is called without previously having 
 bumpGitVersion()
 
 # Taken versions numbers (last 10): 
-# 0.3.2
 # 0.3.3
 # 0.3.4
 # 0.3.5
@@ -125,11 +124,12 @@ bumpGitVersion()
 # 0.3.10
 # 0.3.11
 # 0.3.12
-# Current version: 0.3.12
-# Suggested version: 0.3.13
-# Enter a valid version number: [ENTER = 0.3.13] 
-# Using suggested version: 0.3.13
-# Updating version in DESCRIPTION file to '0.3.13?' [(y)es | (n)o | (q)uit]: 
+# 0.3.13
+# Current version: 0.3.13
+# Suggested version: 0.3.14
+# Enter a valid version number: [ENTER = 0.3.14] 
+# Using suggested version: 0.3.14
+# Updating version in DESCRIPTION file to '0.3.14?' [(y)es | (n)o | (q)uit]: 
 # Ready to bump version in git?' [(y)es | (n)o | (q)uit]: 
 # Name of remote git repository (hit ENTER for default = 'origin'): 
 # Using remote git repository: origin
@@ -139,14 +139,14 @@ bumpGitVersion()
 # Current PAT: {pat-value}
 # Change current PAT? [(y)es | (n)o | (q)uit]: n
 # 
-# [release-0.3.13 9b2f78d] Version bump to 0.3.13 2 files changed, 18 insertions(+), 5 deletions(-)
+# [develop 25ca2ed] Version bump to 0.3.14 2 files changed, 13 insertions(+), 5 deletions(-)
 # 
-# To https://github.com/Rappster/bumpr * [new tag]         v0.3.13 -> v0.3.13
+# To https://github.com/Rappster/bumpr * [new tag]         v0.3.14 -> v0.3.14
 # $old
-# [1] "0.3.12"
+# [1] "0.3.13"
 # 
 # $new
-# [1] "0.3.13"
+# [1] "0.3.14"
 ```
 
 #### Explanation what just happened
@@ -162,7 +162,7 @@ it complies with the [semtatic versioning conventions](http://semver.org/).
 - Then a last check before commencing with Git/GitHub related stuff is made.
 
 - Based on the specification of your remote repository (**note that it is recommended to define it prior to running `bumpGitVersion()` but it can also be set by the function in case it has not been defined yet**) a new commit
-is issued and **after** that a new tag corresponding to `v{new-version}` (e.g. `v0.3.13`) is created so **future** commits are automatically tagged with it.
+is issued and **after** that a new tag corresponding to `v{new-version}` (e.g. `v0.3.14`) is created so **future** commits are automatically tagged with it.
 
 - What also happens is that the files `CHANGES.md` and `NEWS.md` are updated
   as described in `?bumpr`.
