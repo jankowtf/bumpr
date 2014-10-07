@@ -1,3 +1,12 @@
+# Version 0.6
+ - feature no-remote
+ - Merge branch 'master' into develop
+ - Merge branch 'release-0.5'
+ - build commit
+ - bump commit
+
+----------
+
 # Version 0.5
  - minor updates
  - Merge branch 'master' into develop

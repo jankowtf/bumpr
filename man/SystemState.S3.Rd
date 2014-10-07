@@ -8,10 +8,11 @@ SystemState.S3(.x, ask_authentication = TRUE, branch = "master",
   cmd_user_name = "git config --global user.name", description_old = list(),
   git_tag = character(), git_user_email = character(),
   git_user_name = character(), global_or_local = "global",
-  pat_or_basic = character(), path_netrc = file.path(Sys.getenv("HOME"),
-  "_netrc"), path_netrc_tmp = file.path(Sys.getenv("HOME"), "_netrc_0"),
-  quit = FALSE, remote = character(), remote_all = list(origin =
-  character()), remote_name = "origin", remote_url = character(),
+  has_remote = TRUE, pat_or_basic = character(),
+  path_netrc = file.path(Sys.getenv("HOME"), "_netrc"),
+  path_netrc_tmp = file.path(Sys.getenv("HOME"), "_netrc_0"), quit = FALSE,
+  remote = character(), remote_all = list(origin = character()),
+  remote_name = "origin", remote_url = character(),
   temp_credentials = FALSE, what = NA)
 }
 \arguments{
@@ -65,6 +66,10 @@ Default: \code{character}.}
 \item{\code{global_or_local}}{\code{\link{character}}.
 Controls if global or local Git user credentials are used.
 Default: \code{"global"}.}
+
+\item{\code{has_remote}}{\code{\link{logical}}.
+Controls if remote Git repository is considered or not.
+Default: \code{TRUE}.}
 
 \item{\code{pat_or_basic}}{\code{\link{logical}}.
 Controls if a personal access token (PAT or OAuth token) or basic
@@ -147,6 +152,7 @@ SystemState.S3(
   git_user_email = "janko.thyson@rappster.de",
   git_user_name = "Janko Thyson",
   global_or_local = "global",
+  has_remote = TRUE,
   pat_or_basic = "pat",
   path_netrc = file.path(Sys.getenv("HOME"), "_netrc"),
   path_netrc_tmp = file.path(Sys.getenv("HOME"), "_netrc_0"),

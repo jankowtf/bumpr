@@ -561,6 +561,7 @@ setMethod(
     } else {
       out <- force
     }
+    sys_state$with_remote <- out
     return(out)
   }
   .ask_gitShowPat <- function(
@@ -649,6 +650,19 @@ setMethod(
     } else {
       out <- force
     }
+    return(out)
+  }
+  .ask_gitWithRemote <- function(
+    force = logical(),
+    sys_state
+  ) {
+    if (!length(force)) {
+      input <- readline("Would you like to include a remote repository? [(y)es | (n)o | (q)uit]: ")
+      out <- .processUserInput(input = input, dflt = "yes", sys_state = sys_state)
+    } else {
+      out <- force
+    }
+    sys_state$with_remote <- out
     return(out)
   }
   
@@ -979,9 +993,12 @@ setMethod(
   .gitRollbackTag <- function(sys_state) {
     message("Rolling back Git tags")
     cmd_1 <- paste0("git tag -d ", sys_state$git_tag)
-    cmd_2 <- paste0("git push ", sys_state$remote,  " :refs/tags/", sys_state$git_tag)
     msg <- suppressWarnings(system(cmd_1, intern = TRUE))
-    msg <- c(msg, suppressWarnings(system(cmd_2, intern = TRUE)))
+    if (sys_state$with_remote) {
+      cmd_2 <- paste0("git push ", sys_state$remote,  " :refs/tags/", 
+        sys_state$git_tag)
+      msg <- c(msg, suppressWarnings(system(cmd_2, intern = TRUE)))
+    }
     
     if (length(idx <- grep("Deleting a non-existent ref", msg))) {
       msg <- msg[-idx]
@@ -1158,19 +1175,25 @@ setMethod(
     }
   }
 
-  ## Validate remote repository //
-  git_remote <- system("git remote", intern = TRUE)
-  if (!length(git_remote)) {
-    message("No remote git repositories set yet. Specify at least 'origin'")
-    
-    res <- .ask_gitSetRemote(sys_state = sys_state)
-    if (sys_state$quit) {
-      message("Make sure you set a remote repository in your local repository")
-      message("Quiting")
-      return(list())
+  ## With remote //
+  .ask_gitWithRemote(sys_state = sys_state)
+  if (sys_state$with_remote) {
+    ## Validate remote repository //
+    git_remote <- system("git remote", intern = TRUE)
+    if (!length(git_remote)) {
+      message("No remote git repositories set yet")
+      message("Asking")
+      .ask_gitSetRemote(sys_state = sys_state)
+      if (sys_state$quit) {
+  #       message("Make sure you set a remote repository in your local repository")
+        message("Quiting")
+        return(list())
+      }
+      if (sys_state$with_remote) {
+        .gitSetRemote(remote = character(), sys_state = sys_state)
+      }
     }
-    .gitSetRemote(remote = character(), sys_state = sys_state)
-  } 
+  }
 
   ##----------------------------------------------------------------------------
   ## DESCRIPTION file and versions //
@@ -1205,54 +1228,6 @@ setMethod(
     return(list())
   }
   
-  ## Validated remote repository //
-  .gitGetRemoteAll(sys_state = sys_state)
-  .gitGetRemoteThis(sys_state = sys_state)
-
-  ## Check existence //
-  if (!.gitExistsRemoteRepository(
-        remote = sys_state$remote_name, 
-        sys_state = sys_state)
-  ) {
-    msg <- c(
-      "Remote does not exist yet //",
-      paste0("Name: ", sys_state$remote_name),
-      paste0("URL: ", sys_state$remote_url),
-      "Please ensure existence first"
-    )  
-    message(paste(msg, collapse = "\n"))
-    
-    .rollbackChangesInDescription(sys_state = sys_state)
-    message("Quitting")
-    return(list())
-  }
-
-  ## Check validity of remote //
-  if (!.gitIsRemoteRepository(remote = sys_state$remote_name, sys_state = sys_state)) {
-    .gitCheckForBranchesInRemote(
-      remote = sys_state$remote_name,
-      sys_state = sys_state
-    ) 
-    if (sys_state$quit) {
-      message(paste0("Not a git remote repository: ", sys_state$remote_name))
-      message("Make sure you have initialized either a bare repository or cloned an existing one")
-      .rollbackChangesInDescription(sys_state = sys_state)
-      message("Quitting")
-      return(list())
-    }    
-  }
-
-  .gitCheckForBranchesInRemote(
-    remote = sys_state$remote_name,
-    sys_state = sys_state
-  ) 
-  if (sys_state$quit) {
-    message(paste0("No branches in remote: ", sys_state$remote_name))
-    .rollbackChangesInDescription(sys_state = sys_state)
-    message("Quitting")
-    return(list())
-  }
-
   ## Git user credentials //
   .gitGetUserCredentialsCommand(sys_state = sys_state)
   if (sys_state$quit) {
@@ -1263,17 +1238,67 @@ setMethod(
   .gitUserEmail(sys_state = sys_state)
   .gitUserName(sys_state = sys_state)
 
-  ## Authentication //
-  if (sys_state$ask_authentication) {
-    .gitHandleAuthentication(
-      what = what, 
-      temp_credentials = temp_credentials,
-      sys_state = sys_state
-    )
-    if (sys_state$quit) {
+  if (sys_state$with_remote) {
+    ## Validated remote repository //
+    .gitGetRemoteAll(sys_state = sys_state)
+    .gitGetRemoteThis(sys_state = sys_state)
+
+    ## Check existence //
+    if (!.gitExistsRemoteRepository(
+          remote = sys_state$remote_name, 
+          sys_state = sys_state)
+    ) {
+      msg <- c(
+        "Remote does not exist yet //",
+        paste0("Name: ", sys_state$remote_name),
+        paste0("URL: ", sys_state$remote_url),
+        "Please ensure existence first"
+      )  
+      message(paste(msg, collapse = "\n"))
+      
       .rollbackChangesInDescription(sys_state = sys_state)
       message("Quitting")
-      return(list())  
+      return(list())
+    }
+
+    ## Check validity of remote //
+    if (!.gitIsRemoteRepository(remote = sys_state$remote_name, sys_state = sys_state)) {
+      .gitCheckForBranchesInRemote(
+        remote = sys_state$remote_name,
+        sys_state = sys_state
+      ) 
+      if (sys_state$quit) {
+        message(paste0("Not a git remote repository: ", sys_state$remote_name))
+        message("Make sure you have initialized either a bare repository or cloned an existing one")
+        .rollbackChangesInDescription(sys_state = sys_state)
+        message("Quitting")
+        return(list())
+      }    
+    }
+
+    .gitCheckForBranchesInRemote(
+      remote = sys_state$remote_name,
+      sys_state = sys_state
+    ) 
+    if (sys_state$quit) {
+      message(paste0("No branches in remote: ", sys_state$remote_name))
+      .rollbackChangesInDescription(sys_state = sys_state)
+      message("Quitting")
+      return(list())
+    }
+
+    ## Authentication //
+    if (sys_state$ask_authentication) {
+      .gitHandleAuthentication(
+        what = what, 
+        temp_credentials = temp_credentials,
+        sys_state = sys_state
+      )
+      if (sys_state$quit) {
+        .rollbackChangesInDescription(sys_state = sys_state)
+        message("Quitting")
+        return(list())  
+      }
     }
   }
 
@@ -1350,14 +1375,18 @@ setMethod(
     "git add --ignore-removal CHANGES.md DESCRIPTION",
     paste0("git commit -m \"Version bump to ", vsn_new, "\""),
     paste0("git tag -a -m \"Tagging version ", vsn_new, "\" \"v", vsn_new, "\""),
-    paste0("git push ", sys_state$remote, " --tags")
+    if (sys_state$with_remote) {
+      paste0("git push ", sys_state$remote, " --tags")
+    } else {
+      NULL
+    }
   )
 
   ## Execut git commands //
   res <- tryCatch({
       sapply(seq(along=git_commands), function(cmd) {
         res <- tryCatch({
-#             if (cmd == 4) {
+#             if (cmd == 3) {
 #               msg <- c(
 #                 "Intentional error for unit testing",
 #                 paste0("Git command: ", .gitEnsurePatIsHidden(git_commands[cmd]))
@@ -1391,13 +1420,15 @@ setMethod(
       file.remove("NEWS_0.md")
     },
     finally = {
-      ## Cleanup with respect to '_netrc' file // 
-      if (sys_state$pat_or_basic == "basic") {
-        if (file.exists(sys_state$path_netrc_tmp)) {
-          file.rename(from = sys_state$path_netrc_tmp, to = sys_state$path_netrc)
-        }
-        if (temp_credentials) {
-          unlink(sys_state$path_netrc, force = TRUE)
+      if (sys_state$with_remote) {
+        ## Cleanup with respect to '_netrc' file // 
+        if (sys_state$pat_or_basic == "basic") {
+          if (file.exists(sys_state$path_netrc_tmp)) {
+            file.rename(from = sys_state$path_netrc_tmp, to = sys_state$path_netrc)
+          }
+          if (temp_credentials) {
+            unlink(sys_state$path_netrc, force = TRUE)
+          }
         }
       }
     }
