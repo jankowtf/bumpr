@@ -24,7 +24,7 @@ should be updated with a version number bump. Specified as name-value pairs.}
 }
 \value{
 See method
-   \code{\link[bumpr]{bumpPackageVersion-GitVersion.S3-method}}
+   \code{\link[bumpr]{bumpPackageVersion-RPackageVersion.S3-method}}
 }
 \description{
 See generic: \code{\link[bumpr]{bumpPackageVersion}}
@@ -54,7 +54,9 @@ Janko Thyson \email{janko.thyson@gmail.com}
 }
 \seealso{
 \code{
-   \link[bumpr]{bumpPackageVersion}
+   \link[bumpr]{bumpPackageVersion},
+   \link[bumpr]{bumpPackageVersion-RPackageVersion.S3-method},
+   \link[bumpr]{bumpGitVersion}
 }
 }
 
