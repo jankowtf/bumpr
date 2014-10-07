@@ -48,6 +48,9 @@
 #'      Essentially, this function is a mere convenience wrapper for the 
 #'      actual workhorse function \code{\link[bumpr]{bump}} and its 
 #'      method associated to class \code{Bumpr.RPackageVersion.s3}.
+#'      
+#'      In case anything goes wrong, the changes to \code{DESCRIPTION} are 
+#'      automatically rolled back.
 #'    }
 #'    \item{\code{\link[bumpr]{bumpGitVersion}}: }{
 #'    
@@ -65,20 +68,27 @@
 #'      Files \code{DESCRIPTION} and \code{CHANGES.md} are automatically 
 #'      commited to signal the version bump.
 #'      
-#'      Optionally, you can push the new version (i.e. the new tag) as well 
-#'      as the associated commit to a remote repository (default: \code{origin}).
-#'      This can be any valid Git remote repository, including a GitHub
-#'      repository
+#'      Per default, the function expects that you want to include a remote 
+#'      repository in the version bump (default: `origin`). This can be any 
+#'      valid Git remote repository, including a GitHub repository. 
+#'      In this case the bump commit as well as the new version 
+#'      (i.e. the new tag) are pushed to the remote repository as well. 
+#'      You can, however, also choose to only work with your local Git 
+#'      repository (**not recommended**). Simply answer the first question 
+#'      accordingly.
 #'      
 #'      Essentially, this function is a mere convenience wrapper for the 
 #'      actual workhorse function \code{\link[bumpr]{bump}} and its 
 #'      method associated to class \code{Bumpr.GitVersion.s3}.
+#'      
+#'      In case anything goes wrong, all changes made up to this point are
+#'      automatically rolled back.
 #'    }
 #'    \item{\code{\link[bumpr]{bump}}: }{
 #'    
 #'      The actual workhorse function of this package. Introduced in order to 
 #'      generalize the package's purpose and scope to other aspects than 
-#'      version bumping. 
+#'      version bumping only. 
 #'      
 #'      The long-term goal of this package is to provide a simple interface
 #'      to all sorts of things "that can be bumped".
@@ -86,6 +96,7 @@
 #' }
 #' 
 #' @section Disclaimer:
+#' 
 #' \itemize{
 #'    \item{
 #'    \strong{This package is really new. So please test it with 

@@ -16,6 +16,7 @@ SystemState.S3(
   git_user_email = "janko.thyson@rappster.de",
   git_user_name = "Janko Thyson",
   global_or_local = "global",
+  has_remote = TRUE,
   pat_or_basic = "pat",
   path_netrc = file.path(Sys.getenv("HOME"), "_netrc"),
   path_netrc_tmp = file.path(Sys.getenv("HOME"), "_netrc_0"),
