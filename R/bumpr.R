@@ -23,6 +23,12 @@
 #'      Constructor function for instances of class 
 #'      \code{\link[bumpr]{RPackageVersion.S3}}
 #'    }
+#'    \item{\code{\link[bumpr]{SystemState.S3}}: }{
+#'    
+#'      Constructor function for instances of class 
+#'      \code{\link[bumpr]{SystemState.S3}}.
+#'      Used to track system states across function calls.
+#'    }
 #' }
 #' 
 #' @section Main functions/methods:
