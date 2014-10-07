@@ -188,10 +188,11 @@ along the way something when wrong (wrong user input) or when you wanted to quit
 
 ## Classes and constructors
 
-Class `GitVersion.S3`
+### Class `GitVersion.S3`
+
+Formal use
 
 ```
-## Formal use //
 bumpr::GitVersion.S3()
 
 # $version
@@ -211,8 +212,11 @@ bumpr::GitVersion.S3()
 # 
 # attr(,"class")
 # [1] "GitVersion.S3" "list"   
+```
 
-## Informal use //
+Informal use
+
+```
 bumpr::GitVersion.S3("0.1.1")
 
 # [1] "0.1.1"
@@ -220,10 +224,11 @@ bumpr::GitVersion.S3("0.1.1")
 # [1] "GitVersion.S3" "character"    
 ```
 
-Class `RPackageVersion.S3`
+### Class `RPackageVersion.S3`
+
+Formal use
 
 ```
-## Formal use //
 bumpr::RPackageVersion.S3()
 
 # $version
@@ -237,8 +242,11 @@ bumpr::RPackageVersion.S3()
 # 
 # attr(,"class")
 # [1] "RPackageVersion.S3" "list"   
+```
 
-## Informal use //
+Informal use
+
+```
 bumpr::RPackageVersion.S3("0.1.1")
 
 # [1] "0.1.1"
@@ -246,3 +254,42 @@ bumpr::RPackageVersion.S3("0.1.1")
 # [1] "RPackageVersion.S3" "character"   
 ```
 
+### Class `SystemState.S3`
+
+Formal use
+
+```
+bumpr::SystemState.S3(
+  ask_authentication = TRUE,
+  branch = "master",
+  cmd_user_email = "git config --global user.email",
+  cmd_user_name = "git config --global user.name",
+  git_user_email = "janko.thyson@rappster.de",
+  git_user_name = "Janko Thyson",
+  global_or_local = "global",
+  pat_or_basic = "pat",
+  path_netrc = file.path(Sys.getenv("HOME"), "_netrc"),
+  path_netrc_tmp = file.path(Sys.getenv("HOME"), "_netrc_0"),
+  quit = FALSE,
+  remote = "origin",
+  remote_all = list(origin = character()),
+  remote_name = "origin",
+  remote_url = "https://github.com/Rappster/bumpr",
+  temp_credentials = FALSE,
+  what = bumpr::GitVersion.S3()
+)
+
+# <environment: 0x000000000f9d3e60>
+# attr(,"class")
+# [1] "SystemState.S3" "environment"   
+```
+
+Informal use 
+
+```
+bumpr::SystemState.S3(TRUE)
+
+# [1] TRUE
+# attr(,"class")
+# [1] "SystemState.S3" "logical"  
+```
