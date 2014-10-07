@@ -285,6 +285,8 @@ setMethod(
         desc$Date <- Sys.time()
       }
       
+#       stop("Intentional error for unit testing")
+      
       ## Write DESCRIPTION FILE
       write.dcf(as.data.frame(desc), file = "DESCRIPTION")  
     }
@@ -292,6 +294,7 @@ setMethod(
     },
     error = function(cond) {
       .rollbackChangesInDescription(sys_state = sys_state)
+      stop(cond)
     }
   )
 
@@ -1353,10 +1356,10 @@ setMethod(
   res <- tryCatch({
       sapply(seq(along=git_commands), function(cmd) {
         res <- tryCatch({
-#             if (cmd == 3) {
+#             if (cmd == 4) {
 #               msg <- c(
 #                 "Intentional error for unit testing",
-#                 paste0("Git command: ", git_commands[cmd])
+#                 paste0("Git command: ", .gitEnsurePatIsHidden(git_commands[cmd]))
 #               )
 #               stop(paste(msg, collapse = "\n"))
 #             }
