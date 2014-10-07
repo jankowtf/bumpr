@@ -1,7 +1,7 @@
 bumpr (v0.5)
 ======
 
-Easy systematic version bumping and more
+Systematic version bumping and more
 
 ## Installation
 
@@ -15,16 +15,13 @@ require("bumpr")
 
 See `?bumpr` for the overall purpose of this package.
 
+## Semantic versioning
+
+The package's versioning scheme is based on the paradigm of [semantic versioning](http://semver.org/).
+
 ## Bump R package version (no Git required)
 
-Retrieves the current package version from the `DESCRIPTION` file,
-suggests the next version number and prompts the user for a new 
-version number. After asking permission, the new version number is 
-written to the `DESCRIPTION` file along with the additional
-information provided via `desc_fields`. Currently, only 
-an element of form `Date = NULL` is allowed/used, which 
-corresponds to also updating the `Date` field of the 
-`DESCRIPTION` file to the current system time. `desc_fields = list()` suppresses that.
+Retrieves the current package version from the `DESCRIPTION` file, suggests the next version number and prompts the user for a new version number. After asking permission, the new version number is written to the `DESCRIPTION` file along with the additional information provided via `desc_fields`. Currently, only an element of form `Date = NULL` is allowed/used, which corresponds to also updating the `Date` field of the `DESCRIPTION` file to the current system time. Setting `desc_fields = list()` suppresses that.
 
 ### Example
 
@@ -69,6 +66,8 @@ it complies with the [semtatic versioning conventions](http://semver.org/).
 - The function returns the old and new version as a `list`. If
 along the way something when wrong (wrong user input) or when you wanted to quit on purpose, the function returns `list()`.
 
+  In this case, all changes are rolled back (see section *Rollback behavior*).
+
 ## Bump Git version 
 
 Performs all sorts of Git-related checks and tasks in order to take care
@@ -85,13 +84,11 @@ changes in the *new* version is added in file `NEWS.md`.
 Files `DESCRIPTION` and `CHANGES.md` are automatically 
 commited to signal the version bump.
 
-Optionally, you can push the new version (i.e. the new tag) as well 
-as the associated commit to a remote repository (default: `origin`).
-This can be any valid Git remote repository, including a GitHub
-repository
+Per default, the function expects that you want to include a remote repository in the version bump (default: `origin`). This can be any valid Git remote repository, including a GitHub repository. In this case the bump commit as well as the new version (i.e. the new tag) are pushed to the remote repository as well. You can, however, also choose to only work with your local Git repository (**not recommended**). Simply answer the first question accordingly.
 
-**Please read the assumptions and recommendations stated in `?bumpGitVersion()`
-before you are running this function!**
+### NOTE
+**Please read the assumptions and recommendations stated in `?bumpGitVersion`
+before running this function!**
 
 Differentiate use cases:
 
@@ -103,7 +100,7 @@ Differentiate use cases:
 
 2. Calling `bumpGitVersion()` without prior calling of `bumpPackageVersion()`
 
-  This is the recommended way of using this function when version-controlling your package project with Git. Make your version specification as you see fit.
+  **This is the recommended way of using this function when version-controlling your package project with Git. Make your version specification as you see fit.**
 
 ### Example
 
@@ -390,6 +387,7 @@ bumpr::SystemState.S3(
   git_user_email = "janko.thyson@rappster.de",
   git_user_name = "Janko Thyson",
   global_or_local = "global",
+  has_remote = TRUE,
   pat_or_basic = "pat",
   path_netrc = file.path(Sys.getenv("HOME"), "_netrc"),
   path_netrc_tmp = file.path(Sys.getenv("HOME"), "_netrc_0"),

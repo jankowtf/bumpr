@@ -39,6 +39,9 @@
 #' @field global_or_local \code{\link{character}}.
 #'    Controls if global or local Git user credentials are used.
 #'    Default: \code{"global"}.
+#' @field has_remote \code{\link{logical}}.
+#'    Controls if remote Git repository is considered or not.
+#'    Default: \code{TRUE}.
 #' @field pat_or_basic \code{\link{logical}}.
 #'    Controls if a personal access token (PAT or OAuth token) or basic 
 #'    HTTPS authentication should be used.
@@ -95,6 +98,7 @@ SystemState.S3 <- function(
   git_user_email = character(),
   git_user_name = character(),
   global_or_local = "global",
+  has_remote = TRUE,
   pat_or_basic = character(),
   path_netrc = file.path(Sys.getenv("HOME"), "_netrc"),
   path_netrc_tmp = file.path(Sys.getenv("HOME"), "_netrc_0"),
@@ -121,6 +125,7 @@ SystemState.S3 <- function(
     out$git_user_email <- git_user_email
     out$git_user_name <- git_user_name
     out$global_or_local <- global_or_local
+    out$has_remote <- has_remote
     out$pat_or_basic <- pat_or_basic
     out$path_netrc <- path_netrc
     out$path_netrc_tmp <- path_netrc_tmp
