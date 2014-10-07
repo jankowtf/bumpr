@@ -293,6 +293,7 @@ setMethod(
     list(old = vsn_old, new = vsn_new)
     },
     error = function(cond) {
+      message("Version bump failed")
       .rollbackChangesInDescription(sys_state = sys_state)
       stop(cond)
     }

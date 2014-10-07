@@ -170,11 +170,13 @@ is issued and **after** that a new tag corresponding to `v{new-version}` (e.g. `
 - What also happens is that the files `CHANGES.md` and `NEWS.md` are updated
   as described in `?bumpr`.
 
-- Before pushing to the remote (GitHub) repository, you are asked which form of HTTPS authentication you'd like to use: `PAT` ([Personal Access Token](https://github.com/blog/1509-personal-api-tokens)) or `Basic`.
+- Before pushing to the remote (GitHub) repository, you are asked which form of HTTPS authentication you'd like to use: `PAT` ([Personal Access Token](https://github.com/blog/1509-personal-api-tokens) or [OAuth token](http://en.wikipedia.org/wiki/OAuth)) or `Basic`.
 
   - if choosing `PAT` (recommended):
   
-    If your PAT has not been set as an environment variable yet, you are asked to do so. Otherwise you are asked if you would like to review the currently set PAT. In this case you are also asked if you would like to change the PAT (in case the current PAT is wrong/outdated).
+    If your PAT has not been set as an environment variable yet (`GITHUB_PAT` following the convention introduced by package [`devtools`](https://github.com/hadley/devtools)), you are asked to do so. 
+    
+    Otherwise you are asked if you would like to review the currently set PAT. In this case you are also asked if you would like to change the PAT (in case the current PAT is wrong/outdated).
   
   - if choosing `Basic`
   
