@@ -184,6 +184,27 @@ is issued and **after** that a new tag corresponding to `v{new-version}` (e.g. `
 - The function returns the old and new version as a `list` string. If
 along the way something when wrong (wrong user input) or when you wanted to quit on purpose, the function returns `list()`.
 
+## Rollback behavior
+
+### bumpPackageVersion()
+
+If something should go wrong in `bumpPackageVersion()`, the function takes care
+of rolling back all changes to `DESCRIPTION` that might have been made.
+
+#### Example: intentional error
+
+
+
+### bumpGitVersion()
+
+If the use decides to quit a version bump or in case anything should go wrong in `bumpGitVersion()`, the function takes care or rolling back all changes:
+
+1. Changes in `DESCRIPTION`
+2. Changes in `CHANGES.md`
+3. Changes in `NEWS.md`
+4. Last Git commit corresponding to the version bump 
+5. Git tag that was associated to the new version 
+
 -----
 
 ## Classes and constructors
@@ -264,6 +285,8 @@ bumpr::SystemState.S3(
   branch = "master",
   cmd_user_email = "git config --global user.email",
   cmd_user_name = "git config --global user.name",
+  description_old = as.list(read.dcf("DESCRIPTION")[1,]),
+  git_tag = "v1.1.2",
   git_user_email = "janko.thyson@rappster.de",
   git_user_name = "Janko Thyson",
   global_or_local = "global",

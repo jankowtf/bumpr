@@ -42,7 +42,8 @@
 #' @template threedot
 #' @example inst/examples/bumpPackageVersion.r
 #' @seealso \code{
-#'   	\link[bumpr]{bumpPackageVersion-GitVersion.S3-method}
+#'   	\link[bumpr]{bumpPackageVersion-RPackageVersion.S3-method},
+#'     \link[bumpr]{bumpGitVersion}
 #' }
 #' @template author
 #' @template references
@@ -71,10 +72,12 @@ setGeneric(
 #' @inheritParams bumpPackageVersion
 #' @param .ns \code{\link{GitVersion.S3}}.
 #' @return See method
-#'    \code{\link[bumpr]{bumpPackageVersion-GitVersion.S3-method}}
+#'    \code{\link[bumpr]{bumpPackageVersion-RPackageVersion.S3-method}}
 #' @example inst/examples/bumpPackageVersion.r
 #' @seealso \code{
-#'    \link[bumpr]{bumpPackageVersion}
+#'    \link[bumpr]{bumpPackageVersion},
+#'    \link[bumpr]{bumpPackageVersion-RPackageVersion.S3-method},
+#'    \link[bumpr]{bumpGitVersion}
 #' }
 #' @template author
 #' @template references
@@ -110,11 +113,12 @@ setMethod(
 #'   	 
 #' @inheritParams bumpPackageVersion
 #' @param .ns \code{\link{RPackageVersion.S3}}.
-#' @return \code{\link{character}}. New version that the package project has 
-#'    been bumped to.
+#' @return \code{\link{list}}. (\code{old} and \code{new} version number or 
+#'    \code{list()} if the function exited before completing the bump.
 #' @example inst/examples/bumpPackageVersion.r
 #' @seealso \code{
-#'    \link[bumpr]{bumpPackageVersion}
+#'    \link[bumpr]{bumpPackageVersion},
+#'     \link[bumpr]{bumpGitVersion}
 #' }
 #' @template author
 #' @template references
