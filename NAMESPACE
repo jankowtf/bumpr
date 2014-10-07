@@ -2,6 +2,7 @@
 
 export(GitVersion.S3)
 export(RPackageVersion.S3)
+export(SystemState.S3)
 export(bump)
 export(bumpGitVersion)
 export(bumpPackageVersion)

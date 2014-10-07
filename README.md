@@ -1,4 +1,4 @@
-bumpr (v0.4)
+bumpr (v0.4.1)
 ======
 
 Easy systematic version bumping and more
@@ -28,13 +28,12 @@ corresponds to also updating the `Date` field of the
 
 ### Example
 
-Bumping from current version `0.3.14` to a new version
+Bumping from current version `0.4` to a new version
 
 ```
 bumpPackageVersion()
 
 # Taken versions numbers (last 10): 
-# 0.3.4
 # 0.3.5
 # 0.3.6
 # 0.3.7
@@ -45,15 +44,16 @@ bumpPackageVersion()
 # 0.3.12
 # 0.3.13
 # 0.3.14
-# Current version: 0.3.14
-# Suggested version: 0.3.15
-# Enter a valid version number: [ENTER = 0.3.15] 0.4
-# Updating version in DESCRIPTION file to '0.4?' [(y)es | (n)o | (q)uit]: 
+# 0.4
+# Current version: 0.4
+# Suggested version: 0.5
+# Enter a valid version number: [ENTER = 0.5] 0.4.1
+# Updating version in DESCRIPTION file to '0.4.1?' [(y)es | (n)o | (q)uit]: 
 # $old
-# [1] "0.3.14"
+# [1] "0.4"
 # 
 # $new
-# [1] "0.4"
+# [1] "0.4.1"
 ```
 
 #### Explanation what just happened
@@ -113,7 +113,6 @@ The example assumes that `bumpGitVersion()` is called without previously having 
 bumpGitVersion()
 
 # Taken versions numbers (last 10): 
-# 0.3.4
 # 0.3.5
 # 0.3.6
 # 0.3.7
@@ -124,10 +123,11 @@ bumpGitVersion()
 # 0.3.12
 # 0.3.13
 # 0.3.14
-# Current version: 0.3.14
-# Suggested version: 0.3.15
-# Enter a valid version number: [ENTER = 0.3.15] 0.4
-# Updating version in DESCRIPTION file to '0.4?' [(y)es | (n)o | (q)uit]: 
+# 0.4
+# Current version: 0.4
+# Suggested version: 0.5
+# Enter a valid version number: [ENTER = 0.5] 0.4.1
+# Updating version in DESCRIPTION file to '0.4.1?' [(y)es | (n)o | (q)uit]: 
 # Ready to bump version in git?' [(y)es | (n)o | (q)uit]: 
 # Name of remote git repository (hit ENTER for default = 'origin'): 
 # Using remote git repository: origin
@@ -137,14 +137,14 @@ bumpGitVersion()
 # Current PAT: {pat-value}
 # Change current PAT? [(y)es | (n)o | (q)uit]: n
 # 
-# [develop 2e3fa1d] Version bump to 0.4 2 files changed, 13 insertions(+), 5 deletions(-)
+# [release-0.4.1 b692bbc] Version bump to 0.4.1 2 files changed, 13 insertions(+), 5 deletions(-)
 # 
-# To https://github.com/Rappster/bumpr * [new tag]         v0.4 -> v0.4
+# To https://github.com/Rappster/bumpr * [new tag]         v0.4.1 -> v0.4.1
 # $old
-# [1] "0.3.14"
+# [1] "0.4"
 # 
 # $new
-# [1] "0.4"
+# [1] "0.4.1"
 ```
 
 #### Explanation what just happened
@@ -160,7 +160,7 @@ it complies with the [semtatic versioning conventions](http://semver.org/).
 - Then a last check before commencing with Git/GitHub related stuff is made.
 
 - Based on the specification of your remote repository (**note that it is recommended to define it prior to running `bumpGitVersion()` but it can also be set by the function in case it has not been defined yet**) a new commit
-is issued and **after** that a new tag corresponding to `v{new-version}` (e.g. `v0.4`) is created so **future** commits are automatically tagged with it.
+is issued and **after** that a new tag corresponding to `v{new-version}` (e.g. `v0.4.1`) is created so **future** commits are automatically tagged with it.
 
 - What also happens is that the files `CHANGES.md` and `NEWS.md` are updated
   as described in `?bumpr`.
@@ -188,10 +188,11 @@ along the way something when wrong (wrong user input) or when you wanted to quit
 
 ## Classes and constructors
 
-Class `GitVersion.S3`
+### Class `GitVersion.S3`
+
+Formal use
 
 ```
-## Formal use //
 bumpr::GitVersion.S3()
 
 # $version
@@ -211,8 +212,11 @@ bumpr::GitVersion.S3()
 # 
 # attr(,"class")
 # [1] "GitVersion.S3" "list"   
+```
 
-## Informal use //
+Informal use
+
+```
 bumpr::GitVersion.S3("0.1.1")
 
 # [1] "0.1.1"
@@ -220,10 +224,11 @@ bumpr::GitVersion.S3("0.1.1")
 # [1] "GitVersion.S3" "character"    
 ```
 
-Class `RPackageVersion.S3`
+### Class `RPackageVersion.S3`
+
+Formal use
 
 ```
-## Formal use //
 bumpr::RPackageVersion.S3()
 
 # $version
@@ -237,8 +242,11 @@ bumpr::RPackageVersion.S3()
 # 
 # attr(,"class")
 # [1] "RPackageVersion.S3" "list"   
+```
 
-## Informal use //
+Informal use
+
+```
 bumpr::RPackageVersion.S3("0.1.1")
 
 # [1] "0.1.1"
@@ -246,3 +254,42 @@ bumpr::RPackageVersion.S3("0.1.1")
 # [1] "RPackageVersion.S3" "character"   
 ```
 
+### Class `SystemState.S3`
+
+Formal use
+
+```
+bumpr::SystemState.S3(
+  ask_authentication = TRUE,
+  branch = "master",
+  cmd_user_email = "git config --global user.email",
+  cmd_user_name = "git config --global user.name",
+  git_user_email = "janko.thyson@rappster.de",
+  git_user_name = "Janko Thyson",
+  global_or_local = "global",
+  pat_or_basic = "pat",
+  path_netrc = file.path(Sys.getenv("HOME"), "_netrc"),
+  path_netrc_tmp = file.path(Sys.getenv("HOME"), "_netrc_0"),
+  quit = FALSE,
+  remote = "origin",
+  remote_all = list(origin = character()),
+  remote_name = "origin",
+  remote_url = "https://github.com/Rappster/bumpr",
+  temp_credentials = FALSE,
+  what = bumpr::GitVersion.S3()
+)
+
+# <environment: 0x000000000f9d3e60>
+# attr(,"class")
+# [1] "SystemState.S3" "environment"   
+```
+
+Informal use 
+
+```
+bumpr::SystemState.S3(TRUE)
+
+# [1] TRUE
+# attr(,"class")
+# [1] "SystemState.S3" "logical"  
+```

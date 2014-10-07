@@ -1,3 +1,11 @@
+# Version 0.4.1
+ - Merge branch 'feat-state' into develop
+ - feature state
+ - build commit
+ - bump commit
+
+----------
+
 # Version 0.4
  - minor cleanup and build commit
  - Merge branch 'master' into develop

@@ -376,12 +376,12 @@ setMethod(
   .processUserInput <- function(
     input, 
     dflt = "yes",
-    buffer
+    sys_state
   ) {
     input <- ifelse(grepl("\\D", input), tolower(input), dflt)
     if (grepl("[qQ]|Quit|quit|QUIT", input)) {
       out <- NULL
-      buffer$quit <- TRUE
+      sys_state$quit <- TRUE
     } else if (grepl("[nN]|No|no|NO", input)) {
       out <- FALSE
     } else if (grepl("[yY]|Yes|yes|YES", input)) {
@@ -389,17 +389,17 @@ setMethod(
     } else {
       message(paste0("Invalid input: ", input))
       out <- NULL
-      buffer$quit <- TRUE
+      sys_state$quit <- TRUE
     }
     return(out)
   }    
   .ask_gitAddGitignoreFile <- function(
     force = logical(),
-    buffer
+    sys_state
   ) {
     if (!length(force)) {
       input <- readline("Add a '.gitignore' file (highly recommended)? [(y)es | (n)o | (q)uit]: ")
-      out <- .processUserInput(input = input, dflt = "yes", buffer = buffer)
+      out <- .processUserInput(input = input, dflt = "yes", sys_state = sys_state)
     } else {
       out <- force
     }
@@ -407,14 +407,14 @@ setMethod(
   }  
   .ask_gitChangeOrSetRemote <- function(
     force = logical(),
-    buffer
+    sys_state
   ) {
     if (!length(force)) {
       input <- readline("Change remote name or set? [(c)hange | (s)et | (q)uit]: ")
       input <- ifelse(grepl("\\D", input), input, "change")
       if (grepl("[qQ]|Quit|quit|QUIT", input)) {
         out <- NULL
-        buffer$quit <- TRUE
+        sys_state$quit <- TRUE
       } else if (grepl("[cC]|Change|change|CHANGE", input)) {
         out <- "change"
       } else if (grepl("[sS]|set|Set|SET", input)) {
@@ -422,7 +422,7 @@ setMethod(
       } else {
         message(paste0("Invalid input: ", input))
         out <- NULL
-        buffer$quit <- TRUE
+        sys_state$quit <- TRUE
       } 
     } else {
       out <- force
@@ -431,11 +431,11 @@ setMethod(
   }
   .ask_gitChangePat <- function(
     force = logical(),
-    buffer
+    sys_state
   ) {
     if (!length(force)) {
       input <- readline("Change current PAT? [(y)es | (n)o | (q)uit]: ")
-      out <- .processUserInput(input = input, dflt = "yes", buffer = buffer)
+      out <- .processUserInput(input = input, dflt = "yes", sys_state = sys_state)
     } else {
       out <- force
     }
@@ -443,11 +443,11 @@ setMethod(
   }
   .ask_gitDoInitialCommit <- function(
     force = logical(),
-    buffer
+    sys_state
   ) {
     if (!length(force)) {
       input <- readline("Perform initial commit (or quit)? [(y)es | (n)o | (q)uit]: ")
-      out <- .processUserInput(input = input, dflt = "yes", buffer = buffer)
+      out <- .processUserInput(input = input, dflt = "yes", sys_state = sys_state)
     } else {
       out <- force
     }
@@ -455,14 +455,14 @@ setMethod(
   }  
   .ask_gitGlobalOrLocalCredentials <- function(
     force = logical(),
-    buffer
+    sys_state
   ) {
     if (!length(force)) {
       input <- readline("Git 'user.email' and 'user.name': global or local? [(g)lobal | (l)ocal | (q)uit]: ")
       input <- ifelse(grepl("\\D", input), tolower(input), "global")
       if (grepl("[qQ]|quit|Quit|QUIT", input)) {
         out <- NULL
-        buffer$quit <- TRUE
+        sys_state$quit <- TRUE
       } else if (grepl("[gG]|global|Global|GLOBAL", input)) {
         out <- "global"
       } else if (grepl("[lL]|local|Local|LOCAL", input)) {
@@ -470,23 +470,23 @@ setMethod(
       } else {
         message(paste0("Invalid input: ", input))
         out <- NULL
-        buffer$quit <- TRUE
+        sys_state$quit <- TRUE
       }
     } else {
       out <- force
     }
-    buffer$global_or_local <- out
+    sys_state$global_or_local <- out
     return(out)
   }
   .ask_gitPushToRemote <- function(
-    remote = ifelse(!length(buffer$remote_name), "origin", buffer$remote_name),
+    remote = ifelse(!length(sys_state$remote_name), "origin", sys_state$remote_name),
     force = logical(),
-    buffer
+    sys_state
   ) {
     if (!length(force)) {
       input <- readline(paste0("Would you like to push to ", remote, 
                                "? [(y)es | (n)o | (q)uit]: "))
-      out <- .processUserInput(input = input, dflt = "yes", buffer = buffer)
+      out <- .processUserInput(input = input, dflt = "yes", sys_state = sys_state)
     } else {
       out <- force
     }
@@ -494,7 +494,7 @@ setMethod(
   }
   .ask_gitRemoteName <- function(
     force = character(),
-    buffer
+    sys_state
   ) {
     if (!length(force)) {
       input <- readline("Name of remote git repository (hit ENTER for default = 'origin'): ")
@@ -502,7 +502,7 @@ setMethod(
       if (input == "") {
         message("Invalid input")
         out <- NULL
-        buffer$quit <- TRUE
+        sys_state$quit <- TRUE
       } else {
         out <- input
       } 
@@ -513,11 +513,11 @@ setMethod(
   }
   .ask_gitReadyToBumpVersion <- function(
     force = logical(), 
-    buffer
+    sys_state
   ) {
     if (!length(force)) {
       input <- readline("Ready to bump version in git?' [(y)es | (n)o | (q)uit]: ")
-      out <- .processUserInput(input = input, dflt = "yes", buffer = buffer)
+      out <- .processUserInput(input = input, dflt = "yes", sys_state = sys_state)
     } else {
       out <- force
     }
@@ -525,11 +525,11 @@ setMethod(
   }
   .ask_gitSetRemote <- function(
     force = logical(),
-    buffer
+    sys_state
   ) {
     if (!length(force)) {
       input <- readline("Would you like to add a remote repository now? [(y)es | (n)o | (q)uit]: ")
-      out <- .processUserInput(input = input, dflt = "yes", buffer = buffer)
+      out <- .processUserInput(input = input, dflt = "yes", sys_state = sys_state)
     } else {
       out <- force
     }
@@ -537,11 +537,11 @@ setMethod(
   }
   .ask_gitShowPat <- function(
     force = logical(),
-    buffer
+    sys_state
   ) {
     if (!length(force)) {
       input <- readline("Show current PAT to verify its correctness? [(n)o | (y)es | (q)uit]: ")
-      out <- .processUserInput(input = input, dflt = "no", buffer = buffer)
+      out <- .processUserInput(input = input, dflt = "no", sys_state = sys_state)
     } else {
       out <- force
     }
@@ -549,14 +549,14 @@ setMethod(
   }  
   .ask_gitUsePat <- function(
     force = logical(),
-    buffer
+    sys_state
   ) {
     if (!length(force)) {
       input <- readline("Use PAT or 'basic' HTTPS authentication? [(p)at | (b)asic | (q)uit]: ")
       input <- ifelse(grepl("\\D", input), tolower(input), "pat")
       if (grepl("[qQ]|quit|Quit|QUIT", input)) {
         out <- NULL
-        buffer$quit <- TRUE
+        sys_state$quit <- TRUE
       } else if (grepl("[pP]|pat|Pat|PAT", input)) {
         out <- "pat"
       } else if (grepl("[bB]|basic|Basic|BASIC", input)) {
@@ -564,7 +564,7 @@ setMethod(
       } else {
         message(paste0("Invalid input: ", input))
         out <- NULL
-        buffer$quit <- TRUE
+        sys_state$quit <- TRUE
       }
     } else {
       out <- force
@@ -573,9 +573,9 @@ setMethod(
   }
   .ask_gitValidatedRemoteName <- function(
     remote = character(),
-    buffer
+    sys_state
   ) {
-    remote_this <- .ask_gitRemoteName(buffer = buffer)
+    remote_this <- .ask_gitRemoteName(sys_state = sys_state)
     message(paste0("Using remote git repository: ", remote_this))
   
     if (!length(remote) || !remote_this %in% remote) {
@@ -584,26 +584,26 @@ setMethod(
         message(paste0("Available remote repositories: ", 
           paste(remote, collapse = ", ")))  
       }
-      remote_dec <- .ask_gitChangeOrSetRemote(buffer = buffer)
-      if (buffer$quit) {
+      remote_dec <- .ask_gitChangeOrSetRemote(sys_state = sys_state)
+      if (sys_state$quit) {
         return(NULL)
       } else if (remote_dec == "change") {
         remote_this <- .ask_gitValidatedRemoteName(
           remote = remote,
-          buffer = buffer
+          sys_state = sys_state
         )
       } else if (remote_dec == "set") {
-        .gitSetRemote(remote = remote_this, buffer = buffer)
+        .gitSetRemote(remote = remote_this, sys_state = sys_state)
         push_to_remote <- .ask_gitPushToRemote(
           remote = remote_this,
-          buffer = buffer
+          sys_state = sys_state
         )
-        if (buffer$quit) {
+        if (sys_state$quit) {
           return(NULL)
         }
         if (push_to_remote) {
-          res <- .gitPushToRemote(remote = remote_this, buffer = buffer)
-          if (buffer$quit) {
+          res <- .gitPushToRemote(remote = remote_this, sys_state = sys_state)
+          if (sys_state$quit) {
             return(NULL)
           }
         }
@@ -613,11 +613,11 @@ setMethod(
   }
   .ask_useStoredCredentials <- function(
     force = logical(),
-    buffer
+    sys_state
   ) {
     if (!length(force)) {
       input <- readline("Use stored HTTPS credentials (no = type them)? [(y)es | (n)o | (q)uit]: ")
-      out <- .processUserInput(input = input, dflt = "yes", buffer = buffer) 
+      out <- .processUserInput(input = input, dflt = "yes", sys_state = sys_state) 
     } else {
       out <- force
     }
@@ -651,30 +651,30 @@ setMethod(
     file.rename(from = tmpfile, to = ".gitignore")
   }
   .gitCheckForBranchesInRemote <- function(
-    remote = ifelse(!length(buffer$remote_name), "origin", buffer$remote_name),
-    buffer
+    remote = ifelse(!length(sys_state$remote_name), "origin", sys_state$remote_name),
+    sys_state
   ) {
     res <- system(paste0("git ls-remote --heads ", remote), intern = TRUE)
     if (!length(res) || grepl("bad default revision", res)) {
       message(paste0("No branches yet in remote repository: ", remote))
-      push_to_remote <- .ask_gitPushToRemote(remote = remote, buffer = buffer)
-      if (buffer$quit) {
+      push_to_remote <- .ask_gitPushToRemote(remote = remote, sys_state = sys_state)
+      if (sys_state$quit) {
         message("Ensure you pushed at least once to the remote repository")
         return(NULL)
       }
       if (push_to_remote) {
-        .gitPushToRemote(remote = remote, buffer = buffer)
+        .gitPushToRemote(remote = remote, sys_state = sys_state)
       }
     }
     res
   }
   .gitDoInitialCommit <- function(
     check_gitignore = FALSE,
-    buffer
+    sys_state
   ) {
     if (!file.exists(".gitignore") && check_gitignore) {
-      add_gitignore <- .ask_gitAddGitignoreFile(buffer = buffer)
-      if (buffer$quit) {
+      add_gitignore <- .ask_gitAddGitignoreFile(sys_state = sys_state)
+      if (sys_state$quit) {
         return(NULL)
       }
       if (add_gitignore) {
@@ -686,14 +686,14 @@ setMethod(
     res <- suppressWarnings(system("git log", intern = TRUE))
     if (grepl("fatal: bad default revision 'HEAD'", res[1])) {
       message("Something went wrong with initial commit")
-      buffer$quit <- TRUE
+      sys_state$quit <- TRUE
       return(NULL)
     }  
     res
   }
   .gitExistsRemoteRepository <- function(
-    remote = ifelse(!length(buffer$remote_name), "origin", buffer$remote_name),
-    buffer
+    remote = ifelse(!length(sys_state$remote_name), "origin", sys_state$remote_name),
+    sys_state
   ) {
     res <- suppressWarnings(system(paste0("git ls-remote ", remote),
                                    intern = TRUE))
@@ -704,7 +704,7 @@ setMethod(
     }
     return(out)
   }
-  .gitGetNetrcFileNames <- function(buffer) {
+  .gitGetNetrcFileNames <- function(sys_state) {
     sys_home <- Sys.getenv("HOME")
     if (sys_home == "") {
       Sys.setenv("HOME" = what$home)
@@ -713,10 +713,10 @@ setMethod(
     path_netrc <- file.path(sys_home, "_netrc")
     path_netrc_tmp <- gsub("_netrc", "_netrc_0", path_netrc)
   
-    buffer$path_netrc <- path_netrc
-    buffer$path_netrc_tmp <- path_netrc_tmp
+    sys_state$path_netrc <- path_netrc
+    sys_state$path_netrc_tmp <- path_netrc_tmp
   }
-  .gitGetRemoteAll <- function(buffer) {
+  .gitGetRemoteAll <- function(sys_state) {
     git_remote <- system("git remote -v", intern = TRUE)
     git_remote_url <- gsub(".*\\t", "", git_remote, perl = TRUE)
     git_remote_url <- unique(gsub(" \\((fetch|push)\\)", "", 
@@ -724,27 +724,27 @@ setMethod(
     git_remote_name <- unique(gsub("\\t.*", "", git_remote, perl = TRUE))
     git_remote <- as.list(git_remote_url)
     names(git_remote) <- git_remote_name
-    buffer$remote_all <- git_remote
+    sys_state$remote_all <- git_remote
     return(git_remote)
   }
-  .gitGetRemoteThis <- function(buffer) {
-    remote_this <- .ask_gitValidatedRemoteName(remote = names(buffer$remote_all))
-    if (buffer$quit) {
+  .gitGetRemoteThis <- function(sys_state) {
+    remote_this <- .ask_gitValidatedRemoteName(remote = names(sys_state$remote_all))
+    if (sys_state$quit) {
       return(NULL)
     }
-    buffer$remote_url <- buffer$remote_all[[remote_this]]
-    buffer$remote_name <- remote_this
-    buffer$remote <- remote_this
+    sys_state$remote_url <- sys_state$remote_all[[remote_this]]
+    sys_state$remote_name <- remote_this
+    sys_state$remote <- remote_this
     return(remote_this)
   }
-  .gitGetUserCredentialsCommand <- function(buffer) {
+  .gitGetUserCredentialsCommand <- function(sys_state) {
     ## Git user credentials //
-    if (!length(buffer$global_or_local)) {
-      global_or_local <- .ask_gitGlobalOrLocalCredentials(buffer = buffer)
+    if (!length(sys_state$global_or_local)) {
+      global_or_local <- .ask_gitGlobalOrLocalCredentials(sys_state = sys_state)
     } else {
-      global_or_local <- buffer$global_or_local
+      global_or_local <- sys_state$global_or_local
     }
-    if (buffer$quit) {
+    if (sys_state$quit) {
       return(NULL)
     }
     if (global_or_local == "global") {
@@ -754,32 +754,32 @@ setMethod(
       cmd_user_email <- "git config user.email"
       cmd_user_name <- "git config user.name"
     }
-    buffer$cmd_user_email <- cmd_user_email
-    buffer$cmd_user_name <- cmd_user_name
-    return(buffer)
+    sys_state$cmd_user_email <- cmd_user_email
+    sys_state$cmd_user_name <- cmd_user_name
+    return(sys_state)
   }
   .gitHandleAuthentication <- function(
-    what = buffer$what,
-    temp_credentials = buffer$temp_credentials,
-    buffer
+    what = sys_state$what,
+    temp_credentials = sys_state$temp_credentials,
+    sys_state
   ) {
     ## Decision if PAT or basic authentication //
-    if (!length(buffer$pat_or_basic)) {
-      pat_or_basic <- .ask_gitUsePat(buffer = buffer)
-      buffer$pat_or_basic <- pat_or_basic
+    if (!length(sys_state$pat_or_basic)) {
+      pat_or_basic <- .ask_gitUsePat(sys_state = sys_state)
+      sys_state$pat_or_basic <- pat_or_basic
     } else {
-      pat_or_basic <- buffer$pat_or_basic
+      pat_or_basic <- sys_state$pat_or_basic
     }
-    if (buffer$quit) {
+    if (sys_state$quit) {
       return(NULL)
     }
     if (pat_or_basic == "basic") {
     ## Basic authentication //      
-      .gitGetNetrcFileNames(buffer = buffer)
+      .gitGetNetrcFileNames(sys_state = sys_state)
 
       if (!temp_credentials) {
-        use_stored_creds <- .ask_useStoredCredentials(buffer = buffer)
-        if (buffer$quit) {
+        use_stored_creds <- .ask_useStoredCredentials(sys_state = sys_state)
+        if (sys_state$quit) {
           return(NULL)
         }
       } else {
@@ -799,7 +799,7 @@ setMethod(
             "  protocol https"
           )
           message(paste(msg, collapse = "\n"))
-          buffer$quit <- TRUE
+          sys_state$quit <- TRUE
           return(NULL)
         }
       } else {
@@ -808,7 +808,7 @@ setMethod(
         idx <- ifelse(grepl("\\D", input), input, NA)
         if (is.na(idx)){
           message("Empty username")
-          buffer$quit <- TRUE
+          sys_state$quit <- TRUE
           return(NULL)     
         }
         git_https_username <- input
@@ -818,7 +818,7 @@ setMethod(
         idx <- ifelse(grepl("\\D", input), input, NA)
         if (is.na(idx)){
           message("Empty password")
-          buffer$quit <- TRUE
+          sys_state$quit <- TRUE
           return(NULL)
         }
         git_https_password <- input
@@ -842,22 +842,22 @@ setMethod(
         idx <- ifelse(grepl("\\D", input), input, NA)
         if (is.na(idx)){
           message("Invalid input")
-          buffer$quit <- TRUE
+          sys_state$quit <- TRUE
           return(NULL)
         }
         git_pat <- input
         Sys.setenv("GITHUB_PAT" = git_pat)
       } else {
       ## PAT available //
-        check_pat <- .ask_gitShowPat(buffer = buffer)
-        if (buffer$quit) {
+        check_pat <- .ask_gitShowPat(sys_state = sys_state)
+        if (sys_state$quit) {
           return(NULL)
         }
         change_pat <- FALSE
         if (check_pat) {
           message(sprintf("Current PAT: %s", git_pat))
-          change_pat <- .ask_gitChangePat(buffer = buffer)
-          if (buffer$quit) {
+          change_pat <- .ask_gitChangePat(sys_state = sys_state)
+          if (sys_state$quit) {
             return(NULL)
           }
         }
@@ -866,25 +866,25 @@ setMethod(
           idx <- ifelse(grepl("\\D", input), input, NA)
           if (is.na(idx)){
             message("Invalid input")
-            buffer$quit <- TRUE
+            sys_state$quit <- TRUE
             return(NULL)
           }
           Sys.setenv("GITHUB_PAT" = git_pat)
         }
       }
   #     git_https_password <- ""
-      remote <- buffer$remote_url
+      remote <- sys_state$remote_url
       if (grepl("^https://", remote)) {
         remote <- gsub("https://", paste0("https://", git_pat, "@"), remote)  
-        buffer$remote <- remote
+        sys_state$remote <- remote
       }
     }
-    buffer$ask_authentication <- FALSE
-    return(buffer)
+    sys_state$ask_authentication <- FALSE
+    return(sys_state)
   }
   .gitIsRemoteRepository <- function(
-    remote = ifelse(!length(buffer$remote_name), "origin", buffer$remote_name),
-    buffer
+    remote = ifelse(!length(sys_state$remote_name), "origin", sys_state$remote_name),
+    sys_state
   ) {
     res <- suppressWarnings(system(paste0("git ls-remote ", remote),
                                    intern = TRUE))
@@ -900,7 +900,7 @@ setMethod(
     return(out)
   }
 #   .gitIsRemoteRepository()
-  .gitIsLocalRepository <- function(buffer) {
+  .gitIsLocalRepository <- function(sys_state) {
     res <- suppressWarnings(system("git log --oneline", intern = TRUE))
     if (grepl("fatal:.*Not a git repository", res[1])) {
       out <- FALSE
@@ -910,21 +910,21 @@ setMethod(
     return(out)
   }
   .gitPushToRemote <- function(
-    remote = ifelse(!length(buffer$remote), "origin", buffer$remote),
-    branch = ifelse(!length(buffer$branch), "master", buffer$branch), 
-    buffer
+    remote = ifelse(!length(sys_state$remote), "origin", sys_state$remote),
+    branch = ifelse(!length(sys_state$branch), "master", sys_state$branch), 
+    sys_state
   ) {
-    if (!.gitIsRemoteRepository(remote = remote, buffer = buffer)) {
+    if (!.gitIsRemoteRepository(remote = remote, sys_state = sys_state)) {
       message(paste0("Not a git remote repository: ", remote))
       return(NULL)
     }
     
     ## Authentication //
-    if (buffer$ask_authentication) {
-      .gitHandleAuthentication(buffer = buffer)
-      remote <- buffer$remote
+    if (sys_state$ask_authentication) {
+      .gitHandleAuthentication(sys_state = sys_state)
+      remote <- sys_state$remote
     }
-    if (buffer$quit) {
+    if (sys_state$quit) {
       message("Authentication aborted")
       return(NULL)
     }
@@ -933,9 +933,9 @@ setMethod(
   } 
 #  .gitIsLocalRepository()
   .gitSetRemote <- function(
-    remote = ifelse(!length(buffer$remote_name), "origin", buffer$remote_name),
+    remote = ifelse(!length(sys_state$remote_name), "origin", sys_state$remote_name),
     url = character(),
-    buffer
+    sys_state
   ) {
     if (!length(remote)) {
       input <- readline("Repository name [ENTER='origin']: ")
@@ -946,8 +946,8 @@ setMethod(
       input <- ifelse(grepl("\\D", input), input, NA)
       if (is.na(input)) {
         message("Invalid input")
-        buffer$quit
-        return(buffer)
+        sys_state$quit
+        return(sys_state)
       }
       url <- paste0("\"", input, "\"")
     }
@@ -956,19 +956,19 @@ setMethod(
     return(TRUE)
   }
   .gitUserEmail <- function(
-    cmd = buffer$cmd_user_email,
-    global_or_local = buffer$global_or_local,
-    buffer
+    cmd = sys_state$cmd_user_email,
+    global_or_local = sys_state$global_or_local,
+    sys_state
   ) {
     if (!length(cmd)) {
-      .gitGetUserCredentialsCommand(buffer = buffer)
+      .gitGetUserCredentialsCommand(sys_state = sys_state)
     }
     if (!length(global_or_local)) {
-      .ask_gitGlobalOrLocalCredentials(buffer = buffer)
+      .ask_gitGlobalOrLocalCredentials(sys_state = sys_state)
     }
     git_user_email <- suppressWarnings(system(cmd, intern = TRUE))
     if (!length(git_user_email)) {
-      if (!length(buffer$what$user_email)) {
+      if (!length(sys_state$what$user_email)) {
         if (global_or_local == "global") {
           input <- readline("Provide '--global user.email': ")
         } else if (global_or_local == "local") {
@@ -977,12 +977,12 @@ setMethod(
         idx <- ifelse(grepl("\\D", input), input, NA)
         if (is.na(idx)) {
           message("Invalid input: ", input)
-          buffer$quit <- TRUE
-          return(buffer)
+          sys_state$quit <- TRUE
+          return(sys_state)
         }
         git_user_email <- input 
       } else {
-        git_user_email <- buffer$what$user_email 
+        git_user_email <- sys_state$what$user_email 
       }
       if (global_or_local == "global") {
         cmd <- paste0("git config --global user.email \"", 
@@ -993,23 +993,23 @@ setMethod(
       }
       system(cmd, intern = TRUE)  
     }
-    buffer$git_user_email <- git_user_email
+    sys_state$git_user_email <- git_user_email
     return(git_user_email)
   }
   .gitUserName <- function(
-    cmd = buffer$cmd_user_name,
-    global_or_local = buffer$global_or_local,
-    buffer
+    cmd = sys_state$cmd_user_name,
+    global_or_local = sys_state$global_or_local,
+    sys_state
   ) {
     if (!length(cmd)) {
-      .gitGetUserCredentialsCommand(buffer = buffer)
+      .gitGetUserCredentialsCommand(sys_state = sys_state)
     }
     if (!length(global_or_local)) {
-      .ask_gitGlobalOrLocalCredentials(buffer = buffer)
+      .ask_gitGlobalOrLocalCredentials(sys_state = sys_state)
     }
     git_user_name <- suppressWarnings(system(cmd, intern = TRUE))
     if (!length(git_user_name)) {
-      if (!length(buffer$what$user_name)) {
+      if (!length(sys_state$what$user_name)) {
         if (global_or_local == "global") {
           input <- readline("Provide '--global user.name': ")
         } else if (global_or_local == "local") {
@@ -1018,12 +1018,12 @@ setMethod(
         idx <- ifelse(grepl("\\D", input), input, NA)
         if (is.na(idx)) {
           message("Invalid input: ", input)
-          buffer$quit <- TRUE
-          return(buffer)
+          sys_state$quit <- TRUE
+          return(sys_state)
         }
         git_user_name <- input 
       } else {
-        git_user_name <- buffer$what$user_name
+        git_user_name <- sys_state$what$user_name
       }
       if (global_or_local == "global") {
         cmd <- paste0("git config --global user.name \"", 
@@ -1034,25 +1034,22 @@ setMethod(
       }
       system(cmd, intern = TRUE)  
     }
-    buffer$git_user_name <- git_user_name
+    sys_state$git_user_name <- git_user_name
     return(git_user_name)
   }
 
   ##----------------------------------------------------------------------------
-  ## Initialize buffer environment //
+  ## Initialize sys_state environment //
   ##----------------------------------------------------------------------------
 
-  buffer <- new.env()
-  
-  buffer$ask_authentication <- TRUE
-  buffer$quit <- FALSE
-  buffer$what <- what
+  sys_state <- bumpr::SystemState.S3()
+  sys_state$what <- what
   
   ##----------------------------------------------------------------------------
   ## Essential git stuff //
   ##----------------------------------------------------------------------------
   
-  if (!.gitIsLocalRepository(buffer = buffer)) {
+  if (!.gitIsLocalRepository(sys_state = sys_state)) {
     res <- system("git init", intern = TRUE)
   }
   res <- suppressWarnings(system("git log", intern = TRUE))
@@ -1065,16 +1062,16 @@ setMethod(
   ## Initial commit //
   if (!has_initial_commit) {
     message("No initial commit yet")
-    do_initial_commit <- .ask_gitDoInitialCommit(buffer = buffer)
-    if (buffer$quit || !do_initial_commit) {
+    do_initial_commit <- .ask_gitDoInitialCommit(sys_state = sys_state)
+    if (sys_state$quit || !do_initial_commit) {
       message("You should take care of an initial commit")
       return(list())
     }
     
     ## Gitignore file //
     if (!file.exists(".gitignore")) {
-      add_gitignore <- .ask_gitAddGitignoreFile(buffer = buffer)
-      if (buffer$quit) {
+      add_gitignore <- .ask_gitAddGitignoreFile(sys_state = sys_state)
+      if (sys_state$quit) {
         message("Quiting")
         return(list())
       }
@@ -1084,8 +1081,8 @@ setMethod(
     }
     
     ## Actual commit //
-    res <- .gitDoInitialCommit(buffer = buffer)
-    if (buffer$quit) {
+    res <- .gitDoInitialCommit(sys_state = sys_state)
+    if (sys_state$quit) {
       message("Quiting")
       return(list())
     }
@@ -1096,13 +1093,13 @@ setMethod(
   if (!length(git_remote)) {
     message("No remote git repositories set yet. Specify at least 'origin'")
     
-    res <- .ask_gitSetRemote(buffer = buffer)
-    if (buffer$quit) {
+    res <- .ask_gitSetRemote(sys_state = sys_state)
+    if (sys_state$quit) {
       message("Make sure you set a remote repository in your local repository")
       message("Quiting")
       return(list())
     }
-    .gitSetRemote(remote = character(), buffer = buffer)
+    .gitSetRemote(remote = character(), sys_state = sys_state)
   } 
 
   ##----------------------------------------------------------------------------
@@ -1130,8 +1127,8 @@ setMethod(
   ## Git //
   ##----------------------------------------------------------------------------
   
-  .ask_gitReadyToBumpVersion(buffer = buffer)
-  if (buffer$quit) {
+  .ask_gitReadyToBumpVersion(sys_state = sys_state)
+  if (sys_state$quit) {
     message("Rolling back changes in DESCRIPTION file")
     resetPackageVersion(vsn = vsn_old)
     message("Quitting")
@@ -1139,18 +1136,18 @@ setMethod(
   }
   
   ## Validated remote repository //
-  .gitGetRemoteAll(buffer = buffer)
-  .gitGetRemoteThis(buffer = buffer)
+  .gitGetRemoteAll(sys_state = sys_state)
+  .gitGetRemoteThis(sys_state = sys_state)
 
   ## Check existence //
   if (!.gitExistsRemoteRepository(
-        remote = buffer$remote_name, 
-        buffer = buffer)
+        remote = sys_state$remote_name, 
+        sys_state = sys_state)
   ) {
     msg <- c(
       "Remote does not exist yet //",
-      paste0("Name: ", buffer$remote_name),
-      paste0("URL: ", buffer$remote_url),
+      paste0("Name: ", sys_state$remote_name),
+      paste0("URL: ", sys_state$remote_url),
       "Please ensure existence first"
     )  
     message(paste(msg, collapse = "\n"))
@@ -1162,13 +1159,13 @@ setMethod(
   }
 
   ## Check validity of remote //
-  if (!.gitIsRemoteRepository(remote = buffer$remote_name, buffer = buffer)) {
+  if (!.gitIsRemoteRepository(remote = sys_state$remote_name, sys_state = sys_state)) {
     .gitCheckForBranchesInRemote(
-      remote = buffer$remote_name,
-      buffer = buffer
+      remote = sys_state$remote_name,
+      sys_state = sys_state
     ) 
-    if (buffer$quit) {
-      message(paste0("Not a git remote repository: ", buffer$remote_name))
+    if (sys_state$quit) {
+      message(paste0("Not a git remote repository: ", sys_state$remote_name))
       message("Make sure you have initialized either a bare repository or cloned an existing one")
       message("Rolling back changes in DESCRIPTION file")
       resetPackageVersion(vsn = vsn_old)
@@ -1178,11 +1175,11 @@ setMethod(
   }
 
   .gitCheckForBranchesInRemote(
-    remote = buffer$remote_name,
-    buffer = buffer
+    remote = sys_state$remote_name,
+    sys_state = sys_state
   ) 
-  if (buffer$quit) {
-    message(paste0("No branches in remote: ", buffer$remote_name))
+  if (sys_state$quit) {
+    message(paste0("No branches in remote: ", sys_state$remote_name))
     message("Rolling back changes in DESCRIPTION file")
     resetPackageVersion(vsn = vsn_old)
     message("Quitting")
@@ -1190,24 +1187,24 @@ setMethod(
   }
 
   ## Git user credentials //
-  .gitGetUserCredentialsCommand(buffer = buffer)
-  if (buffer$quit) {
+  .gitGetUserCredentialsCommand(sys_state = sys_state)
+  if (sys_state$quit) {
     message("Rolling back changes in DESCRIPTION file")
     resetPackageVersion(vsn = vsn_old)
     message("Quitting")
     return(list())
   }
-  .gitUserEmail(buffer = buffer)
-  .gitUserName(buffer = buffer)
+  .gitUserEmail(sys_state = sys_state)
+  .gitUserName(sys_state = sys_state)
 
   ## Authentication //
-  if (buffer$ask_authentication) {
+  if (sys_state$ask_authentication) {
     .gitHandleAuthentication(
       what = what, 
       temp_credentials = temp_credentials,
-      buffer = buffer
+      sys_state = sys_state
     )
-    if (buffer$quit) {
+    if (sys_state$quit) {
       message("Rolling back changes in DESCRIPTION file")
       resetPackageVersion(vsn = vsn_old)
       message("Quitting")
@@ -1276,7 +1273,7 @@ setMethod(
     "git add --ignore-removal CHANGES.md DESCRIPTION",
     paste0("git commit -m \"Version bump to ", vsn_new, "\""),
     paste0("git tag -a -m \"Tagging version ", vsn_new, "\" \"v", vsn_new, "\""),
-    paste0("git push ", buffer$remote, " --tags")
+    paste0("git push ", sys_state$remote, " --tags")
   )
 
   ## Execut git commands //
@@ -1303,12 +1300,12 @@ setMethod(
     }),
     finally = {
       ## Cleanup with respect to '_netrc' file // 
-      if (buffer$pat_or_basic == "basic") {
-        if (file.exists(buffer$path_netrc_tmp)) {
-          file.rename(from = buffer$path_netrc_tmp, to = buffer$path_netrc)
+      if (sys_state$pat_or_basic == "basic") {
+        if (file.exists(sys_state$path_netrc_tmp)) {
+          file.rename(from = sys_state$path_netrc_tmp, to = sys_state$path_netrc)
         }
         if (temp_credentials) {
-          unlink(buffer$path_netrc, force = TRUE)
+          unlink(sys_state$path_netrc, force = TRUE)
         }
       }
     }
