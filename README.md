@@ -1,4 +1,4 @@
-bumpr (v0.4.2)
+bumpr (v0.5)
 ======
 
 Easy systematic version bumping and more
@@ -34,7 +34,6 @@ Bumping from current version `0.4.1` to a new version
 bumpPackageVersion()
 
 # Taken versions numbers (last 10): 
-# 0.3.6
 # 0.3.7
 # 0.3.8
 # 0.3.9
@@ -45,16 +44,16 @@ bumpPackageVersion()
 # 0.3.14
 # 0.4
 # 0.4.1
-# Current version: 0.4.1
-# Suggested version: 0.4.2
-# Enter a valid version number: [ENTER = 0.4.2] 
-# Using suggested version: 0.4.2
-# Updating version in DESCRIPTION file to '0.4.2?' [(y)es | (n)o | (q)uit]: 
+# 0.4.2
+# Current version: 0.4.2
+# Suggested version: 0.4.3
+# Enter a valid version number: [ENTER = 0.4.3] 0.5
+# Updating version in DESCRIPTION file to '0.5?' [(y)es | (n)o | (q)uit]: 
 # $old
-# [1] "0.4.1"
+# [1] "0.4.2"
 # 
 # $new
-# [1] "0.4.2"
+# [1] "0.5"
 ```
 
 #### Explanation what just happened
@@ -114,7 +113,6 @@ The example assumes that `bumpGitVersion()` is called without previously having 
 bumpGitVersion()
 
 # Taken versions numbers (last 10): 
-# 0.3.6
 # 0.3.7
 # 0.3.8
 # 0.3.9
@@ -125,11 +123,11 @@ bumpGitVersion()
 # 0.3.14
 # 0.4
 # 0.4.1
-# Current version: 0.4.1
-# Suggested version: 0.4.2
-# Enter a valid version number: [ENTER = 0.4.2] 
-# Using suggested version: 0.4.2
-# Updating version in DESCRIPTION file to '0.4.2?' [(y)es | (n)o | (q)uit]: 
+# 0.4.2
+# Current version: 0.4.2
+# Suggested version: 0.4.3
+# Enter a valid version number: [ENTER = 0.4.3] 0.5
+# Updating version in DESCRIPTION file to '0.5?' [(y)es | (n)o | (q)uit]: 
 # Ready to bump version in git?' [(y)es | (n)o | (q)uit]: 
 # Name of remote git repository (hit ENTER for default = 'origin'): 
 # Using remote git repository: origin
@@ -139,17 +137,17 @@ bumpGitVersion()
 # Current PAT: {pat-value}
 # Change current PAT? [(y)es | (n)o | (q)uit]: n
 # 
-# [release-0.4.2 7cd526e] Version bump to 0.4.2 2 files changed, 17 insertions(+), 5 deletions(-)
+# [release-0.5 e9ad11d] Version bump to 0.5 2 files changed, 14 insertions(+), 5 deletions(-)
 # 
-# To https://github.com/Rappster/bumpr * [new tag]         v0.4.2 -> v0.4.2
+# To https://github.com/Rappster/bumpr * [new tag]         v0.5 -> v0.5
 # $old
-# [1] "0.4.1"
-# 
-# $new
 # [1] "0.4.2"
 # 
+# $new
+# [1] "0.5"
+# 
 # $git_tag
-# [1] "v0.4.2"
+# [1] "v0.5"
 ```
 
 #### Explanation what just happened
@@ -165,7 +163,7 @@ it complies with the [semtatic versioning conventions](http://semver.org/).
 - Then a last check before commencing with Git/GitHub related stuff is made.
 
 - Based on the specification of your remote repository (**note that it is recommended to define it prior to running `bumpGitVersion()` but it can also be set by the function in case it has not been defined yet**) a new commit
-is issued and **after** that a new tag corresponding to `v{new-version}` (e.g. `v0.4.2`) is created so **future** commits are automatically tagged with it.
+is issued and **after** that a new tag corresponding to `v{new-version}` (e.g. `v0.5`) is created so **future** commits are automatically tagged with it.
 
 - What also happens is that the files `CHANGES.md` and `NEWS.md` are updated
   as described in `?bumpr`.
@@ -205,11 +203,22 @@ of rolling back all changes to `DESCRIPTION` that might have been made.
 ```
 bumpPackageVersion()
 
+# Taken versions numbers (last 10): 
+# 0.3.7
+# 0.3.8
+# 0.3.9
+# 0.3.10
+# 0.3.11
+# 0.3.12
+# 0.3.13
+# 0.3.14
+# 0.4
+# 0.4.1
+# 0.4.2
 # Current version: 0.4.2
 # Suggested version: 0.4.3
-# Enter a valid version number: [ENTER = 0.4.3] 
-# Using suggested version: 0.4.3
-# Updating version in DESCRIPTION file to '0.4.3?' [(y)es | (n)o | (q)uit]: 
+# Enter a valid version number: [ENTER = 0.4.3] 0.5
+# Updating version in DESCRIPTION file to '0.5?' [(y)es | (n)o | (q)uit]: 
 # Rolling back changes in 'DESCRIPTION'
 # Error in doTryCatch(return(expr), name, parentenv, handler) : 
 #   Intentional error for unit testing
@@ -244,9 +253,8 @@ bumpGitVersion()
 # 0.4.2
 # Current version: 0.4.2
 # Suggested version: 0.4.3
-# Enter a valid version number: [ENTER = 0.4.3] 
-# Using suggested version: 0.4.3
-# Updating version in DESCRIPTION file to '0.4.3?' [(y)es | (n)o | (q)uit]: 
+# Enter a valid version number: [ENTER = 0.4.3] 0.5
+# Updating version in DESCRIPTION file to '0.5?' [(y)es | (n)o | (q)uit]: 
 # Ready to bump version in git?' [(y)es | (n)o | (q)uit]: q
 # Rolling back changes in 'DESCRIPTION'
 # Quitting
@@ -272,17 +280,16 @@ bumpGitVersion()
 # 0.4.2
 # Current version: 0.4.2
 # Suggested version: 0.4.3
-# Enter a valid version number: [ENTER = 0.4.3] 
-# Using suggested version: 0.4.3
-# Updating version in DESCRIPTION file to '0.4.3?' [(y)es | (n)o | (q)uit]: 
+# Enter a valid version number: [ENTER = 0.4.3] 0.5
+# Updating version in DESCRIPTION file to '0.5?' [(y)es | (n)o | (q)uit]: 
 # Ready to bump version in git?' [(y)es | (n)o | (q)uit]: 
 # Name of remote git repository (hit ENTER for default = 'origin'): 
 # Using remote git repository: origin
 # Use PAT or 'basic' HTTPS authentication? [(p)at | (b)asic | (q)uit]: 
 # Show current PAT to verify its correctness? [(n)o | (y)es | (q)uit]: 
 # 
-# [release-0.4.2 09475fb] Version bump to 0.4.3 2 files changed, 6 insertions(+), 2 deletions(-)
-# 
+# [release-0.5 e9ad11d] Version bump to 0.5 2 files changed, 14 insertions(+), 5 deletions(-)
+#
 # Version bump failed
 # Rolling back changes in 'DESCRIPTION'
 # Rolling back changes in 'CHANGES.md'
@@ -290,9 +297,9 @@ bumpGitVersion()
 # Rolling back bump commit
 # Unstaged changes after reset:M  NEWS.mdM	R/bump.rM	README.md
 # Rolling back Git tags
-# Deleted tag 'v0.4.3' (was ebda564)
+# Deleted tag 'v0.5' (was ebda564)
 # To https://github.com/Rappster/bumpr
-#  - [deleted]         v0.4.3
+#  - [deleted]         v0.5
 # Error in doTryCatch(return(expr), name, parentenv, handler) : 
 #   Intentional error for unit testing
 # Git command: git push https://github.com/Rappster/bumpr --tags

@@ -1,3 +1,12 @@
+# Version 0.5
+ - minor updates
+ - Merge branch 'master' into develop
+ - Merge branch 'release-0.4.2'
+ - build commit
+ - bump commit
+
+----------
+
 # Version 0.4.2
  - feature rollback
  - Merge branch 'master' into develop
