@@ -1386,7 +1386,7 @@ setMethod(
   res <- tryCatch({
       sapply(seq(along=git_commands), function(cmd) {
         res <- tryCatch({
-#             if (cmd == 4) {
+#             if (cmd == 3) {
 #               msg <- c(
 #                 "Intentional error for unit testing",
 #                 paste0("Git command: ", .gitEnsurePatIsHidden(git_commands[cmd]))

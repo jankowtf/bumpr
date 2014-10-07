@@ -25,13 +25,12 @@ Retrieves the current package version from the `DESCRIPTION` file, suggests the 
 
 ### Example
 
-Bumping from current version `0.4.1` to a new version
+Bumping from current version `0.5` to a new version
 
 ```
 bumpPackageVersion()
 
 # Taken versions numbers (last 10): 
-# 0.3.7
 # 0.3.8
 # 0.3.9
 # 0.3.10
@@ -42,15 +41,17 @@ bumpPackageVersion()
 # 0.4
 # 0.4.1
 # 0.4.2
-# Current version: 0.4.2
-# Suggested version: 0.4.3
-# Enter a valid version number: [ENTER = 0.4.3] 0.5
-# Updating version in DESCRIPTION file to '0.5?' [(y)es | (n)o | (q)uit]: 
+# 0.5
+# Current version: 0.5
+# Suggested version: 0.6
+# Enter a valid version number: [ENTER = 0.6] 
+# Using suggested version: 0.6
+# Updating version in DESCRIPTION file to '0.6?' [(y)es | (n)o | (q)uit]: 
 # $old
-# [1] "0.4.2"
+# [1] "0.5"
 # 
 # $new
-# [1] "0.5"
+# [1] "0.6"
 ```
 
 #### Explanation what just happened
@@ -102,15 +103,15 @@ Differentiate use cases:
 
   **This is the recommended way of using this function when version-controlling your package project with Git. Make your version specification as you see fit.**
 
-### Example
+### Example: with remote repository
 
-The example assumes that `bumpGitVersion()` is called without previously having called `bumpPackageVersion()` explicitly.
+The example assumes that `bumpGitVersion()` is called without previously having called `bumpPackageVersion()` explicitly and that a remote repository should be included in the version bump.
 
 ```
 bumpGitVersion()
 
+# Would you like to include a remote repository? [(y)es | (n)o | (q)uit]: 
 # Taken versions numbers (last 10): 
-# 0.3.7
 # 0.3.8
 # 0.3.9
 # 0.3.10
@@ -121,10 +122,12 @@ bumpGitVersion()
 # 0.4
 # 0.4.1
 # 0.4.2
-# Current version: 0.4.2
-# Suggested version: 0.4.3
-# Enter a valid version number: [ENTER = 0.4.3] 0.5
-# Updating version in DESCRIPTION file to '0.5?' [(y)es | (n)o | (q)uit]: 
+# 0.5
+# Current version: 0.5
+# Suggested version: 0.6
+# Enter a valid version number: [ENTER = 0.6] 
+# Using suggested version: 0.6
+# Updating version in DESCRIPTION file to '0.6?' [(y)es | (n)o | (q)uit]: 
 # Ready to bump version in git?' [(y)es | (n)o | (q)uit]: 
 # Name of remote git repository (hit ENTER for default = 'origin'): 
 # Using remote git repository: origin
@@ -134,25 +137,26 @@ bumpGitVersion()
 # Current PAT: {pat-value}
 # Change current PAT? [(y)es | (n)o | (q)uit]: n
 # 
-# [release-0.5 e9ad11d] Version bump to 0.5 2 files changed, 14 insertions(+), 5 deletions(-)
+# [release-0.6 b66874e] Version bump to 0.6 2 files changed, 14 insertions(+), 5 deletions(-)
 # 
-# To https://github.com/Rappster/bumpr * [new tag]         v0.5 -> v0.5
+# To https://github.com/Rappster/bumpr * [new tag]         v0.6 -> v0.6
 # $old
-# [1] "0.4.2"
-# 
-# $new
 # [1] "0.5"
 # 
+# $new
+# [1] "0.6"
+# 
 # $git_tag
-# [1] "v0.5"
+# [1] "v0.6"
 ```
 
 #### Explanation what just happened
 
-- The suggestion always takes the last version digit and increments it by one.
-If you simply hit enter, this suggested version will be used. 
+- You are first asked if a remote repository should be included or not. 
 
-  However, you are of course free to provide any version you'd like as long as
+- The suggestion for the new version always takes the last version digit and increments it by one. If you simply hit enter, this suggested version will be used. 
+
+  However, you are of course free to provide any version you like as long as
 it complies with the [semtatic versioning conventions](http://semver.org/).
 
 - You are then asked if you want to update your `DESCRIPTION` file (currently updated fields: `Version` and `Date`).
@@ -187,6 +191,44 @@ is issued and **after** that a new tag corresponding to `v{new-version}` (e.g. `
 along the way something when wrong (wrong user input) or when you wanted to quit on purpose, the function returns `list()`. 
 
   Note that in this case, all changes are rolled back (see section *Rollback behavior*)
+
+### Example: without remote repository
+
+The behavior is analogous to that above except everthing that only has to do with remote repositories. 
+
+```
+# Would you like to include a remote repository? [(y)es | (n)o | (q)uit]: n
+# Taken versions numbers (last 10): 
+# 0.3.8
+# 0.3.9
+# 0.3.10
+# 0.3.11
+# 0.3.12
+# 0.3.13
+# 0.3.14
+# 0.4
+# 0.4.1
+# 0.4.2
+# 0.5
+# Current version: 0.5
+# Suggested version: 0.6
+# Enter a valid version number: [ENTER = 0.6] 
+# Using suggested version: 0.6
+# Updating version in DESCRIPTION file to '0.7?' [(y)es | (n)o | (q)uit]: 
+# Ready to bump version in git?' [(y)es | (n)o | (q)uit]: 
+#
+# [release-0.6 b66874e] Version bump to 0.6 2 files changed, 14 insertions(+), 5 deletions(-)
+# 
+# To https://github.com/Rappster/bumpr * [new tag]         v0.6 -> v0.6
+# $old
+# [1] "0.5"
+# 
+# $new
+# [1] "0.6"
+# 
+# $git_tag
+# [1] "v0.6"
+```
 
 ## Rollback behavior
 
@@ -236,6 +278,7 @@ If the use decides to quit a version bump or in case anything should go wrong in
 ```
 bumpGitVersion()
 
+# Would you like to include a remote repository? [(y)es | (n)o | (q)uit]:
 # Taken versions numbers (last 10): 
 # 0.3.7
 # 0.3.8
@@ -263,6 +306,7 @@ bumpGitVersion()
 ```
 bumpGitVersion()
 
+# Would you like to include a remote repository? [(y)es | (n)o | (q)uit]:
 # Taken versions numbers (last 10): 
 # 0.3.7
 # 0.3.8
