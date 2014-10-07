@@ -22,8 +22,9 @@ See details.}
 \item{...}{Further arguments to be passed to subsequent functions/methods.}
 }
 \value{
-\code{\link{character}}. New Git version that the project has
-   been bumped to.
+\code{\link{list}}. (\code{old} and \code{new} version number and
+   the git tag (\code{git_tag}) or
+   \code{list()} if the function exited before completing the bump.
 }
 \description{
 See generic: \code{\link[bumpr]{bumpGitVersion}}
@@ -53,7 +54,8 @@ Janko Thyson \email{janko.thyson@gmail.com}
 }
 \seealso{
 \code{
-   \link[bumpr]{bumpGitVersion}
+   \link[bumpr]{bumpGitVersion},
+   \link[bumpr]{bumpPackageVersion}
 }
 }
 

@@ -11,6 +11,8 @@ SystemState.S3(
   branch = "master",
   cmd_user_email = "git config --global user.email",
   cmd_user_name = "git config --global user.name",
+  description_old = as.list(read.dcf("DESCRIPTION")[1,]),
+  git_tag = "v1.1.2",
   git_user_email = "janko.thyson@rappster.de",
   git_user_name = "Janko Thyson",
   global_or_local = "global",

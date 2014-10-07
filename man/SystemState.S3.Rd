@@ -5,13 +5,13 @@
 \usage{
 SystemState.S3(.x, ask_authentication = TRUE, branch = "master",
   cmd_user_email = "git config --global user.email",
-  cmd_user_name = "git config --global user.name",
-  git_user_email = character(), git_user_name = character(),
-  global_or_local = "global", pat_or_basic = character(),
-  path_netrc = file.path(Sys.getenv("HOME"), "_netrc"),
-  path_netrc_tmp = file.path(Sys.getenv("HOME"), "_netrc_0"), quit = FALSE,
-  remote = character(), remote_all = list(origin = character()),
-  remote_name = "origin", remote_url = character(),
+  cmd_user_name = "git config --global user.name", description_old = list(),
+  git_tag = character(), git_user_email = character(),
+  git_user_name = character(), global_or_local = "global",
+  pat_or_basic = character(), path_netrc = file.path(Sys.getenv("HOME"),
+  "_netrc"), path_netrc_tmp = file.path(Sys.getenv("HOME"), "_netrc_0"),
+  quit = FALSE, remote = character(), remote_all = list(origin =
+  character()), remote_name = "origin", remote_url = character(),
   temp_credentials = FALSE, what = NA)
 }
 \arguments{
@@ -44,6 +44,15 @@ Default: \code{"git config --global user.email"}.}
 \item{\code{cmd_user_name}}{\code{\link{character}}.
 Git command used to query \code{user.name}.
 Default: \code{"git config --global user.name"}.}
+
+\item{\code{description_old}}{\code{\link{character}}.
+Old state of \code{DESCRIPTION} file that can be used to rollback
+changes.
+Default: \code{list()}.}
+
+\item{\code{git_tag}}{\code{\link{character}}.
+Git tag for new version.
+Default: \code{character()}.}
 
 \item{\code{git_user_email}}{\code{\link{character}}.
 Git value for \code{user.email}.
@@ -133,6 +142,8 @@ SystemState.S3(
   branch = "master",
   cmd_user_email = "git config --global user.email",
   cmd_user_name = "git config --global user.name",
+  description_old = as.list(read.dcf("DESCRIPTION")[1,]),
+  git_tag = "v1.1.2",
   git_user_email = "janko.thyson@rappster.de",
   git_user_name = "Janko Thyson",
   global_or_local = "global",

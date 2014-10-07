@@ -23,8 +23,8 @@ should be updated with a version number bump. Specified as name-value pairs.}
 \item{...}{Further arguments to be passed to subsequent functions/methods.}
 }
 \value{
-\code{\link{character}}. New version that the package project has
-   been bumped to.
+\code{\link{list}}. (\code{old} and \code{new} version number or
+   \code{list()} if the function exited before completing the bump.
 }
 \description{
 See generic: \code{\link[bumpr]{RPackageVersion.S3}}
@@ -54,7 +54,8 @@ Janko Thyson \email{janko.thyson@gmail.com}
 }
 \seealso{
 \code{
-   \link[bumpr]{bumpPackageVersion}
+   \link[bumpr]{bumpPackageVersion},
+    \link[bumpr]{bumpGitVersion}
 }
 }
 

@@ -5,7 +5,8 @@
 \title{Bump Package Version Number}
 \usage{
 \S4method{bump}{RPackageVersion.S3,character,character}(what, from, to,
-  desc_fields = list(Date = NULL), taken = character(), ...)
+  desc_fields = list(Date = NULL), taken = character(),
+  sys_state = bumpr::SystemState.S3(), ...)
 }
 \arguments{
 \item{what}{\code{\link{RPackageVersion.S3}}.}
@@ -27,7 +28,7 @@ information is automatically retrieved.}
 \item{...}{Further arguments to be passed to subsequent functions/methods.}
 }
 \value{
-\code{\link{list}}. (\code{old} and \code{new} package version or
+\code{\link{list}}. (\code{old} and \code{new} version number or
    \code{list()} if the function exited before completing the bump.
 }
 \description{
