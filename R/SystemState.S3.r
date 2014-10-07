@@ -23,6 +23,13 @@
 #' @field cmd_user_name \code{\link{character}}.
 #'    Git command used to query \code{user.name}.
 #'    Default: \code{"git config --global user.name"}.
+#' @field description_old \code{\link{character}}.
+#'    Old state of \code{DESCRIPTION} file that can be used to rollback 
+#'    changes.
+#'    Default: \code{list()}.
+#' @field git_tag \code{\link{character}}.
+#'    Git tag for new version.
+#'    Default: \code{character()}.
 #' @field git_user_email \code{\link{character}}.
 #'    Git value for \code{user.email}.
 #'    Default: \code{character()}.
@@ -83,6 +90,8 @@ SystemState.S3 <- function(
   branch = "master",
   cmd_user_email = "git config --global user.email",
   cmd_user_name = "git config --global user.name",
+  description_old = list(),
+  git_tag = character(),
   git_user_email = character(),
   git_user_name = character(),
   global_or_local = "global",
@@ -103,23 +112,25 @@ SystemState.S3 <- function(
   } else {
     out <- new.env()
     
-    out$ask_authentication = ask_authentication
-    out$branch = branch
-    out$cmd_user_email = cmd_user_email
-    out$cmd_user_name = cmd_user_name
-    out$git_user_email = git_user_email
-    out$git_user_name = git_user_name
-    out$global_or_local = global_or_local
-    out$pat_or_basic = pat_or_basic
-    out$path_netrc = path_netrc
-    out$path_netrc_tmp = path_netrc_tmp
-    out$quit = quit
-    out$remote = remote
-    out$remote_all = remote_all
-    out$remote_name = remote_name
-    out$remote_url = remote_url
-    out$temp_credentials = temp_credentials
-    out$what = what
+    out$ask_authentication <- ask_authentication
+    out$branch <- branch
+    out$cmd_user_email <- cmd_user_email
+    out$cmd_user_name <- cmd_user_name
+    out$description_old <- description_old
+    out$git_tag <- git_tag
+    out$git_user_email <- git_user_email
+    out$git_user_name <- git_user_name
+    out$global_or_local <- global_or_local
+    out$pat_or_basic <- pat_or_basic
+    out$path_netrc <- path_netrc
+    out$path_netrc_tmp <- path_netrc_tmp
+    out$quit <- quit
+    out$remote <- remote
+    out$remote_all <- remote_all
+    out$remote_name <- remote_name
+    out$remote_url <- remote_url
+    out$temp_credentials <- temp_credentials
+    out$what <- what
     
     class(out) <- c("SystemState.S3", class(out))
   }

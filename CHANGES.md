@@ -1,3 +1,15 @@
+# Version 0.4.2
+ - feature rollback
+ - Merge branch 'master' into develop
+ - Merge branch 'release-0.4.1'
+ - build commit
+ - bump commit
+ - Merge branch 'release-0.4'
+ - Merge branch 'release-0.3.14'
+ - Merge branch 'develop' into release-0.3.14
+
+----------
+
 # Version 0.4.1
  - Merge branch 'feat-state' into develop
  - feature state

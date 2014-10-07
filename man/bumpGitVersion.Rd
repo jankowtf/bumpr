@@ -142,6 +142,7 @@ Janko Thyson \email{janko.thyson@gmail.com}
 \seealso{
 \code{
   	\link[bumpr]{bumpGitVersion-GitVersion.S3-method}
+   \link[bumpr]{bumpPackageVersion}
 }
 }
 

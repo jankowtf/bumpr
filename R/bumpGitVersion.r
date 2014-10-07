@@ -105,6 +105,7 @@
 #' @example inst/examples/bumpGitVersion.r
 #' @seealso \code{
 #'   	\link[bumpr]{bumpGitVersion-GitVersion.S3-method}
+#'    \link[bumpr]{bumpPackageVersion}
 #' }
 #' @template author
 #' @template references
@@ -137,7 +138,9 @@ setGeneric(
 #'    \code{\link[bumpr]{bumpGitVersion-GitVersion.S3-method}}
 #' @example inst/examples/bumpGitVersion.r
 #' @seealso \code{
-#'    \link[bumpr]{bumpGitVersion}
+#'    \link[bumpr]{bumpGitVersion},
+#'    \link[bumpr]{bumpGitVersion-GitVersion.S3-method},
+#'    \link[bumpr]{bumpPackageVersion}
 #' }
 #' @template author
 #' @template references
@@ -180,11 +183,13 @@ setMethod(
 #'   	 
 #' @inheritParams bumpGitVersion
 #' @param .ns \code{\link{GitVersion.S3}}.
-#' @return \code{\link{character}}. New Git version that the project has 
-#'    been bumped to.
+#' @return \code{\link{list}}. (\code{old} and \code{new} version number and
+#'    the git tag (\code{git_tag}) or 
+#'    \code{list()} if the function exited before completing the bump.
 #' @example inst/examples/bumpGitVersion.r
 #' @seealso \code{
-#'    \link[bumpr]{bumpGitVersion}
+#'    \link[bumpr]{bumpGitVersion},
+#'    \link[bumpr]{bumpPackageVersion}
 #' }
 #' @template author
 #' @template references

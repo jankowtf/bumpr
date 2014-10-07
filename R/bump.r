@@ -70,6 +70,7 @@ setMethod(
     to,
     desc_fields = list("Date" = NULL),
     taken = character(),
+    sys_state = bumpr::SystemState.S3(),
     ...
   ) {
     
@@ -89,6 +90,7 @@ setMethod(
     to = to, 
     desc_fields = desc_fields,
     taken = taken, 
+    sys_state = sys_state,
     ...
   ))
     
@@ -113,7 +115,7 @@ setMethod(
 #' @param desc_fields \code{\link{list}}.
 #'    Additional fields (besides \code{Version}) in DESCRIPTION file that 
 #'    should be updated with a version number bump. Specified as name-value pairs.
-#' @return \code{\link{list}}. (\code{old} and \code{new} package version or 
+#' @return \code{\link{list}}. (\code{old} and \code{new} version number or 
 #'    \code{list()} if the function exited before completing the bump.
 #' @example inst/examples/bump.r
 #' @seealso \code{
@@ -135,6 +137,7 @@ setMethod(
     to,
     desc_fields = list("Date" = NULL),
     taken = character(),
+    sys_state = bumpr::SystemState.S3(),
     ...
   ) {
     
@@ -193,6 +196,15 @@ setMethod(
     }
     vsn_new
   }
+  .rollbackChangesInDescription <- function(sys_state) {
+    out <- FALSE
+    if (length(sys_state$description_old)) {
+      message("Rolling back changes in 'DESCRIPTION'")
+      write.dcf(as.data.frame(sys_state$description_old), file = "DESCRIPTION")  
+      out <- TRUE
+    }
+    return(out)
+  }
 
   ## Validate //
   if (!file.exists("DESCRIPTION")) {
@@ -214,65 +226,79 @@ setMethod(
   vsn_new <- to
   
   ## Read description file //
-  tmp <- read.dcf("DESCRIPTION")
-  desc <- as.list(tmp)
-  names(desc) <- colnames(tmp)  
+  desc <- as.list(read.dcf("DESCRIPTION")[1,])
   
-  ## Taken versions //
-  if (length(taken)) {
-    message("Taken versions numbers (last 10): ")
-    tmp <- sort(numeric_version(gsub("^v(?=\\d)", "", taken, perl = TRUE)))
-    if (length(tmp) > 10) {
-      tmp <- tmp[(length(tmp) - 10):length(tmp)]
-    }
-    message(paste0(tmp, collapse="\n"))
+  ## Save old state of DESCRIPTION //
+  if (!missing(sys_state)) {
+    sys_state$description_old <- desc
   }
   
-  ## Ensure correct current version number //
-  if (!length(vsn_old)) {
-    vsn_old <- desc$Version
-  } else if (from != desc$Version) {
-    vsn_old <- desc$Version
-  }
-  message(paste0("Current version: ", vsn_old))
-  
-  if (!length(vsn_new)) {
-    ## Get suggested version //
-    vsn_1 <- unlist(strsplit(vsn_old, split = "\\."))
-    vsn_list <- list(major = character(), minor = character(), 
-                     patch = character(), dev = character())
-    for (ii in seq(along = vsn_1)) {
-      vsn_list[[ii]] <- vsn_1[ii]
-    }
-    vsn_vec <- unlist(vsn_list)
-    vsn_sug <- vsn_vec 
-    vsn_sug[length(vsn_vec)] <- as.numeric(vsn_sug[length(vsn_vec)]) + 1
-    vsn_sug <- paste(vsn_sug, collapse = ".")
-
-    message(paste0("Suggested version: ", vsn_sug))
-
-    ## New version //
-    vsn_new <- .askNewVersionNumber(taken = taken)
-  }
-  
-  ## Verify update of DESCRIPTION file //  
-  if (vsn_new != vsn_old) {
-    res <- .askUpdateDescriptionFile(vsn = vsn_new)
-    if (is.null(res) || !res) {
-      message("Quitting")
-      return(list())
-    }
-    ## Update DESCRIPTION file //
-    desc$Version <- vsn_new
-    if ("Date" %in% names(desc_fields)) {
-      desc$Date <- Sys.time()
+  out <- tryCatch({
+    ## Taken versions //
+    if (length(taken)) {
+      message("Taken versions numbers (last 10): ")
+      tmp <- sort(numeric_version(gsub("^v(?=\\d)", "", taken, perl = TRUE)))
+      if (length(tmp) > 10) {
+        tmp <- tmp[(length(tmp) - 10):length(tmp)]
+      }
+      message(paste0(tmp, collapse="\n"))
     }
     
-    ## Write DESCRIPTION FILE
-    write.dcf(as.data.frame(desc), file = "DESCRIPTION")  
-  }
+    ## Ensure correct current version number //
+    if (!length(vsn_old)) {
+      vsn_old <- desc$Version
+    } else if (from != desc$Version) {
+      vsn_old <- desc$Version
+    }
+    message(paste0("Current version: ", vsn_old))
+    
+    if (!length(vsn_new)) {
+      ## Get suggested version //
+      vsn_1 <- unlist(strsplit(vsn_old, split = "\\."))
+      vsn_list <- list(major = character(), minor = character(), 
+                       patch = character(), dev = character())
+      for (ii in seq(along = vsn_1)) {
+        vsn_list[[ii]] <- vsn_1[ii]
+      }
+      vsn_vec <- unlist(vsn_list)
+      vsn_sug <- vsn_vec 
+      vsn_sug[length(vsn_vec)] <- as.numeric(vsn_sug[length(vsn_vec)]) + 1
+      vsn_sug <- paste(vsn_sug, collapse = ".")
+  
+      message(paste0("Suggested version: ", vsn_sug))
+  
+      ## New version //
+      vsn_new <- .askNewVersionNumber(taken = taken)
+    }
+    
+    ## Verify update of DESCRIPTION file //  
+    if (vsn_new != vsn_old) {
+      res <- .askUpdateDescriptionFile(vsn = vsn_new)
+      if (is.null(res) || !res) {
+        message("Quitting")
+        return(list())
+      }
+      
+      ## Update DESCRIPTION file //
+      desc$Version <- vsn_new
+      if ("Date" %in% names(desc_fields)) {
+        desc$Date <- Sys.time()
+      }
+      
+#       stop("Intentional error for unit testing")
+      
+      ## Write DESCRIPTION FILE
+      write.dcf(as.data.frame(desc), file = "DESCRIPTION")  
+    }
+    list(old = vsn_old, new = vsn_new)
+    },
+    error = function(cond) {
+      .rollbackChangesInDescription(sys_state = sys_state)
+      stop(cond)
+    }
+  )
 
-  return(list(old = vsn_old, new = vsn_new))
+  return(out)
     
   }
 )
@@ -347,7 +373,8 @@ setMethod(
 #' @param what \code{\link{GitVersion.S3}}.
 #' @param from \code{\link{character}}.
 #' @param to \code{\link{character}}.
-#' @return \code{\link{list}}. (\code{old} and \code{new} package version or 
+#' @return \code{\link{list}}. (\code{old} and \code{new} version number and
+#'    the git tag (\code{git_tag}) or 
 #'    \code{list()} if the function exited before completing the bump.
 #' @example inst/examples/bump.r
 #' @seealso \code{
@@ -691,6 +718,17 @@ setMethod(
     }  
     res
   }
+#   input <- "To https://e6e3de550c3358f20bd8533c52e9ab20821d20bf@github.com/Rappster/bumpr.test
+#  - [deleted]         v0.1.0"
+  .gitEnsurePatIsHidden <- function(
+    input = character(),
+    pattern = paste0(Sys.getenv("GITHUB_PAT"), "@")
+  ) {
+    if (length(input) && any(grepl(pattern, input))) {
+      input <- gsub(pattern, "", input)
+    }
+    return(input)
+  }
   .gitExistsRemoteRepository <- function(
     remote = ifelse(!length(sys_state$remote_name), "origin", sys_state$remote_name),
     sys_state
@@ -930,8 +968,30 @@ setMethod(
     }
     system(paste0("git push ", remote, " ", branch), intern = TRUE)
     res <- system(paste0("git ls-remote --heads ", remote), intern = TRUE)
-  } 
-#  .gitIsLocalRepository()
+  }
+  .gitRollbackBumpCommit <- function(sys_state) {
+    message("Rolling back bump commit")
+    cmd_1 <- paste0("git reset HEAD~1")
+    msg <- suppressWarnings(system(cmd_1, intern = TRUE))
+    return(msg)
+  }
+  .gitRollbackTag <- function(sys_state) {
+    message("Rolling back Git tags")
+    cmd_1 <- paste0("git tag -d ", sys_state$git_tag)
+    cmd_2 <- paste0("git push ", sys_state$remote,  " :refs/tags/", sys_state$git_tag)
+    msg <- suppressWarnings(system(cmd_1, intern = TRUE))
+    msg <- c(msg, suppressWarnings(system(cmd_2, intern = TRUE)))
+    
+    if (length(idx <- grep("Deleting a non-existent ref", msg))) {
+      msg <- msg[-idx]
+    }
+    if (length(idx <- grep("error:", msg))) {
+      msg <- msg[-idx]
+    }
+    msg <- .gitEnsurePatIsHidden(input = msg)
+    
+    return(paste(msg, collapse = "\n"))
+  }
   .gitSetRemote <- function(
     remote = ifelse(!length(sys_state$remote_name), "origin", sys_state$remote_name),
     url = character(),
@@ -1037,6 +1097,15 @@ setMethod(
     sys_state$git_user_name <- git_user_name
     return(git_user_name)
   }
+  .rollbackChangesInDescription <- function(sys_state) {
+    out <- FALSE
+    if (length(sys_state$description_old)) {
+      message("Rolling back changes in 'DESCRIPTION'")
+      write.dcf(as.data.frame(sys_state$description_old), file = "DESCRIPTION")  
+      out <- TRUE
+    }
+    return(out)
+  }
 
   ##----------------------------------------------------------------------------
   ## Initialize sys_state environment //
@@ -1107,13 +1176,14 @@ setMethod(
   ##----------------------------------------------------------------------------
   
   git_tags <- system("git tag", intern = TRUE)
-  res <- bumpPackageVersion(taken = git_tags)
+  res <- bumpPackageVersion(taken = git_tags, sys_state = sys_state)
   if (!length(res)) {
     message("Quitting")
     return(list())
   }
   vsn_new <- res$new
   vsn_old <- res$old
+  sys_state$git_tag <- paste0("v", vsn_new)
 
   idx <- which(grepl("^v\\d.*", git_tags))
   if (length(idx)) {
@@ -1129,8 +1199,7 @@ setMethod(
   
   .ask_gitReadyToBumpVersion(sys_state = sys_state)
   if (sys_state$quit) {
-    message("Rolling back changes in DESCRIPTION file")
-    resetPackageVersion(vsn = vsn_old)
+    .rollbackChangesInDescription(sys_state = sys_state)
     message("Quitting")
     return(list())
   }
@@ -1152,8 +1221,7 @@ setMethod(
     )  
     message(paste(msg, collapse = "\n"))
     
-    message("Rolling back changes in DESCRIPTION file")
-    resetPackageVersion(vsn = vsn_old)
+    .rollbackChangesInDescription(sys_state = sys_state)
     message("Quitting")
     return(list())
   }
@@ -1167,8 +1235,7 @@ setMethod(
     if (sys_state$quit) {
       message(paste0("Not a git remote repository: ", sys_state$remote_name))
       message("Make sure you have initialized either a bare repository or cloned an existing one")
-      message("Rolling back changes in DESCRIPTION file")
-      resetPackageVersion(vsn = vsn_old)
+      .rollbackChangesInDescription(sys_state = sys_state)
       message("Quitting")
       return(list())
     }    
@@ -1180,8 +1247,7 @@ setMethod(
   ) 
   if (sys_state$quit) {
     message(paste0("No branches in remote: ", sys_state$remote_name))
-    message("Rolling back changes in DESCRIPTION file")
-    resetPackageVersion(vsn = vsn_old)
+    .rollbackChangesInDescription(sys_state = sys_state)
     message("Quitting")
     return(list())
   }
@@ -1189,8 +1255,7 @@ setMethod(
   ## Git user credentials //
   .gitGetUserCredentialsCommand(sys_state = sys_state)
   if (sys_state$quit) {
-    message("Rolling back changes in DESCRIPTION file")
-    resetPackageVersion(vsn = vsn_old)
+    .rollbackChangesInDescription(sys_state = sys_state)
     message("Quitting")
     return(list())
   }
@@ -1205,15 +1270,17 @@ setMethod(
       sys_state = sys_state
     )
     if (sys_state$quit) {
-      message("Rolling back changes in DESCRIPTION file")
-      resetPackageVersion(vsn = vsn_old)
+      .rollbackChangesInDescription(sys_state = sys_state)
       message("Quitting")
       return(list())  
     }
   }
 
+  ##----------------------------------------------------------------------------
   ## CHANGES //
-  tmpfile <- tempfile()
+  ##----------------------------------------------------------------------------
+  
+  tmpfile_changes <- tempfile()
   if (!file.exists("CHANGES.md")) {
     write("", file = "CHANGES.md")
   }
@@ -1233,16 +1300,24 @@ setMethod(
     "",
     readLines("CHANGES.md")
   )
-  write(tmp_new, file = tmpfile)
-  file.rename(from = tmpfile, to = "CHANGES.md")
-
+  write(tmp_new, file = tmpfile_changes)
+  
+  file.rename(from = "CHANGES.md", to = "CHANGES_0.md")
+  file.rename(from = tmpfile_changes, to = "CHANGES.md")
+  
+  ##----------------------------------------------------------------------------
   ## NEWS //
-  tmpfile <- tempfile()
+  ##----------------------------------------------------------------------------
+
+  tmpfile_news <- tempfile()
   if (!file.exists("NEWS.md")) {
     write("", file = "NEWS.md")
   }
   cnt_old <- readLines("NEWS.md")
+
+  update_news <- FALSE
   if (!grepl(paste0("VERSION ", vsn_new), cnt_old[1])) {
+    update_news <- TRUE
     news_content <- c(
       if (length(project)) {
         paste0("# CHANGES IN ", project, " VERSION ", vsn_new)
@@ -1264,8 +1339,9 @@ setMethod(
       "",
       cnt_old
     )
-    write(news_content, file = tmpfile)
-    file.rename(from = tmpfile, to = "NEWS.md")
+    write(news_content, file = tmpfile_news)
+    file.rename(from = "NEWS.md", to = "NEWS_0.md")
+    file.rename(from = tmpfile_news, to = "NEWS.md")
   }
 
   ## Git commands //
@@ -1277,27 +1353,42 @@ setMethod(
   )
 
   ## Execut git commands //
-  pat_pattern <- paste0(Sys.getenv("GITHUB_PAT"), "@")
-  res <- tryCatch(
-    sapply(git_commands, function(cmd) {
-#       message(cmd)
-      res <- tryCatch({
-          msg <- system(cmd, intern = TRUE)
-          ## Make sure PAT is not displayed //
-          if (length(msg) && grepl(pat_pattern, msg)) {
-            msg <- gsub(pat_pattern, "", msg)
+  res <- tryCatch({
+      sapply(seq(along=git_commands), function(cmd) {
+        res <- tryCatch({
+#             if (cmd == 4) {
+#               msg <- c(
+#                 "Intentional error for unit testing",
+#                 paste0("Git command: ", .gitEnsurePatIsHidden(git_commands[cmd]))
+#               )
+#               stop(paste(msg, collapse = "\n"))
+#             }
+            cmd <- git_commands[cmd]
+            msg <- system(cmd, intern = TRUE)
+            
+            ## Make sure PAT is not displayed //
+            msg <- .gitEnsurePatIsHidden(input = msg)
+            
+            message(paste(msg, sep = "\n"))
+          },
+          error = function(cond) {
+            message("Version bump failed")
+            .rollbackChangesInDescription(sys_state = sys_state)
+            message("Rolling back changes in 'CHANGES.md'")
+            file.rename(from = "CHANGES_0.md", to = "CHANGES.md")
+            message("Rolling back changes in 'NEWS.md'")
+            file.rename(from = "NEWS_0.md", to = "NEWS.md")
+            message(.gitRollbackBumpCommit(sys_state = sys_state))
+            message(.gitRollbackTag(sys_state = sys_state))
+            stop(cond)
           }
-          
-          message(paste(msg, sep = "\n"))
-        },
-        error = function(cond) {
-          message("Version bump failed")
-          message("Rolling back changes in DESCRIPTION file")
-          resetPackageVersion(vsn = vsn_old)
-          stop(cond)
-        }
-      )
-    }),
+        )
+      })
+      
+      ## Cleanup //
+      file.remove("CHANGES_0.md")
+      file.remove("NEWS_0.md")
+    },
     finally = {
       ## Cleanup with respect to '_netrc' file // 
       if (sys_state$pat_or_basic == "basic") {
@@ -1311,7 +1402,7 @@ setMethod(
     }
   )
   
-  return(list(old = vsn_old, new = vsn_new))
+  return(list(old = vsn_old, new = vsn_new, git_tag = sys_state$git_tag))
     
   }
 )

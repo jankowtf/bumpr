@@ -5,7 +5,8 @@
 \title{Bump Package Version Number}
 \usage{
 \S4method{bump}{RPackageVersion.S3,missing,missing}(what, from, to,
-  desc_fields = list(Date = NULL), taken = character(), ...)
+  desc_fields = list(Date = NULL), taken = character(),
+  sys_state = bumpr::SystemState.S3(), ...)
 }
 \arguments{
 \item{what}{\code{\link{RPackageVersion.S3}}.}

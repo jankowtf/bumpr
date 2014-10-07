@@ -17,7 +17,8 @@
 \item{...}{Further arguments to be passed to subsequent functions/methods.}
 }
 \value{
-\code{\link{list}}. (\code{old} and \code{new} package version or
+\code{\link{list}}. (\code{old} and \code{new} version number and
+   the git tag (\code{git_tag}) or
    \code{list()} if the function exited before completing the bump.
 }
 \description{
