@@ -237,7 +237,13 @@ setMethod(
     ## Taken versions //
     if (length(taken)) {
       message("Taken versions numbers (last 10): ")
-      tmp <- sort(numeric_version(gsub("^v(?=\\d)", "", taken, perl = TRUE)))
+      
+      ## Filter out pre-releases //
+      idx <- grep("^pre_", taken)
+      if (length(idx)) {
+        taken <- taken[-idx]
+      }
+      tmp <- sort(numeric_version(gsub("^.*v(?=\\d)", "", taken, perl = TRUE)))
       if (length(tmp) > 10) {
         tmp <- tmp[(length(tmp) - 10):length(tmp)]
       }
@@ -293,7 +299,8 @@ setMethod(
     list(old = vsn_old, new = vsn_new)
     },
     error = function(cond) {
-      message("Version bump failed")
+      message("Version bump failed:")
+#       message(conditionMessage(cond))
       .rollbackChangesInDescription(sys_state = sys_state)
       stop(cond)
     }
