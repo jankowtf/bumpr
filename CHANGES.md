@@ -1,3 +1,11 @@
+# Version 0.7.1
+ - Merge branch 'master' into develop
+ - Merge branch 'release-0.6'
+ - build commit
+ - bump commit
+
+----------
+
 # Version 0.6
  - feature no-remote
  - Merge branch 'master' into develop
