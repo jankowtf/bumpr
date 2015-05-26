@@ -1,3 +1,9 @@
+# Version 0.7.3
+ - Merge branch 'release-0.7.2'
+ - R-3.2.0
+
+----------
+
 # Version 0.7.2
  - Merge branch 'master' into develop
  - Merge branch 'release-0.7.1'
