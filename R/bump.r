@@ -84,7 +84,7 @@ setMethod(
   }
   to <- as.character(what$version)
     
-  return(bump(
+  bump(
     what = what,
     from = from, 
     to = to, 
@@ -92,7 +92,7 @@ setMethod(
     taken = taken, 
     sys_state = sys_state,
     ...
-  ))
+  )
     
   }
 )
@@ -359,14 +359,14 @@ setMethod(
   }
   to <- as.character(what$version)
   
-  return(bump(
+  bump(
     what = what,
     from = from, 
     to = to, 
     project = project,
     temp_credentials = temp_credentials,
     ...
-  ))
+  )
     
   }
 )
@@ -1253,7 +1253,8 @@ setMethod(
     ## Check existence //
     if (!.gitExistsRemoteRepository(
           remote = sys_state$remote_name, 
-          sys_state = sys_state)
+          sys_state = sys_state
+        )
     ) {
       msg <- c(
         "Remote does not exist yet //",
@@ -1269,7 +1270,10 @@ setMethod(
     }
 
     ## Check validity of remote //
-    if (!.gitIsRemoteRepository(remote = sys_state$remote_name, sys_state = sys_state)) {
+    if (!.gitIsRemoteRepository(
+      remote = sys_state$remote_name, 
+      sys_state = sys_state)
+    ) {
       .gitCheckForBranchesInRemote(
         remote = sys_state$remote_name,
         sys_state = sys_state
@@ -1391,7 +1395,7 @@ setMethod(
 
   ## Execut git commands //
   res <- tryCatch({
-      sapply(seq(along=git_commands), function(cmd) {
+      sapply(seq(along = git_commands), function(cmd) {
         res <- tryCatch({
 #             if (cmd == 3) {
 #               msg <- c(
@@ -1402,6 +1406,12 @@ setMethod(
 #             }
             cmd <- git_commands[cmd]
             msg <- system(cmd, intern = TRUE)
+
+            if (any(grepl("Please tell me who you are", msg))) {
+              .gitUserEmail(sys_state = sys_state, global_or_local = "local")
+              .gitUserName(sys_state = sys_state, global_or_local = "local")
+              msg <- system(cmd, intern = TRUE)
+            }
             
             ## Make sure PAT is not displayed //
             msg <- .gitEnsurePatIsHidden(input = msg)
@@ -1423,8 +1433,8 @@ setMethod(
       })
       
       ## Cleanup //
-      file.remove("CHANGES_0.md")
-      file.remove("NEWS_0.md")
+      try(file.remove("CHANGES_0.md"), silent = TRUE)
+      try(file.remove("NEWS_0.md"), silent = TRUE)
     },
     finally = {
       if (sys_state$with_remote) {

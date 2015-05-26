@@ -1,4 +1,4 @@
-bumpr (v0.6)
+bumpr
 ======
 
 Systematic version bumping and more

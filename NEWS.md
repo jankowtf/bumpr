@@ -1,3 +1,19 @@
+# CHANGES IN bumpr VERSION 0.7.2
+
+## NEW FEATURES
+
+## BUG FIXES
+
+## MAJOR CHANGES
+
+## MINOR CHANGES
+
+## MISC
+
+- Build with R-3.2.0
+
+-----
+
 # CHANGES IN bumpr VERSION 0.7.1
 
 ## NEW FEATURES

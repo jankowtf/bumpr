@@ -1,5 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+doc
 inst/examples
 inst/prof
 man-roxygen

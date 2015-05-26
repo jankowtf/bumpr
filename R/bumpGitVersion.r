@@ -157,20 +157,20 @@ setMethod(
     ...
   ) {
     
-  .ns <- bumpr::GitVersion.S3()
-   
-  return(bumpGitVersion(
-    project = project,
-    temp_credentials = temp_credentials,
-    .ns = .ns,
-    ...
-  ))
-  
-#   ## From and to //
-#   from <- unname(read.dcf("DESCRIPTION", field = "Version")[1,1])
-#   if (is.na(from)) {
-#     stop("Invalid version in DESCRIPTION")
-#   }
+    .ns <- bumpr::GitVersion.S3()
+    
+    bumpGitVersion(
+      project = project,
+      temp_credentials = temp_credentials,
+      .ns = .ns,
+      ...
+    )
+    
+    #   ## From and to //
+    #   from <- unname(read.dcf("DESCRIPTION", field = "Version")[1,1])
+    #   if (is.na(from)) {
+    #     stop("Invalid version in DESCRIPTION")
+    #   }
     
   }
 )
@@ -205,13 +205,13 @@ setMethod(
     .ns,
     ...
   ) {
-
-  return(bump(
-    what = .ns, 
-    project = project,
-    temp_credentials = temp_credentials, 
-    ...
-  ))
+    
+    bump(
+      what = .ns, 
+      project = project,
+      temp_credentials = temp_credentials, 
+      ...
+    )
     
   }
 )
