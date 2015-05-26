@@ -1,3 +1,17 @@
+# Version 0.7.2
+ - Merge branch 'master' into develop
+ - Merge branch 'release-0.7.1'
+ - fixes #15
+
+----------
+
+# Version 0.7.2
+ - Merge branch 'master' into develop
+ - Merge branch 'release-0.7.1'
+ - fixes #15
+
+----------
+
 # Version 0.7.1
  - Merge branch 'master' into develop
  - Merge branch 'release-0.6'

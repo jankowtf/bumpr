@@ -1,13 +1,13 @@
 Package: bumpr
 Type: Package
 Title: Easy systematic version bumping and more
-Version: 0.7.1
-Date: 2014-10-29 16:03:06
+Version: 0.7.2
+Date: 2015-05-26 19:13:12
 Author: Janko Thyson [aut, cre]
 Maintainer: Janko Thyson <janko.thyson@gmail.com>
-Description: Makes it really easy to bump the version of an R package project to a new number.
-          Also allows to bump the Git version number as well when the project is placed under
-          Git version control.
+Description: Makes it really easy to bump the version of an R package project to
+         a new number. Also allows to bump the Git version number as well when
+         the project is placed under Git version control.
 License: GPL (>= 2)
 Roxygen: list(wrap = FALSE)
 NeedsCompilation: no
