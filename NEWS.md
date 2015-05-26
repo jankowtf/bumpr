@@ -1,3 +1,19 @@
+# CHANGES IN bumpr VERSION 0.7.3
+
+## NEW FEATURES
+
+## BUG FIXES
+
+## MAJOR CHANGES
+
+## MINOR CHANGES
+
+## MISC
+
+- tested local vs. global behavior w.r.t. to user info (user.name and user.email)
+
+-----
+
 # CHANGES IN bumpr VERSION 0.7.2
 
 ## NEW FEATURES
